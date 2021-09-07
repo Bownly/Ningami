@@ -1,0 +1,35 @@
+REM mod2gbt TheLuckyBench.mod tlbsong -c 2
+REM del outputtlbsong.c
+REM rename output.c outputtlbsong.c
+REM mod2gbt TheWhiteFrame.mod twfsong -c 4
+REM del outputtwfsong.c
+REM rename output.c outputtwfsong.c
+REM mod2gbt TheWhite.mod twsong -c 4
+REM del outputtwsong.c
+REM rename output.c outputtwsong.c
+REM mod2gbt ayVenture.mod avsong -c 4
+REM del outputavsong.c
+REM rename output.c outputavsong.c
+REM pause
+
+C:\gbdk2020\bin\lcc -Wa-l -c -o bordertiles.o tiles/borderTiles.c
+C:\gbdk2020\bin\lcc -Wa-l -c -o cardtiles.o tiles/cardTiles.c
+C:\gbdk2020\bin\lcc -Wa-l -c -o cursortiles.o tiles/cursorTiles.c
+C:\gbdk2020\bin\lcc -Wa-l -c -o enemyHorsetiles.o tiles/enemyHorseTiles.c
+C:\gbdk2020\bin\lcc -Wa-l -c -o fonttiles.o tiles/fontTiles.c
+C:\gbdk2020\bin\lcc -Wa-l -c -o icontiles.o tiles/iconTiles.c
+@REM C:\gbdk2020\bin\lcc -Wa-l -c -o scorenumtiles.o tiles/scorenumTiles.c
+
+C:\gbdk2020\bin\lcc -Wa-l -c -o common.o common.c
+C:\gbdk2020\bin\lcc -Wa-l -c -o fade.o fade.c
+
+C:\gbdk2020\bin\lcc -Wa-l -Wf-bo1 -c -o battleState.o battleState.c
+
+C:\gbdk2020\bin\lcc -Wa-l -c -o main.o main.c CardObject.c
+C:\gbdk2020\bin\lcc -Wl-yt3 -Wl-yo8 -Wl-ya4 -o kartomancer.gb *.o
+
+REM pause
+del *.o
+del *.lst
+del *.asm
+del *.sym
