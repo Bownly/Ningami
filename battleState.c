@@ -372,7 +372,17 @@ void phaseEnemyTurn()
     // Selects random move based on enemy's movepool
     // TODO: This ^
     curAnim = ANIM_ENEMY_ATTACK;
-    player.hpCur -= enemy.atk;
+
+    if (player.shieldCount >= enemy.atk)
+    {
+        player.shieldCount -= enemy.atk;
+        k = 0U;
+    }
+    else
+    {
+        k = enemy.atk - player.shieldCount;
+    }
+    player.hpCur -= k;
 
     // Goto ENEMY_ANIM
     substate = ENEMY_ANIM;
@@ -424,6 +434,7 @@ void phaseAnimateEnemyMove()
             case ANIM_ENEMY_ATTACK:
                 move_bkg(0, 0);
                 displayHP();
+                displayShields();
                 break;
             case ANIM_ENEMY_HEAL:
                 // If ANIM_ENEMY_HEAL, show heart popup
