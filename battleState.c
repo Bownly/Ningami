@@ -88,7 +88,6 @@ void queueMessage(UINT8, UINT8);
 void displayCursor(UINT8);
 void displayCard(CardObject*, UINT8, UINT8);
 void displayHand(HandObject*, UINT8, UINT8);
-// void displayDeck(DeckObject*, UINT8, UINT8);
 void displayFullDeck(DeckObject*, UINT8, UINT8);
 void displayHP();
 void displayMP();
@@ -166,8 +165,8 @@ void phaseOpunZaGeimu()
     
     // TODO make this variable based on different enemy types    
     set_bkg_data(enemyTileIndex, 16U, enemyHorseTiles);
-    enemy.hpMax = 10U;
-    enemy.hpCur = 10U;
+    enemy.hpMax = 100U;
+    enemy.hpCur = 100U;
     enemy.shieldCount = 0U;
     enemy.atk = 2U;
     enemy.def = 0U;
@@ -177,7 +176,7 @@ void phaseOpunZaGeimu()
     initrand(DIV_REG);
     // Initialize deck and hand; shuffle deck
     initializeDeck(&deck);
-    shuffleDeck(&deck, 64U);
+    shuffleDeck(&deck, 64U, FALSE);
     initializeHand(&hand);
 
     // Show enemies on screen
@@ -199,9 +198,11 @@ void phaseOpunZaGeimu()
 
 void phaseStartTurn()
 {
-    // Reset MP
+    // Reset MP and Shields
     player.mpCur = player.mpMax;
     displayMP();
+    player.shieldCount = 0U;
+    displayShields();
 
     // Discard old hand
     if (hand.cardCount != 0U)
@@ -209,6 +210,7 @@ void phaseStartTurn()
         for (i = 0U; i != hand.cardCount;)
         {
             tempCardPtr = removeCardFromHand(&hand, i);
+            discardCard(&deck, tempCardPtr->id);
         }
     }
 
@@ -216,15 +218,18 @@ void phaseStartTurn()
     UINT8 c = 0U;
     for (; c != 4U; c++)
     {
-        if (deck.cardCount != 0U)
+        // Shuffle discard pile into deck if needed
+        if (deck.cardCount == 0U)
         {
-            tempCardPtr = drawCard(&deck);
-            addCardToHand(&hand, tempCardPtr);
+            shuffleDeck(&deck, 64U, TRUE);
+            for (i = 0; i != hand.cardCount; ++i)
+            {
+                deck.cardIds[deck.cardCount + i] = hand.cards[i]->id;
+            }
         }
+        tempCardPtr = drawCard(&deck);
+        addCardToHand(&hand, tempCardPtr);
     }
-
-    // Shuffle discard into deck if needed
-
 
     // Show hand
     displayHand(&hand, xAnchorHand, yAnchorHand);
@@ -278,8 +283,9 @@ void phaseSelectCard()
 
 void phaseUseCard()
 {
-    // Remove card from hand
+    // Remove card from hand and discard it
     tempCardPtr = removeCardFromHand(&hand, m);
+    discardCard(&deck, tempCardPtr->id);
 
     // Redraw hand
     displayHand(&hand, xAnchorHand, yAnchorHand);
@@ -298,6 +304,7 @@ void phaseUseCard()
     {
         k = tempCardPtr->pointVal + player.def;
         player.shieldCount += k;
+        displayShields();
     }
     else if (tempCardPtr->typeId == CT_HEAL)
     {
@@ -306,6 +313,7 @@ void phaseUseCard()
         {
             player.hpCur = player.hpMax;
         }
+        displayHP();
     }
 
     // Goto PLAYER_ANIM
@@ -444,8 +452,20 @@ void phaseWinCheck()
     }
     else
     {
+        // Return to CARD_SELECT if more cards can be played
         // Else goto ENEMY_TURN
         substate = ENEMY_TURN;
+
+        for (i = 0U; i != hand.cardCount; ++i)
+        {
+            if (hand.cards[i]->mpCost <= player.mpCur)
+            {
+                substate = CARD_SELECT;
+                // Reset cursor location
+                m = 0U;
+                displayCursor(m);
+            }
+        }
     }
 }
 
@@ -500,73 +520,6 @@ void queueMessage(UINT8 messageType, UINT8 value)
     // Push message of messageType with value to messageQueue
     // Increment messageQueueCount
 }
-
-
-
-
-// void dickPhase()
-// {
-//     // Dick x 2
-//     dick(P1);
-//     dick(CPU);
-
-//     while (substate != TURN_START)
-//     {
-//         i = getStackScoreSum(&stackP1);
-//         j = getStackScoreSum(&stackCPU);
-//         if (i == j)
-//         {
-//             performantdelay(60U);
-//             // handleTie();
-//             ++i;  // TODO temp line for testing purposes
-//         }
-//         else if (i > j)
-//         {
-//             curPlayer = CPU;
-//             substate = TURN_START;
-//         }
-//         else
-//         {
-//             curPlayer = P1;
-//             substate = TURN_START;
-//         }
-//     }
-// }
-
-// void dick(UINT8 player)
-// {
-//     // Setup coord/deck pointers
-//     DeckObject* deckPtr;
-//     CardObject* tempCardPtr;
-//     UINT8* xAnchorCardPtr;
-//     UINT8* xAnchorDeckPtr;
-
-//     if (player == P1)
-//     {
-//         deckPtr = &deckP1;
-//         xAnchorCardPtr = &xAnchorP1Cards;
-//         xAnchorDeckPtr = &xAnchorP1Deck;
-//         j = yAnchorP1Cards;
-//     }
-//     else
-//     {
-//         deckPtr = &deckCPU;
-//         xAnchorCardPtr = &xAnchorCPUCards;
-//         xAnchorDeckPtr = &xAnchorCPUDeck;
-//         j = yAnchorCPUCards;
-//     }
-
-//     // Draw card
-//     tempCardPtr = drawCard(deckPtr);
-//     tempCardPtr->isFaceUp = 1U;
-
-//     // Place card
-//     playNumCard(tempCardPtr, *xAnchorCardPtr, j, player);
-//     displayDeck(deckPtr, *xAnchorDeckPtr, j-1U);
-
-//     // Update score gfx
-//     displayScore(player);
-// }
 
 
 /******************************** DISPLAY METHODS ********************************/

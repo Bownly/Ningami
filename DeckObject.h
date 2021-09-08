@@ -12,7 +12,8 @@ typedef struct DeckObject {
 
 void initializeDeck(DeckObject* deck);
 void addCardToDeck(DeckObject* deck, CardObject* card);
-void shuffleDeck(DeckObject* deck, UINT8 shuffleCount);
+void shuffleDeck(DeckObject* deck, UINT8 shuffleCount, UINT8 includeDiscarded);
 CardObject* drawCard(DeckObject* deck);
+void discardCard(DeckObject* deck, UINT8 cardId);
 
 #endif
