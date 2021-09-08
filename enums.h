@@ -42,7 +42,7 @@ typedef enum {
     KATANA   = 1U,  // High cost big damage
     HASAMI   = 2U,  // Higher cost bigger damage
     HIKOUKI  = 3U,  // Free cost, small damage
-    SHATSU   = 4U,  // Low cost shield
+    SHOUZOKU = 4U,  // Low cost shield
     KABUTO   = 5U,  // High cost shield
     HAATO    = 6U,  // Heal
     EMPTY    = 7U

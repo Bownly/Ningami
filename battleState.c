@@ -15,6 +15,7 @@
 #include "maps/blankTileMap.c"
 #include "maps/cardMaps.c"
 #include "maps/enemyMap.c"
+#include "maps/cardDescStrings.c"
 // #include "maps/scoreNumMaps.c"
 
 extern const unsigned char borderTiles[];
@@ -194,6 +195,7 @@ void phaseOpunZaGeimu()
 
     // // test junk
     // displayFullDeck(&deck, 0, 0);
+    set_bkg_tiles(0U, 14U, 20U, 4U, textWindowMap);
 }
 
 void phaseStartTurn()
@@ -238,6 +240,10 @@ void phaseStartTurn()
     m = 0U;  // using m for cursor location
     displayCursor(m);
 
+    // Update card description of default selected card
+    printLine(1U, 15U, cardDescStrings[hand.cards[m]->faceId<<1]);
+    printLine(1U, 16U, cardDescStrings[(hand.cards[m]->faceId<<1)+1]);
+
     // Reset MP to max, and update shown value
     substate = CARD_SELECT;
 }
@@ -253,6 +259,8 @@ void phaseSelectCard()
         // playMoveSfx();
 
         // Update card description as selected card changes
+        printLine(1U, 15U, cardDescStrings[hand.cards[m]->faceId<<1]);
+        printLine(1U, 16U, cardDescStrings[(hand.cards[m]->faceId<<1)+1]);
     }
     else if (curJoypad & J_LEFT && !(prevJoypad & J_LEFT))
     {
@@ -262,6 +270,8 @@ void phaseSelectCard()
         // playMoveSfx();
 
         // Update card description as selected card changes
+        printLine(1U, 15U, cardDescStrings[hand.cards[m]->faceId<<1]);
+        printLine(1U, 16U, cardDescStrings[(hand.cards[m]->faceId<<1)+1]);
     }
     else if (curJoypad & J_A && !(prevJoypad & J_A))
     {
@@ -290,20 +300,23 @@ void phaseUseCard()
     // Redraw hand
     displayHand(&hand, xAnchorHand, yAnchorHand);
 
+    // Update card description to blank
+    printLine(1U, 15U, cardDescStrings[14]);
+    printLine(1U, 16U, cardDescStrings[14]);
+
     // If attack card
     if (tempCardPtr->typeId == CT_ATTACK)
     {
         // Run damage calcs on target
         k = tempCardPtr->pointVal + player.atk;
         enemy.hpCur -= k;
-
-        // Set curAnim to ANIM_ATTACK
         curAnim = ANIM_ATTACK;
     }
     else if (tempCardPtr->typeId == CT_SHIELD)
     {
         k = tempCardPtr->pointVal + player.def;
         player.shieldCount += k;
+        curAnim = ANIM_SHIELD;
         displayShields();
     }
     else if (tempCardPtr->typeId == CT_HEAL)
@@ -313,6 +326,7 @@ void phaseUseCard()
         {
             player.hpCur = player.hpMax;
         }
+        curAnim = ANIM_HEAL;
         displayHP();
     }
 
@@ -475,6 +489,10 @@ void phaseWinCheck()
                 // Reset cursor location
                 m = 0U;
                 displayCursor(m);
+
+                // Update card description of default selected card
+                printLine(1U, 15U, cardDescStrings[hand.cards[m]->faceId<<1]);
+                printLine(1U, 16U, cardDescStrings[(hand.cards[m]->faceId<<1)+1]);
             }
         }
     }
@@ -556,7 +574,7 @@ void displayCard(CardObject* card, UINT8 x, UINT8 y)
         case HIKOUKI:
             set_bkg_tiles(x, y, 2U, 3U, card4Map);
             break;
-        case SHATSU:
+        case SHOUZOKU:
             set_bkg_tiles(x, y, 2U, 3U, card5Map);
             break;
         case KABUTO:
@@ -584,14 +602,6 @@ void displayHand(HandObject* hand, UINT8 x, UINT8 y)
     }
 }
 
-// void displayDeck(DeckObject* deck, UINT8 x, UINT8 y)
-// {
-//     if (deck->cardCount != 0U && deck->cardCount != 1U)
-//         set_bkg_tiles(x, y, 2U, 3U, cardBackMap);
-//     else
-//         set_bkg_tiles(x, y, 2U, 3U, cardEmptyMap);
-// }
-
 // This is meant for testing purposes only
 void displayFullDeck(DeckObject* deck, UINT8 x, UINT8 y)
 {
@@ -618,7 +628,7 @@ void displayHP()
 void displayMP()
 {
     set_bkg_tile_xy(xAnchorMP, yAnchorMP, player.mpCur%10U);
-    set_bkg_tile_xy(xAnchorMP+1, yAnchorMP, 0x2AU);
+    set_bkg_tile_xy(xAnchorMP+1, yAnchorMP, 0x2BU);
 }
 
 void displayShields()

@@ -6,9 +6,9 @@
 #include "enums.h"
 
 // test deck
-const CARDFACE defaultDeck[18U] = { SHURIKEN, SHURIKEN, SHURIKEN, SHURIKEN, SHURIKEN,  SHATSU,
-                                      SHATSU,   SHATSU,   SHATSU,   KATANA,   KATANA,  HASAMI,
-                                     HIKOUKI,  HIKOUKI,   KABUTO,   KABUTO,    HAATO,   HAATO };
+const CARDFACE defaultDeck[18U] = { SHURIKEN, SHURIKEN, SHURIKEN, SHURIKEN, SHURIKEN,  SHOUZOKU,
+                                    SHOUZOKU, SHOUZOKU, SHOUZOKU,   KATANA,   KATANA,    HASAMI,
+                                     HIKOUKI,  HIKOUKI,   KABUTO,   KABUTO,    HAATO,     HAATO };
 
 typedef struct DeckObject {
     UINT8 cardCount;

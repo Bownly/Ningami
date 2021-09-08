@@ -22,10 +22,14 @@
 
 */
 
+#ifndef __cardTiles_h_INCLUDE
+#define __cardTiles_h_INCLUDE
 
 /* Bank of tiles. */
 #define cardTilesBank 0
 /* Start of tile array. */
-extern unsigned char cardTiles[];
+extern const unsigned char cardTiles[];
+
+#endif
 
 /* End of CARDTILES.H */

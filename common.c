@@ -15,15 +15,27 @@ UINT8 getRandUint(UINT8 modulo)
 
 void printLine(UINT8 xCoord, UINT8 yCoord, unsigned char* line)
 {
+    unsigned char tempLine[18U];
+    unsigned char* tempLinePtr = tempLine;
     UINT8 size = 0U;
+    UINT8 diff = 0x37;
     while (*line)
     {
-        *line -= (0x37);
+
+        if (*line <= 0x39) // 0-9
+            diff = 0x30;
+        else if (*line == 0x20)  // Space
+            diff = 0xFF;
+        else  // A-Z
+            diff = 0x37;
+
+        *tempLinePtr = *line - diff;
+        tempLinePtr++;
         line++;
         size++;
     }
     
-    set_bkg_tiles(xCoord, yCoord, size, 1U, line-size);
+    set_bkg_tiles(xCoord, yCoord, size, 1U, tempLinePtr-size);
 }
 
 void setBlankBg()
