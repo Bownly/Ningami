@@ -8,9 +8,10 @@
 
 // #include "CardObject.h"
 // #include "DeckObject.c"
-#include "EnemyObject.h"
+// #include "EnemyObject.h"
 // #include "HandObject.c"
 #include "PlayerObject.h"
+#include "TileObject.h"
 #include "sprites/player.h"
 
 // #include "maps/textWindowMap.c"
@@ -30,11 +31,14 @@
 // extern const unsigned char enemyHorseTiles[];
 // extern const unsigned char fontTiles[];
 // // extern const unsigned char scorenumTiles[];
+extern const unsigned char wallTiles[];
+extern const unsigned char wallMetaTiles[][4U];
 
 // const UINT8 borderTileIndex = 0x30;
 // const UINT8 cardsTileIndex  = 0x40;
 // const UINT8 enemyTileIndex  = 0xB0;
 // // const UINT8 scoreNumsTileIndex = 0xB0;
+const UINT8 wallTileIndex = 0x30U;
 
 extern UINT8 curJoypad;
 extern UINT8 prevJoypad;
@@ -57,18 +61,22 @@ extern UINT8 substate;
 extern PlayerObject player;
 extern UINT8 levelId;
 
-UINT8 playerX = 80U;
-UINT8 playerY = 88U;
 UINT8 playerstate;
 UINT8 playerDir = 0U;
 
+TileObject playGrid[18U][18U];
+TileObject* tilePtr;
+
+UINT8 gridW = 20U;
+UINT8 gridH = 18U;
+
 const UINT8 PLAYER_X_LEFT   = 16U;  // 8 offset due to GB specs, 8 offset due to metatile centering
-const UINT8 PLAYER_X_CENTER = 80U;
-const UINT8 PLAYER_X_RIGHT  = 144U;
+const UINT8 PLAYER_X_CENTER = 96U;
+const UINT8 PLAYER_X_RIGHT  = 160U;
 const UINT8 PLAYER_Y_UP     = 24U;
 const UINT8 PLAYER_Y_CENTER = 88U;
 const UINT8 PLAYER_Y_DOWN   = 152U;
-UINT8 camera_max_x          = 9U * 16U;
+UINT8 camera_max_x          = 10U * 16U;
 UINT8 camera_max_y          = 9U * 16U;
 #define STARTPOS 4U
 #define STARTCAM 0U
@@ -101,7 +109,7 @@ void checkUnderfootTile();
 
 // /* DISPLAY METHODS */
 void draw_new_bkg();
-// void drawBkgTile(UINT8, UINT8, TileObject*);
+void drawBkgTile(UINT8, UINT8, TileObject*);
 
 
 void overworldStateMain()
@@ -116,9 +124,9 @@ void overworldStateMain()
         case OW_INIT_MAP:
             phaseInitMap();
             break;
-        // case OW_PLAYER_INPUTS:
-        //     phasePlayerInputs();
-        //     break;
+        case OW_PLAYER_INPUTS:
+            phasePlayerInputs();
+            break;
         // case OW_PLAYER_MOVE:
         //     phasePlayerMove();
         //     break;
@@ -140,7 +148,31 @@ void overworldStateMain()
 /******************************** SUBSTATE METHODS *******************************/
 void phaseInitOverworld()
 {
+    // Initialize graphics
+    setBlankBg();
+    DISPLAY_ON;
+    SHOW_BKG;
+    SHOW_SPRITES;
+    HIDE_WIN;
 
+    // Initiatlize window
+    for (i = 0U; i != 2U; ++i)
+    {
+        for (j = 0U; j != 18U; ++j)
+        {
+            set_win_tile_xy(i, j, 0x32U);
+        }
+    }
+    // Draw pause window data: deck, hp, mp, paper
+
+    // set_bkg_data(0U, 40U, fontTiles);
+    set_bkg_data(wallTileIndex, 60U, wallTiles);
+
+    initrand(DIV_REG);
+    SCX_REG = camera_x; SCY_REG = camera_y; 
+    redraw = FALSE;
+
+    substate = OW_INIT_MAP;
 }
 
 void phaseInitMap()
@@ -149,6 +181,31 @@ void phaseInitMap()
     // Check player coords/dir, draw player appropriately
     // Reset camera
     // 
+
+    // // Initialize grid
+    // for (i = 0U; i != gridW; i++)
+    // {
+    //     for (j = 0U; j != gridH; j++)
+    //     {
+    //         playGrid[j][i].face = BLANK;
+    //         playGrid[j][i].isUncovered = FALSE;
+    //     }
+    // }
+
+    // Draw grid
+    for (i = 0U; i != gridW>>1; i++)
+    {
+        for (j = 0U; j != gridH>>1; j++)
+        {
+            drawBkgTile(i<<1U, j<<1U, &playGrid[j][i]);
+        }
+    }
+
+    // Spawn player
+    set_sprite_data(PLAYER_TILE_NUM_START, sizeof(player_data) >> 4U, player_data);
+
+
+    substate = OW_PLAYER_INPUTS;
 }
 
 void phasePlayerInputs()
@@ -158,10 +215,10 @@ void phasePlayerInputs()
     {
         if (playerDir == N)
         {
-            if (camera_y == 0U || playerY != PLAYER_Y_CENTER)
+            if (camera_y == 0U || player.y != PLAYER_Y_CENTER)
             {
-                playerY -= 4U;
-                if ((playerY+8U) % 16U == 0U)  // +8 because of the annoying metatiles center + 16 vert offset for sprites
+                player.y -= 4U;
+                if ((player.y + 8U) % 16U == 0U)  // +8 because of the annoying metatiles center + 16 vert offset for sprites
                     checkUnderfootTile();
             }
             else
@@ -173,10 +230,10 @@ void phasePlayerInputs()
         }
         else if (playerDir == S)
         {
-            if (camera_y == camera_max_y || playerY != PLAYER_Y_CENTER)
+            if (camera_y == camera_max_y || player.y != PLAYER_Y_CENTER)
             {
-                playerY += 4U;
-                if ((playerY-8U) % 16U == 0U)
+                player.y += 4U;
+                if ((player.y - 8U) % 16U == 0U)
                     checkUnderfootTile();
             }
             else
@@ -188,10 +245,10 @@ void phasePlayerInputs()
         }
         else if (playerDir == W)
         {
-            if (camera_x == 0U || playerX != PLAYER_X_CENTER)
+            if (camera_x == 0U || player.x != PLAYER_X_CENTER)
             {
-                playerX -= 4U;
-                if (playerX % 16U == 0U)
+                player.x -= 4U;
+                if (player.x % 16U == 0U)
                     checkUnderfootTile();
             }
             else
@@ -203,10 +260,10 @@ void phasePlayerInputs()
         }
         else if (playerDir == E)
         {
-            if (camera_x == camera_max_x || playerX != PLAYER_X_CENTER)
+            if (camera_x == camera_max_x || player.x != PLAYER_X_CENTER)
             {
-                playerX += 4U;
-                if (playerX % 16U == 0U)
+                player.x += 4U;
+                if (player.x % 16U == 0U)
                     checkUnderfootTile();
             }
             else
@@ -231,9 +288,9 @@ void phasePlayerInputs()
         {
             playerDir = N;
             // Move sprite, not camera
-            if (camera_y == 0U || playerY > PLAYER_Y_CENTER)
+            if (camera_y == 0U || player.y > PLAYER_Y_CENTER)
             {
-                if (playerY != PLAYER_Y_UP)  // Bomb/covered check goes here
+                if (player.y != PLAYER_Y_UP)  // Bomb/covered check goes here
                 {
                     playerstate = WALKING;
                 }
@@ -249,9 +306,9 @@ void phasePlayerInputs()
         {
             playerDir = S;
             // Move sprite, not camera
-            if (camera_y == camera_max_y || playerY < PLAYER_Y_CENTER)
+            if (camera_y == camera_max_y || player.y < PLAYER_Y_CENTER)
             {
-                if (playerY != PLAYER_Y_DOWN)  // Bomb/covered check goes here
+                if (player.y != PLAYER_Y_DOWN)  // Bomb/covered check goes here
                 {
                     playerstate = WALKING;
                 }
@@ -267,9 +324,9 @@ void phasePlayerInputs()
         {
             playerDir = W;
             // Move sprite, not camera
-            if (camera_x == 0U || playerX > PLAYER_X_CENTER)
+            if (camera_x == 0U || player.x > PLAYER_X_CENTER)
             {
-                if (playerX != PLAYER_X_LEFT)  // Bomb/covered check goes here
+                if (player.x != PLAYER_X_LEFT)  // Bomb/covered check goes here
                 {
                     playerstate = WALKING;
                 }
@@ -285,9 +342,9 @@ void phasePlayerInputs()
         {
             playerDir = E;
             // Move sprite, not camera
-            if (camera_x == camera_max_x || playerX < PLAYER_X_CENTER)
+            if (camera_x == camera_max_x || player.x < PLAYER_X_CENTER)
             {
-                if (playerX != PLAYER_X_RIGHT)  // Bomb/covered check goes here
+                if (player.x != PLAYER_X_RIGHT)  // Bomb/covered check goes here
                 {
                     playerstate = WALKING;
                 }
@@ -308,7 +365,7 @@ void phasePlayerInputs()
         animFrame = 1U;
     if (curJoypad == 0U && playerstate == IDLE)
         animFrame = 1U;
-    move_metasprite(player_metasprites[playerDir*3 + animFrame], PLAYER_TILE_NUM_START, PLAYER_SPR_NUM_START, playerX, playerY);
+    move_metasprite(player_metasprites[playerDir*3 + animFrame], PLAYER_TILE_NUM_START, PLAYER_SPR_NUM_START, player.x, player.y);
 
     if (redraw && playerstate == WALKING)
     {
@@ -331,13 +388,13 @@ void checkUnderfootTile()
 {
     playerstate = IDLE;
 
-    // tilePtr = &playGrid[(map_pos_y>>1U) + ((playerY-16U)>>4U)][(map_pos_x>>1U) + ((playerX-8U)>>4U)];
+    // tilePtr = &playGrid[(map_pos_y>>1U) + ((player.y-16U)>>4U)][(map_pos_x>>1U) + ((player.x-8U)>>4U)];
     // if (tilePtr->face == KEY)
     // {
     //     ++heldKeys;
     //     updateUIKeys();
     //     tilePtr->face = tilePtr->numAdjacent;
-    //     drawBkgTile(((map_pos_x) + ((playerX-16U)>>3U))%32U, ((map_pos_y) + ((playerY-24U)>>3U))%32U, tilePtr);
+    //     drawBkgTile(((map_pos_x) + ((player.x-16U)>>3U))%32U, ((map_pos_y) + ((player.y-24U)>>3U))%32U, tilePtr);
     // }
     // else if (tilePtr->face == CHEST_C)
     // {
@@ -346,7 +403,7 @@ void checkUnderfootTile()
     //         --heldKeys;
     //         updateUIKeys();
     //         tilePtr->face = tilePtr->numAdjacent;
-    //         drawBkgTile(((map_pos_x) + ((playerX-16U)>>3U))%32U, ((map_pos_y) + ((playerY-24U)>>3U))%32U, tilePtr);
+    //         drawBkgTile(((map_pos_x) + ((player.x-16U)>>3U))%32U, ((map_pos_y) + ((player.y-24U)>>3U))%32U, tilePtr);
     //     }
     // }
     // else if (tilePtr->face == STAIRS)
@@ -397,7 +454,7 @@ void checkUnderfootTile()
 //     }
 // }
 
-// void drawBkgTile(UINT8 x, UINT8 y, TileObject *tile)
-// {
-//     set_bkg_tiles(x, y, 2U, 2U, wallMetaTiles[tile->face]);
-// }
+void drawBkgTile(UINT8 x, UINT8 y, TileObject *tile)
+{
+    set_bkg_tiles(x, y, 2U, 2U, wallMetaTiles[tile->face]);
+}

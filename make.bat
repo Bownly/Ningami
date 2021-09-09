@@ -18,6 +18,8 @@ C:\gbdk2020\bin\lcc -Wa-l -c -o cursortiles.o tiles/cursorTiles.c
 C:\gbdk2020\bin\lcc -Wa-l -c -o enemyHorsetiles.o tiles/enemyHorseTiles.c
 C:\gbdk2020\bin\lcc -Wa-l -c -o fonttiles.o tiles/fontTiles.c
 C:\gbdk2020\bin\lcc -Wa-l -c -o icontiles.o tiles/iconTiles.c
+C:\gbdk2020\bin\lcc -Wa-l -Wf-bo2 -c -o walltiles.o tiles/wallTiles.c
+C:\gbdk2020\bin\lcc -Wa-l -Wf-bo2 -c -o wallmetatiles.o tiles/wallMetaTiles.c
 @REM C:\gbdk2020\bin\lcc -Wa-l -c -o scorenumtiles.o tiles/scorenumTiles.c
 
 C:\gbdk2020\bin\png2mtspr sprites/player.png -sh 16 -sw 16 -pw 0 -ph 0 -spr8x8 -b 2

@@ -144,13 +144,15 @@ void titlePressStartLoop()
         initrand(DIV_REG);
         initPlayer();
         gamestate = STATE_OVERWORLD;
-        substate = OW_INIT_MAP;
+        substate = OW_INIT_OW;
     }
     prevJoypad = curJoypad;
 }
 
 void initPlayer()
 {
+    player.x = 80U;
+    player.y = 88U;
     player.hpMax = 10U;
     player.hpCur = 10U;
     player.mpMax = 3U;

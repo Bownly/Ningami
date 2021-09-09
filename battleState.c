@@ -28,7 +28,7 @@ extern const unsigned char fontTiles[];
 
 const UINT8 borderTileIndex = 0x30;
 const UINT8 cardsTileIndex  = 0x40;
-const UINT8 enemyTileIndex  = 0xB0;
+const UINT8 enemyTileIndex  = 0xE0;
 // const UINT8 scoreNumsTileIndex = 0xB0;
 
 extern UINT8 curJoypad;

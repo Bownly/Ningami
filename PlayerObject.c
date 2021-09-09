@@ -2,6 +2,8 @@
 #include "enums.h"
 
 typedef struct PlayerObject {
+    UINT8 x;
+    UINT8 y;
     UINT8 hpMax;
     UINT8 hpCur;
     UINT8 mpMax;
