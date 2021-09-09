@@ -5,4 +5,5 @@ ANIMTYPE animtype;
 BATTLESTATE battlestate;
 CARDTYPE cardtype;
 CARDFACE cardface;
-PLAYERNAME playername;
+PLAYERSTATE playerstate;
+DIRECTION direction;

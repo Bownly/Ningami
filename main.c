@@ -6,6 +6,7 @@
 #include "fade.h"
 
 #include "battleState.h"
+#include "overworldState.h"
 
 #include "PlayerObject.h"
 
@@ -24,6 +25,7 @@ extern const unsigned char iconTiles[];
 void setBlankBg();
 void titleInit();
 void titlePressStartLoop();
+void initPlayer();
 
 // Save data stuff
 const UBYTE RAM_SIG[8U] = {'K','A','R','T','M','N','C','R'};
@@ -44,10 +46,11 @@ UINT8 m;  // Used for menus generally
 UINT8 n;  // Used for menus generally
 UINT8 r;  // Used for randomization stuff
 
-UINT8 gamestate = MAIN_TITLE;
+UINT8 gamestate = STATE_TITLE;
 UINT8 substate;
 
 PlayerObject player;
+UINT8 levelId = 0U;
 
 UINT8 animTick = 0U;
 // UINT8 maxAnimTick = 96U;  // Arbitrary value with lots of factors
@@ -62,7 +65,7 @@ void vbl_update() {
 void main()
 {
  	// initRAM(0U);
-    gamestate = MAIN_TITLE;
+    gamestate = STATE_TITLE;
     substate = 0U;
 
     while(1U)
@@ -73,7 +76,7 @@ void main()
 
         switch(gamestate)
         {
-            case MAIN_TITLE:
+            case STATE_TITLE:
                 if (substate == 0U)
                 {
                     titleInit();
@@ -82,25 +85,14 @@ void main()
                 {
                     titlePressStartLoop();
                 }
-                else if (substate == 2U)
-                {
-                    gamestate = GAME_PLAY;
-                    substate = GAME_KAISHI;
-
-                    // Init player
-                    // TODO: move this to its own function or something
-                    player.hpMax = 10U;
-                    player.hpCur = 10U;
-                    player.mpMax = 3U;
-                    player.mpCur = 3U;
-                    player.shieldCount = 0U;
-                    player.atk = 0U;
-                    player.def = 0U;
-                }
                 break;
-            case GAME_PLAY:
-                SWITCH_ROM_MBC1(0U);
+            case STATE_BATTLE:
+                SWITCH_ROM_MBC1(1U);
                 battleStateMain();
+                break;
+            case STATE_OVERWORLD:
+                SWITCH_ROM_MBC1(2U);
+                overworldStateMain();
                 break;
         }
         // // music stuff
@@ -143,10 +135,28 @@ void titlePressStartLoop()
     if (curJoypad & J_START && !(prevJoypad & J_START))
     {
         initrand(DIV_REG);
-        substate = 2U;
+        initPlayer();
+        gamestate = STATE_BATTLE;
+        substate = GAME_KAISHI;
+    }
+    else if (curJoypad & J_SELECT && !(prevJoypad & J_SELECT))
+    {
+        initrand(DIV_REG);
+        initPlayer();
+        gamestate = STATE_OVERWORLD;
+        substate = OW_INIT_MAP;
     }
     prevJoypad = curJoypad;
 }
 
-
+void initPlayer()
+{
+    player.hpMax = 10U;
+    player.hpCur = 10U;
+    player.mpMax = 3U;
+    player.mpCur = 3U;
+    player.shieldCount = 0U;
+    player.atk = 0U;
+    player.def = 0U;
+}
 

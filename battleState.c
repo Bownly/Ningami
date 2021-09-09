@@ -82,9 +82,6 @@ void phaseShowMessages();
 void phaseCalcSpoils();
 void phaseEndBattle();
 
-/* HELPER METHODS */
-void queueMessage(UINT8, UINT8);
-
 /* DISPLAY METHODS */
 void displayCursor(UINT8);
 void displayCard(CardObject*, UINT8, UINT8);
@@ -96,6 +93,9 @@ void displayShields();
 // void displayScore(UINT8);
 // void displayScoreDigit(UINT8, UINT8, UINT8);
 // void displayStack(StackObject*, UINT8, UINT8, UINT8);
+
+/* HELPER METHODS */
+void queueMessage(UINT8, UINT8);
 
 
 void battleStateMain()
@@ -141,13 +141,14 @@ void battleStateMain()
             phaseEndBattle();
             break;
         default:  // Abort to title in the event of unexpected state
-            gamestate = MAIN_TITLE;
-            substate = 0;
+            gamestate = STATE_TITLE;
+            substate = 0U;
             break;
     }
     prevJoypad = curJoypad;
 }
 
+/******************************** SUBSTATE METHODS *******************************/
 void phaseOpunZaGeimu()
 {
     // Initialize variables and graphics
@@ -542,6 +543,7 @@ void phaseEndBattle()
 }
 
 
+/******************************** HELPER METHODS ********************************/
 void queueMessage(UINT8 messageType, UINT8 value)
 {
     m = messageType;
@@ -628,7 +630,7 @@ void displayHP()
 void displayMP()
 {
     set_bkg_tile_xy(xAnchorMP, yAnchorMP, player.mpCur%10U);
-    set_bkg_tile_xy(xAnchorMP+1, yAnchorMP, 0x2BU);
+    set_bkg_tile_xy(xAnchorMP+1, yAnchorMP, 0x2AU);
 }
 
 void displayShields()
@@ -641,21 +643,3 @@ void displayShields()
     set_bkg_tile_xy(xAnchorShield+2, yAnchorShield, 0x29U);
 }
 
-
-// /******************************** HELPER METHODS ********************************/
-// void playNumCard(CardObject* card, UINT8 x, UINT8 y, UINT8 player)
-// {
-//     if (player == P1)
-//     {
-//         addCardToStack(&stackP1, card);
-//         displayStack(&stackP1, x, y, player);
-//     }
-//     else
-//     {
-//         addCardToStack(&stackCPU, card);
-//         displayStack(&stackCPU, x, y, player);
-//     }
-
-//     // update score gfx
-//     displayScore(player);
-// }
