@@ -14,6 +14,7 @@
 #include "TileObject.h"
 #include "sprites/player.h"
 
+#include "maps/room1Map.c"
 // #include "maps/textWindowMap.c"
 // #include "maps/blankTileMap.c"
 // #include "maps/cardMaps.c"
@@ -31,8 +32,9 @@
 // extern const unsigned char enemyHorseTiles[];
 // extern const unsigned char fontTiles[];
 // // extern const unsigned char scorenumTiles[];
-extern const unsigned char wallTiles[];
-extern const unsigned char wallMetaTiles[][4U];
+// extern const unsigned char wallTiles[];
+extern const unsigned char forestTiles[];
+extern const unsigned char forestMetaTiles[][4U];
 
 // const UINT8 borderTileIndex = 0x30;
 // const UINT8 cardsTileIndex  = 0x40;
@@ -64,11 +66,13 @@ extern UINT8 levelId;
 UINT8 playerstate;
 UINT8 playerDir = 0U;
 
-TileObject playGrid[18U][18U];
+TileObject playGrid[30U][30U];
 TileObject* tilePtr;
 
 UINT8 gridW = 20U;
 UINT8 gridH = 18U;
+UINT16 camera_max_x = 10U * 16U;
+UINT16 camera_max_y = 9U * 16U;
 
 const UINT8 PLAYER_X_LEFT   = 16U;  // 8 offset due to GB specs, 8 offset due to metatile centering
 const UINT8 PLAYER_X_CENTER = 96U;
@@ -76,8 +80,6 @@ const UINT8 PLAYER_X_RIGHT  = 160U;
 const UINT8 PLAYER_Y_UP     = 24U;
 const UINT8 PLAYER_Y_CENTER = 88U;
 const UINT8 PLAYER_Y_DOWN   = 152U;
-UINT8 camera_max_x          = 10U * 16U;
-UINT8 camera_max_y          = 9U * 16U;
 #define STARTPOS 4U
 #define STARTCAM 0U
 
@@ -166,7 +168,7 @@ void phaseInitOverworld()
     // Draw pause window data: deck, hp, mp, paper
 
     // set_bkg_data(0U, 40U, fontTiles);
-    set_bkg_data(wallTileIndex, 60U, wallTiles);
+    set_bkg_data(wallTileIndex, 60U, forestTiles);
 
     initrand(DIV_REG);
     SCX_REG = camera_x; SCY_REG = camera_y; 
@@ -182,20 +184,30 @@ void phaseInitMap()
     // Reset camera
     // 
 
-    // // Initialize grid
-    // for (i = 0U; i != gridW; i++)
-    // {
-    //     for (j = 0U; j != gridH; j++)
-    //     {
-    //         playGrid[j][i].face = BLANK;
-    //         playGrid[j][i].isUncovered = FALSE;
-    //     }
-    // }
+
+// #define room1MapWidth 25
+// #define room1MapHeight 15
+
+    // Initialize grid
+    gridW = room1MapWidth;
+    gridH = room1MapHeight;
+    camera_max_x = room1MapWidth * 16U;
+    camera_max_y = room1MapHeight * 16U;
+
+    UINT16 c = 0U;
+    for (j = 0U; j != room1MapHeight; j++)
+    {
+        for (i = 0U; i != room1MapWidth; i++)
+        {
+            playGrid[j][i].face = room1Map[c];
+            c++;
+        }
+    }
 
     // Draw grid
-    for (i = 0U; i != gridW>>1; i++)
+    for (i = 0U; i != gridW>>1U; i++)
     {
-        for (j = 0U; j != gridH>>1; j++)
+        for (j = 0U; j != gridH>>1U; j++)
         {
             drawBkgTile(i<<1U, j<<1U, &playGrid[j][i]);
         }
@@ -456,5 +468,5 @@ void checkUnderfootTile()
 
 void drawBkgTile(UINT8 x, UINT8 y, TileObject *tile)
 {
-    set_bkg_tiles(x, y, 2U, 2U, wallMetaTiles[tile->face]);
+    set_bkg_tiles(x, y, 2U, 2U, forestMetaTiles[tile->face]);
 }
