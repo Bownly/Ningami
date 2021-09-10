@@ -7,7 +7,7 @@
  Info:
    Section       : 
    Bank          : 0
-   Map size      : 25 x 15
+   Map size      : 26 x 18
    Tile set      : C:\Projects\Gameboy\Kartomancer\raw graphics\forestTiles.gbr
    Plane count   : 1 plane (8 bits)
    Plane order   : Tiles are continues
@@ -20,8 +20,8 @@
 #ifndef __room1Map_h_INCLUDE
 #define __room1Map_h_INCLUDE
 
-#define room1MapWidth 25
-#define room1MapHeight 15
+#define room1MapWidth 26
+#define room1MapHeight 18
 #define room1MapBank 0
 
 extern const unsigned char room1Map[];

@@ -61,13 +61,14 @@ extern UINT8 substate;
 // EnemyObject enemy;
 // HandObject hand;
 extern PlayerObject player;
-extern UINT8 levelId;
+extern UINT8 roomId;
 
 UINT8 playerstate;
 UINT8 playerDir = 0U;
 
 TileObject playGrid[30U][30U];
 TileObject* tilePtr;
+const char * roomMapPtr;
 
 UINT8 gridW = 20U;
 UINT8 gridH = 18U;
@@ -106,8 +107,8 @@ void phaseCheckSquare();
 void phasePause();
 
 // /* HELPER METHODS */
+void loadRoom();
 void checkUnderfootTile();
-// void queueMessage(UINT8, UINT8);
 
 // /* DISPLAY METHODS */
 void draw_new_bkg();
@@ -189,25 +190,28 @@ void phaseInitMap()
 // #define room1MapHeight 15
 
     // Initialize grid
-    gridW = room1MapWidth;
-    gridH = room1MapHeight;
-    camera_max_x = room1MapWidth * 16U;
-    camera_max_y = room1MapHeight * 16U;
+    // gridW = room1MapWidth;
+    // gridH = room1MapHeight;
+    // camera_max_x = (((room1MapWidth  - 20U) * 2U) + 20U) * 8U;
+    // camera_max_y = (((room1MapHeight - 18U) * 2U) + 18U) * 8U;
+
+    loadRoom();
 
     UINT16 c = 0U;
     for (j = 0U; j != room1MapHeight; j++)
     {
         for (i = 0U; i != room1MapWidth; i++)
         {
-            playGrid[j][i].face = room1Map[c];
+            // playGrid[j][i].face = room1Map[c];
+            playGrid[j][i].face = *(roomMapPtr +c);
             c++;
         }
     }
 
     // Draw grid
-    for (i = 0U; i != gridW>>1U; i++)
+    for (i = 0U; i != 10U; i++)
     {
-        for (j = 0U; j != gridH>>1U; j++)
+        for (j = 0U; j != 9U; j++)
         {
             drawBkgTile(i<<1U, j<<1U, &playGrid[j][i]);
         }
@@ -382,7 +386,7 @@ void phasePlayerInputs()
     if (redraw && playerstate == WALKING)
     {
         wait_vbl_done();
-        // draw_new_bkg();
+        draw_new_bkg();
         redraw = FALSE;
     }
     else
@@ -396,6 +400,30 @@ void phasePause();
 
 
 /******************************** HELPER METHODS *********************************/
+void loadRoom()
+{
+    switch (roomId)
+    {
+        case 1U:
+            roomMapPtr = room1Map;
+            gridW = room1MapWidth;
+            gridH = room1MapHeight;
+            camera_max_x = (((room1MapWidth  - 20U) * 2U) + 20U) * 8U;
+            camera_max_y = (((room1MapHeight - 18U) * 2U) + 18U) * 8U;
+            break;
+        // case 2U:
+        //     roomMapPtr = room2Map;
+        //     gridW = room2MapWidth;
+        //     gridH = room2MapHeight;
+        //     camera_max_x = (((room2MapWidth  - 20U) * 2U) + 20U) * 8U;
+        //     camera_max_y = (((room2MapHeight - 18U) * 2U) + 18U) * 8U;
+        //     break;
+        
+        default:
+            break;
+    }
+}
+
 void checkUnderfootTile()
 {
     playerstate = IDLE;
@@ -427,44 +455,44 @@ void checkUnderfootTile()
 
 
 /******************************** DISPLAY METHODS ********************************/
-// void draw_new_bkg() {
-//     // Vertical
-//     new_map_pos_y = (BYTE)(new_camera_y >> 3u);
-//     if (map_pos_y != new_map_pos_y) { 
-//         if (new_camera_y < camera_y) 
-//         {
-//             for (k = 0U; k != 10U; ++k)
-//             {
-//                 drawBkgTile((map_pos_x+(k<<1U))%32U, new_map_pos_y%32U, &playGrid[new_map_pos_y>>1U][(map_pos_x>>1U)+k]);
-//             }
-//         } else
-//         {
-//             for (UINT8 k = 0U; k != 10U; ++k)
-//             {
-//                 drawBkgTile((map_pos_x+(k<<1U))%32U, (new_map_pos_y+16U)%32U, &playGrid[((new_map_pos_y+16U)>>1U)][(map_pos_x>>1U)+k]);
-//             }
-//         }
-//         map_pos_y = new_map_pos_y; 
-//     }
-//     // Horizontal 
-//     new_map_pos_x = (BYTE)(new_camera_x >> 3U);
-//     if (map_pos_x != new_map_pos_x) {
-//         if (new_camera_x < camera_x) 
-//         {
-//             for (UINT8 k = 0U; k != 9U; ++k)
-//             {
-//                 drawBkgTile(new_map_pos_x%32U, (map_pos_y+(k<<1U))%32U, &playGrid[(map_pos_y>>1U)+k][new_map_pos_x>>1U]);
-//             }
-//         } else 
-//         {
-//             for (UINT8 k = 0U; k != 9U; ++k)
-//             {
-//                 drawBkgTile((new_map_pos_x + 18U)%32U, (map_pos_y+(k<<1U))%32U, &playGrid[(map_pos_y>>1U)+k][(new_map_pos_x+18U)>>1U]);
-//             }
-//         }
-//         map_pos_x = new_map_pos_x;
-//     }
-// }
+void draw_new_bkg() {
+    // Vertical
+    new_map_pos_y = (BYTE)(new_camera_y >> 3u);
+    if (map_pos_y != new_map_pos_y) { 
+        if (new_camera_y < camera_y) 
+        {
+            for (k = 0U; k != 10U; ++k)
+            {
+                drawBkgTile((map_pos_x+(k<<1U))%32U, new_map_pos_y%32U, &playGrid[new_map_pos_y>>1U][(map_pos_x>>1U)+k]);
+            }
+        } else
+        {
+            for (UINT8 k = 0U; k != 10U; ++k)
+            {
+                drawBkgTile((map_pos_x+(k<<1U))%32U, (new_map_pos_y+16U)%32U, &playGrid[((new_map_pos_y+16U)>>1U)][(map_pos_x>>1U)+k]);
+            }
+        }
+        map_pos_y = new_map_pos_y; 
+    }
+    // Horizontal 
+    new_map_pos_x = (BYTE)(new_camera_x >> 3U);
+    if (map_pos_x != new_map_pos_x) {
+        if (new_camera_x < camera_x) 
+        {
+            for (UINT8 k = 0U; k != 9U; ++k)
+            {
+                drawBkgTile(new_map_pos_x%32U, (map_pos_y+(k<<1U))%32U, &playGrid[(map_pos_y>>1U)+k][new_map_pos_x>>1U]);
+            }
+        } else 
+        {
+            for (UINT8 k = 0U; k != 9U; ++k)
+            {
+                drawBkgTile((new_map_pos_x + 18U)%32U, (map_pos_y+(k<<1U))%32U, &playGrid[(map_pos_y>>1U)+k][(new_map_pos_x+18U)>>1U]);
+            }
+        }
+        map_pos_x = new_map_pos_x;
+    }
+}
 
 void drawBkgTile(UINT8 x, UINT8 y, TileObject *tile)
 {
