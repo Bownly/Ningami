@@ -146,6 +146,10 @@ void titlePressStartLoop()
         gamestate = STATE_OVERWORLD;
         substate = OW_INIT_OW;
     }
+    else if (curJoypad & J_B && !(prevJoypad & J_B))
+    {
+        roomId = 2U;
+    }
     prevJoypad = curJoypad;
 }
 

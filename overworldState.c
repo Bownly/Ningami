@@ -15,6 +15,7 @@
 #include "sprites/player.h"
 
 #include "maps/room1Map.c"
+#include "maps/room2Map.c"
 // #include "maps/textWindowMap.c"
 // #include "maps/blankTileMap.c"
 // #include "maps/cardMaps.c"
@@ -29,10 +30,7 @@
 // extern const unsigned char cardTiles[];
 // extern const unsigned char cursorTiles[];
 // extern const unsigned char emptyTiles[];
-// extern const unsigned char enemyHorseTiles[];
 // extern const unsigned char fontTiles[];
-// // extern const unsigned char scorenumTiles[];
-// extern const unsigned char wallTiles[];
 extern const unsigned char forestTiles[];
 extern const unsigned char forestMetaTiles[][4U];
 
@@ -40,7 +38,7 @@ extern const unsigned char forestMetaTiles[][4U];
 // const UINT8 cardsTileIndex  = 0x40;
 // const UINT8 enemyTileIndex  = 0xB0;
 // // const UINT8 scoreNumsTileIndex = 0xB0;
-const UINT8 wallTileIndex = 0x30U;
+const UINT8 forestTileIndex = 0x30U;
 
 extern UINT8 curJoypad;
 extern UINT8 prevJoypad;
@@ -169,7 +167,7 @@ void phaseInitOverworld()
     // Draw pause window data: deck, hp, mp, paper
 
     // set_bkg_data(0U, 40U, fontTiles);
-    set_bkg_data(wallTileIndex, 60U, forestTiles);
+    set_bkg_data(forestTileIndex, 60U, forestTiles);
 
     initrand(DIV_REG);
     SCX_REG = camera_x; SCY_REG = camera_y; 
@@ -181,28 +179,16 @@ void phaseInitOverworld()
 void phaseInitMap()
 {
     // Check levelId, pull appropriate level
+    loadRoom();
     // Check player coords/dir, draw player appropriately
     // Reset camera
     // 
 
-
-// #define room1MapWidth 25
-// #define room1MapHeight 15
-
-    // Initialize grid
-    // gridW = room1MapWidth;
-    // gridH = room1MapHeight;
-    // camera_max_x = (((room1MapWidth  - 20U) * 2U) + 20U) * 8U;
-    // camera_max_y = (((room1MapHeight - 18U) * 2U) + 18U) * 8U;
-
-    loadRoom();
-
     UINT16 c = 0U;
-    for (j = 0U; j != room1MapHeight; j++)
+    for (j = 0U; j != gridH; j++)
     {
-        for (i = 0U; i != room1MapWidth; i++)
+        for (i = 0U; i != gridW; i++)
         {
-            // playGrid[j][i].face = room1Map[c];
             playGrid[j][i].face = *(roomMapPtr +c);
             c++;
         }
@@ -219,7 +205,6 @@ void phaseInitMap()
 
     // Spawn player
     set_sprite_data(PLAYER_TILE_NUM_START, sizeof(player_data) >> 4U, player_data);
-
 
     substate = OW_PLAYER_INPUTS;
 }
@@ -411,15 +396,16 @@ void loadRoom()
             camera_max_x = (((room1MapWidth  - 20U) * 2U) + 20U) * 8U;
             camera_max_y = (((room1MapHeight - 18U) * 2U) + 18U) * 8U;
             break;
-        // case 2U:
-        //     roomMapPtr = room2Map;
-        //     gridW = room2MapWidth;
-        //     gridH = room2MapHeight;
-        //     camera_max_x = (((room2MapWidth  - 20U) * 2U) + 20U) * 8U;
-        //     camera_max_y = (((room2MapHeight - 18U) * 2U) + 18U) * 8U;
-        //     break;
-        
+        case 2U:
+            roomMapPtr = room2Map;
+            gridW = room2MapWidth;
+            gridH = room2MapHeight;
+            camera_max_x = (((room2MapWidth  - 20U) * 2U) + 20U) * 8U;
+            camera_max_y = (((room2MapHeight - 18U) * 2U) + 18U) * 8U;
+            break;
         default:
+            roomId = 1U;  // Eventually, I'll make a roomId = 0U default room. ...Maybe.
+            loadRoom();
             break;
     }
 }
