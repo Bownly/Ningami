@@ -5,5 +5,5 @@
 #define player_PIVOT_X 8
 #define player_PIVOT_Y 8
 
-extern const UINT8 player_data[272];
+extern const UINT8 player_data[432];
 extern const metasprite_t* const player_metasprites[12];

@@ -360,8 +360,8 @@ void phasePlayerInputs()
     } 
 
     ++animTick;
-    animFrame = animTick % 32U;
-    animFrame /= 8U;
+    animFrame = animTick % 16U;
+    animFrame /= 4U;
     if (animFrame == 3U)
         animFrame = 1U;
     if (curJoypad == 0U && playerstate == IDLE)
