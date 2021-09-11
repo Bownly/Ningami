@@ -10,7 +10,7 @@
   Compression          : None.
   Counter              : None.
   Tile size            : 8 x 8
-  Tiles                : 0 to 2
+  Tiles                : 0 to 4
 
   Palette colors       : None.
   SGB Palette          : None.
@@ -22,10 +22,14 @@
 
 */
 
+#ifndef __cursorTiles_h_INCLUDE
+#define __cursorTiles_h_INCLUDE
 
 /* Bank of tiles. */
 #define cursorTilesBank 0
 /* Start of tile array. */
-extern unsigned char cursorTiles[];
+extern const unsigned char cursorTiles[];
+
+#endif
 
 /* End of CURSORTILES.H */

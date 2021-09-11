@@ -55,6 +55,7 @@ PlayerObject player;
 UINT8 enemyId;
 UINT8 roomId = 1U;
 
+UINT8 animFrame = 0U;
 UINT8 animTick = 0U;
 // UINT8 maxAnimTick = 96U;  // Arbitrary value with lots of factors
 

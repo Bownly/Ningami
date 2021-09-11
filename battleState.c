@@ -64,6 +64,7 @@ const UINT8 yAnchorShield = 13U;
 const UINT8 xAnchorEnemy = 8U;
 const UINT8 yAnchorEnemy = 4U;
 
+extern UINT8 animFrame;
 extern UINT8 animTick;
 const UINT8 maxAnimTick = 16U;
 ANIMTYPE curAnim = ANIM_ENEMY_ATTACK;
@@ -154,13 +155,12 @@ void battleStateMain()
 void phaseOpunZaGeimu()
 {
     // Initialize variables and graphics
+    animTick = 0U;
+    animFrame = 0U;
     setBlankBg();
     DISPLAY_ON;
     SHOW_BKG;
     SHOW_SPRITES;
-    set_bkg_data(0U, 40U, fontTiles);
-    set_bkg_data(borderTileIndex, 8U, borderTiles);
-    set_bkg_data(cardsTileIndex, 60U, cardTiles);
     set_sprite_data(0U, 3U, cursorTiles);
     // set_bkg_data(scoreNumsTileIndex, 20U, scorenumTiles);
 
@@ -254,11 +254,18 @@ void phaseStartTurn()
     printLine(1U, 16U, cardDescStrings[(hand.cards[m]->faceId<<1)+1]);
 
     // Reset MP to max, and update shown value
+    animTick = 0U;
     substate = CARD_SELECT;
 }
 
 void phaseSelectCard()
 {
+    ++animTick;
+    animFrame = animTick / 8U % 4U;
+    if (animFrame == 3U)
+        animFrame = 1U;
+    set_sprite_tile(0U, animFrame);
+    
     // Player inputs
     if (curJoypad & J_RIGHT && !(prevJoypad & J_RIGHT))
     {
@@ -497,6 +504,7 @@ void phaseWinCheck()
         {
             if (hand.cards[i]->mpCost <= player.mpCur)
             {
+                animTick = 0U;
                 substate = CARD_SELECT;
                 // Reset cursor location
                 m = 0U;
@@ -568,7 +576,7 @@ void queueMessage(UINT8 messageType, UINT8 value)
 void displayCursor(UINT8 xindex)
 {
     // The coords are magic numbers. Fight me.
-    move_sprite(0U, 60U + (xindex << 4U), 100U);
+    move_sprite(0U, 56U + (xindex << 4U), 96U);
 }
 
 void displayCard(CardObject* card, UINT8 x, UINT8 y)

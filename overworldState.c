@@ -90,7 +90,7 @@ UBYTE map_pos_x = STARTPOS, map_pos_y = STARTPOS, new_map_pos_x = STARTPOS, new_
 UBYTE redraw;
 
 extern UINT8 animTick;
-UINT8 animFrame = 0U;
+extern UINT8 animFrame;
 // const UINT8 maxAnimTick = 16U;
 // ANIMTYPE curAnim = ANIM_ENEMY_ATTACK;
 
@@ -150,6 +150,8 @@ void overworldStateMain()
 void phaseInitOverworld()
 {
     // Initialize graphics
+    animTick = 0U;
+    animFrame = 0U;
     setBlankBg();
     DISPLAY_ON;
     SHOW_BKG;
