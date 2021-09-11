@@ -6,8 +6,11 @@
 
 typedef struct DeckObject {
     UINT8 cardCount;
-    CardObject orderedCards[30U];
-    UINT8 cardIds[30U];
+    CardObject orderedCards[18U];
+    UINT8 cardIds[18U];
+    CardObject emptyCard;
+    UINT8 discardCount;
+    UINT8 discardPile[18U];
 } DeckObject;
 
 void initializeDeck(DeckObject* deck);

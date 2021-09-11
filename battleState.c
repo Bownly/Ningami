@@ -6,14 +6,14 @@
 #include "fade.h"
 
 #include "CardObject.h"
-#include "DeckObject.c"
+#include "DeckObject.h"
 #include "EnemyObject.h"
 #include "HandObject.c"
 #include "PlayerObject.h"
 
 #include "maps/textWindowMap.c"
 #include "maps/blankTileMap.c"
-#include "maps/cardMaps.c"
+#include "maps/cardMaps.h"
 #include "maps/enemyMap.c"
 #include "maps/cardDescStrings.c"
 // #include "maps/scoreNumMaps.c"
@@ -26,8 +26,6 @@ extern const unsigned char enemyHorseTiles[];
 extern const unsigned char fontTiles[];
 // extern const unsigned char scorenumTiles[];
 
-const UINT8 borderTileIndex = 0x30;
-const UINT8 cardsTileIndex  = 0x40;
 const UINT8 enemyTileIndex  = 0xE0;
 // const UINT8 scoreNumsTileIndex = 0xB0;
 
@@ -43,10 +41,12 @@ extern UINT8 n;  // Used for menus generally
 extern UINT8 r;  // Used for randomization stuff
 
 extern UINT8 gamestate;
+extern UINT8 oldGamestate;
 extern UINT8 substate;
+extern UINT8 oldSubstate;
 
 CardObject* tempCardPtr;
-DeckObject deck;
+extern DeckObject deck;
 HandObject hand;
 EnemyObject enemy;
 extern PlayerObject player;
@@ -89,7 +89,6 @@ void phaseEndBattle();
 void displayCursor(UINT8);
 void displayCard(CardObject*, UINT8, UINT8);
 void displayHand(HandObject*, UINT8, UINT8);
-void displayFullDeck(DeckObject*, UINT8, UINT8);
 void displayHP();
 void displayMP();
 void displayShields();
@@ -620,15 +619,6 @@ void displayHand(HandObject* hand, UINT8 x, UINT8 y)
     for (; i != 4U; ++i)
     {
         set_bkg_tiles(i*2U + x, y, 2U, 3U, cardEmptyMap);
-    }
-}
-
-// This is meant for testing purposes only
-void displayFullDeck(DeckObject* deck, UINT8 x, UINT8 y)
-{
-    for (i = 0U; i != deck->cardCount; i++)
-    {
-        displayCard(&deck->orderedCards[deck->cardIds[i]], (i*2U)%20U + x, y + (i/10U * 3U));
     }
 }
 

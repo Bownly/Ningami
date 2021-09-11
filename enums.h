@@ -27,8 +27,10 @@ typedef enum {
     OW_PLAYER_INPUTS,
     OW_PLAYER_MOVE,
     OW_CHECK_SQUARE,
-    OW_PAUSE
-} BATTLESTATE;
+    OW_PAUSE,
+    PM_INIT,
+    PM_LOOP
+} SUBSTATE;
 
 typedef enum {
     CT_ATTACK,
@@ -69,8 +71,8 @@ typedef enum {
 } DIRECTION;
 
 extern GAMESTATE gamestate;
+extern SUBSTATE substate;
 extern ANIMTYPE animtype;
-extern BATTLESTATE battlestate;
 extern CARDTYPE cardtype;
 extern CARDFACE cardface;
 extern PLAYERSTATE playerstate;

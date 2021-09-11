@@ -5,10 +5,12 @@
 #include "enums.h"
 #include "fade.h"
 
+#include "DeckObject.h"
+#include "PlayerObject.h"
+
 #include "battleState.h"
 #include "overworldState.h"
-
-#include "PlayerObject.h"
+#include "pausemenuState.h"
 
 #include "maps/textWindowMap.h"
 #include "maps/blankTileMap.h"
@@ -20,6 +22,7 @@ extern const unsigned char borderTiles[];
 extern const unsigned char cardTiles[];
 extern const unsigned char cursorTiles[];
 extern const unsigned char fontTiles[];
+extern const unsigned char forestTiles[];
 extern const unsigned char iconTiles[];
 extern const unsigned char titlecardTiles[];
 // extern const unsigned char scorenumTiles[];
@@ -36,6 +39,9 @@ UBYTE *data;
 // const UINT8 borderTileIndex    = 0x30;
 // const UINT8 cardsTileIndex     = 0x40;
 // const UINT8 scoreNumsTileIndex = 0xB0;
+const UINT8 borderTileIndex = 0x30U;
+const UINT8 cardsTileIndex  = 0x40U;
+const UINT8 forestTileIndex = 0xA0U;
 
 UINT8 vbl_count;
 UINT8 curJoypad;
@@ -50,8 +56,11 @@ UINT8 r;  // Used for randomization stuff
 
 UINT8 gamestate = STATE_TITLE;
 UINT8 substate;
+UINT8 oldGamestate;
+UINT8 oldSubstate;
 
 PlayerObject player;
+DeckObject deck;
 UINT8 enemyId;
 UINT8 roomId = 1U;
 
@@ -98,6 +107,10 @@ void main()
                 SWITCH_ROM_MBC1(2U);
                 overworldStateMain();
                 break;
+            case STATE_PAUSEMENU:
+                SWITCH_ROM_MBC1(3U);
+                pausemenuStateMain();
+                break;
         }
         // // music stuff
         // songPlayerUpdate();
@@ -140,6 +153,14 @@ void titlePressStartLoop()
     if (curJoypad & J_START && !(prevJoypad & J_START))
     {
         fadeout();
+
+        SWITCH_ROM_MBC1(1U);
+        set_bkg_data(0U, 40U, fontTiles);
+        set_bkg_data(borderTileIndex, 8U, borderTiles);
+        set_bkg_data(cardsTileIndex, 60U, cardTiles);
+        SWITCH_ROM_MBC1(2U);
+        set_bkg_data(forestTileIndex, 60U, forestTiles);
+
         move_bkg(0U, 0U);
         set_bkg_data(0x28U, 4U, iconTiles);
         initrand(DIV_REG);
@@ -150,6 +171,14 @@ void titlePressStartLoop()
     else if (curJoypad & J_SELECT && !(prevJoypad & J_SELECT))
     {
         fadeout();
+
+        SWITCH_ROM_MBC1(1U);
+        set_bkg_data(0U, 40U, fontTiles);
+        set_bkg_data(borderTileIndex, 8U, borderTiles);
+        set_bkg_data(cardsTileIndex, 60U, cardTiles);
+        SWITCH_ROM_MBC1(2U);
+        set_bkg_data(forestTileIndex, 60U, forestTiles);
+
         move_bkg(0U, 0U);
         set_bkg_data(0x28U, 4U, iconTiles);
         initrand(DIV_REG);

@@ -4,5 +4,6 @@
 UINT8 getRandUint(UINT8);
 void printLine(UINT8, UINT8, unsigned char *);
 void setBlankBg();
+void setBlankWin();
 
 #endif

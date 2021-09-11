@@ -1,4 +1,5 @@
-
+#ifndef CARDMAPS_H
+#define CARDMAPS_H
 
 const extern unsigned char cardBackMap[];
 const extern unsigned char card1Map[];
@@ -12,3 +13,4 @@ const extern unsigned char cardBoltMap[];
 const extern unsigned char cardMirrorMap[];
 const extern unsigned char cardEmptyMap[];
 
+#endif

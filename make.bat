@@ -33,8 +33,10 @@ C:\gbdk2020\bin\lcc -Wa-l -c -o fade.o fade.c
 
 C:\gbdk2020\bin\lcc -Wa-l -Wf-bo1 -c -o battleState.o battleState.c
 C:\gbdk2020\bin\lcc -Wa-l -Wf-bo2 -c -o overworldState.o overworldState.c
+C:\gbdk2020\bin\lcc -Wa-l -Wf-bo3 -c -o pausemenuState.o pausemenuState.c
+C:\gbdk2020\bin\lcc -Wa-l -c -o cardMaps.o maps/cardMaps.c
 
-C:\gbdk2020\bin\lcc -Wa-l -c -o main.o main.c CardObject.c EnemyObject.c
+C:\gbdk2020\bin\lcc -Wa-l -c -o main.o main.c CardObject.c DeckObject.c EnemyObject.c
 C:\gbdk2020\bin\lcc -Wl-yt3 -Wl-yo8 -Wl-ya4 -o Ningami.gb *.o sprites/*.c
 
 REM pause
@@ -47,4 +49,4 @@ del *.sym
 @REM 0: main, common, music logic etc
 @REM 1: battleState
 @REM 2: overworldState
-@REM 3: title card stuff
+@REM 3: title card stuff; pause menu

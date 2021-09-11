@@ -1,13 +1,7 @@
 #include <gb/gb.h>
 #include "enums.h"
 
-typedef struct CardObject {
-    UINT8 id;
-    CARDTYPE typeId;
-    CARDFACE faceId;
-    UINT8 pointVal;
-    UINT8 mpCost;
-} CardObject;
+#include "CardObject.h"
 
 const UINT8 cardCostsDict[7U] = { 1U, 2U, 3U, 0U, 1U, 2U, 2U };
 const UINT8 cardValsDict[7U]  = { 3U, 7U, 11U, 2U, 3U, 7U, 5U };

@@ -1,4 +1,5 @@
 
+#include "cardMaps.h"
 
 const unsigned char cardBackMap[] =   { 0x40, 0x43,
                                         0x41, 0x44,

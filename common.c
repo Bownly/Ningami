@@ -48,3 +48,14 @@ void setBlankBg()
         }
     }
 }
+
+void setBlankWin()
+{
+    for (i = 0U; i != 21U; i++)
+    {
+        for (j = 0U; j != 18U; j++)
+        {
+            set_win_tile_xy(i, j, 0xFF);
+        }
+    }
+}

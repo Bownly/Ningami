@@ -2,6 +2,7 @@
 #include "rand.h"
 
 #include "CardObject.h"
+#include "DeckObject.h"
 #include "common.h"
 #include "enums.h"
 
@@ -9,15 +10,6 @@
 const CARDFACE defaultDeck[18U] = { SHURIKEN, SHURIKEN, SHURIKEN, SHURIKEN, SHURIKEN,  SHOUZOKU,
                                     SHOUZOKU, SHOUZOKU, SHOUZOKU,   KATANA,   KATANA,    HASAMI,
                                      HIKOUKI,  HIKOUKI,   KABUTO,   KABUTO,    HAATO,     HAATO };
-
-typedef struct DeckObject {
-    UINT8 cardCount;
-    CardObject orderedCards[18U];
-    UINT8 cardIds[18U];
-    CardObject emptyCard;
-    UINT8 discardCount;
-    UINT8 discardPile[18U];
-} DeckObject;
 
 void initializeDeck(DeckObject* deck)
 {

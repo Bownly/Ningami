@@ -31,14 +31,12 @@
 // extern const unsigned char cursorTiles[];
 // extern const unsigned char emptyTiles[];
 // extern const unsigned char fontTiles[];
-extern const unsigned char forestTiles[];
 extern const unsigned char forestMetaTiles[][4U];
 
 // const UINT8 borderTileIndex = 0x30;
 // const UINT8 cardsTileIndex  = 0x40;
 // const UINT8 enemyTileIndex  = 0xB0;
 // // const UINT8 scoreNumsTileIndex = 0xB0;
-const UINT8 forestTileIndex = 0xA0U;
 
 extern UINT8 curJoypad;
 extern UINT8 prevJoypad;
@@ -53,6 +51,8 @@ extern UINT8 r;  // Used for randomization stuff
 
 extern UINT8 gamestate;
 extern UINT8 substate;
+extern UINT8 oldGamestate;
+extern UINT8 oldSubstate;
 
 // CardObject* tempCardPtr;
 // DeckObject deck;
@@ -169,7 +169,6 @@ void phaseInitOverworld()
     // Draw pause window data: deck, hp, mp, paper
 
     // set_bkg_data(0U, 40U, fontTiles);
-    set_bkg_data(forestTileIndex, 60U, forestTiles);
 
     initrand(DIV_REG);
     SCX_REG = camera_x; SCY_REG = camera_y; 
@@ -282,8 +281,14 @@ void phasePlayerInputs()
     }
     else
     {
-        // Uncover tile
-        if (curJoypad & J_A && !(prevJoypad & J_A))
+        if (curJoypad & J_START && !(prevJoypad & J_START))
+        {
+            oldSubstate = substate;
+            oldGamestate = gamestate;
+            gamestate = STATE_PAUSEMENU;
+            substate = PM_INIT;
+        }
+        else if (curJoypad & J_A && !(prevJoypad & J_A))
         {
             // Check for NPC in front of player
             // Interact with NPC if present
