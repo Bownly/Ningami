@@ -40,7 +40,7 @@ void printLine(UINT8 xCoord, UINT8 yCoord, unsigned char* line)
 
 void setBlankBg()
 {
-    for (i = 0U; i != 20U; i++)
+    for (i = 0U; i != 21U; i++)
     {
         for (j = 0U; j != 18U; j++)
         {

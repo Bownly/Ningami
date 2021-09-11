@@ -38,7 +38,7 @@ extern const unsigned char forestMetaTiles[][4U];
 // const UINT8 cardsTileIndex  = 0x40;
 // const UINT8 enemyTileIndex  = 0xB0;
 // // const UINT8 scoreNumsTileIndex = 0xB0;
-const UINT8 forestTileIndex = 0x30U;
+const UINT8 forestTileIndex = 0xA0U;
 
 extern UINT8 curJoypad;
 extern UINT8 prevJoypad;
@@ -174,6 +174,8 @@ void phaseInitOverworld()
     redraw = FALSE;
 
     substate = OW_INIT_MAP;
+
+    fadein();
 }
 
 void phaseInitMap()

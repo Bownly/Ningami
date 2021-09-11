@@ -11,4 +11,6 @@ typedef struct EnemyObject {
     UINT8 def;
 } EnemyObject;
 
+extern const EnemyObject enemyDex[];
+
 #endif

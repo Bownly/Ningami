@@ -24,6 +24,7 @@ C:\gbdk2020\bin\lcc -Wa-l -c -o icontiles.o tiles/iconTiles.c
 @REM C:\gbdk2020\bin\lcc -Wa-l -Wf-bo2 -c -o wallmetatiles.o tiles/wallMetaTiles.c
 C:\gbdk2020\bin\lcc -Wa-l -Wf-bo2 -c -o foresttiles.o tiles/forestTiles.c
 C:\gbdk2020\bin\lcc -Wa-l -Wf-bo2 -c -o forestmetatiles.o tiles/forestMetaTiles.c
+C:\gbdk2020\bin\lcc -Wa-l -Wf-bo3 -c -o titlecardtiles.o tiles/titlecardTiles.c
 
 C:\gbdk2020\bin\png2mtspr sprites/player.png -sh 16 -sw 16 -pw 0 -ph 0 -spr8x8 -b 2
 
@@ -33,8 +34,8 @@ C:\gbdk2020\bin\lcc -Wa-l -c -o fade.o fade.c
 C:\gbdk2020\bin\lcc -Wa-l -Wf-bo1 -c -o battleState.o battleState.c
 C:\gbdk2020\bin\lcc -Wa-l -Wf-bo2 -c -o overworldState.o overworldState.c
 
-C:\gbdk2020\bin\lcc -Wa-l -c -o main.o main.c CardObject.c
-C:\gbdk2020\bin\lcc -Wl-yt3 -Wl-yo8 -Wl-ya4 -o kartomancer.gb *.o sprites/*.c
+C:\gbdk2020\bin\lcc -Wa-l -c -o main.o main.c CardObject.c EnemyObject.c
+C:\gbdk2020\bin\lcc -Wl-yt3 -Wl-yo8 -Wl-ya4 -o Ningami.gb *.o sprites/*.c
 
 REM pause
 del *.o
@@ -46,3 +47,4 @@ del *.sym
 @REM 0: main, common, music logic etc
 @REM 1: battleState
 @REM 2: overworldState
+@REM 3: title card stuff

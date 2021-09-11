@@ -47,9 +47,11 @@ extern UINT8 substate;
 
 CardObject* tempCardPtr;
 DeckObject deck;
-EnemyObject enemy;
 HandObject hand;
+EnemyObject enemy;
 extern PlayerObject player;
+extern UINT8 enemyId;
+extern const EnemyObject enemyDex[];
 
 UINT8 xAnchorHand = 6U;
 const UINT8 yAnchorHand = 11U;
@@ -165,13 +167,17 @@ void phaseOpunZaGeimu()
     move_bkg(0, 0);
     set_bkg_tiles(0U, 18U, 16U, 1U, blankEnemyMap);
     
+    // Initialize enemy data
     // TODO make this variable based on different enemy types    
     set_bkg_data(enemyTileIndex, 16U, enemyHorseTiles);
-    enemy.hpMax = 100U;
-    enemy.hpCur = 100U;
-    enemy.shieldCount = 0U;
-    enemy.atk = 2U;
-    enemy.def = 0U;
+
+    enemyId = 1U;
+    enemy = enemyDex[enemyId];
+    enemy.hpMax = enemyDex[enemyId].hpMax;
+    enemy.hpCur = enemyDex[enemyId].hpCur;
+    enemy.shieldCount = enemyDex[enemyId].shieldCount;
+    enemy.atk = enemyDex[enemyId].atk;
+    enemy.def = enemyDex[enemyId].def;
 
     xAnchorHand = 6U;
 
@@ -193,6 +199,8 @@ void phaseOpunZaGeimu()
 
     // Set substate
     substate = TURN_KAISHI;
+
+    fadein();
 
     // // test junk
     // displayFullDeck(&deck, 0, 0);
@@ -309,8 +317,11 @@ void phaseUseCard()
     if (tempCardPtr->typeId == CT_ATTACK)
     {
         // Run damage calcs on target
-        k = tempCardPtr->pointVal + player.atk;
-        enemy.hpCur -= k;
+        k = tempCardPtr->pointVal + player.atk - enemy.def;
+        if (k < enemy.hpCur)
+            enemy.hpCur -= k;
+        else
+            enemy.hpCur = 0;
         curAnim = ANIM_ATTACK;
     }
     else if (tempCardPtr->typeId == CT_SHIELD)
