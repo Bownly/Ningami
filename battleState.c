@@ -11,11 +11,11 @@
 #include "HandObject.c"
 #include "PlayerObject.h"
 
-#include "maps/textWindowMap.c"
+#include "maps/textWindowMap.h"
 #include "maps/blankTileMap.c"
 #include "maps/cardMaps.h"
 #include "maps/enemyMap.c"
-#include "maps/cardDescStrings.c"
+#include "maps/cardDescStrings.h"
 // #include "maps/scoreNumMaps.c"
 
 extern const unsigned char borderTiles[];
@@ -160,7 +160,6 @@ void phaseOpunZaGeimu()
     DISPLAY_ON;
     SHOW_BKG;
     SHOW_SPRITES;
-    set_sprite_data(0U, 3U, cursorTiles);
     // set_bkg_data(scoreNumsTileIndex, 20U, scorenumTiles);
 
     move_bkg(0, 0);
@@ -249,8 +248,8 @@ void phaseStartTurn()
     displayCursor(m);
 
     // Update card description of default selected card
-    printLine(1U, 15U, cardDescStrings[hand.cards[m]->faceId<<1]);
-    printLine(1U, 16U, cardDescStrings[(hand.cards[m]->faceId<<1)+1]);
+    printLine(1U, 15U, cardDescStrings[hand.cards[m]->faceId<<1], FALSE);
+    printLine(1U, 16U, cardDescStrings[(hand.cards[m]->faceId<<1)+1], FALSE);
 
     // Reset MP to max, and update shown value
     animTick = 0U;
@@ -266,27 +265,32 @@ void phaseSelectCard()
     set_sprite_tile(0U, animFrame);
     
     // Player inputs
-    if (curJoypad & J_RIGHT && !(prevJoypad & J_RIGHT))
+    if (curJoypad & J_START && !(prevJoypad & J_START))
+    {
+        oldSubstate = substate;
+        oldGamestate = gamestate;
+        gamestate = STATE_PAUSEMENU;
+        substate = PM_INIT;
+    }
+    else if (curJoypad & J_RIGHT && !(prevJoypad & J_RIGHT))
     {
         if (++m == hand.cardCount)
             m = 0U;
-        displayCursor(m);
         // playMoveSfx();
 
         // Update card description as selected card changes
-        printLine(1U, 15U, cardDescStrings[hand.cards[m]->faceId<<1]);
-        printLine(1U, 16U, cardDescStrings[(hand.cards[m]->faceId<<1)+1]);
+        printLine(1U, 15U, cardDescStrings[hand.cards[m]->faceId<<1U], FALSE);
+        printLine(1U, 16U, cardDescStrings[(hand.cards[m]->faceId<<1U)+1U], FALSE);
     }
     else if (curJoypad & J_LEFT && !(prevJoypad & J_LEFT))
     {
         if (m-- == 0U)
             m = hand.cardCount - 1U;
-        displayCursor(m);
         // playMoveSfx();
 
         // Update card description as selected card changes
-        printLine(1U, 15U, cardDescStrings[hand.cards[m]->faceId<<1]);
-        printLine(1U, 16U, cardDescStrings[(hand.cards[m]->faceId<<1)+1]);
+        printLine(1U, 15U, cardDescStrings[hand.cards[m]->faceId<<1U], FALSE);
+        printLine(1U, 16U, cardDescStrings[(hand.cards[m]->faceId<<1U)+1U], FALSE);
     }
     else if (curJoypad & J_A && !(prevJoypad & J_A))
     {
@@ -304,6 +308,7 @@ void phaseSelectCard()
         //     // Play buzzer sfx or something
         // }
     }
+    displayCursor(m);
 }
 
 void phaseUseCard()
@@ -316,8 +321,8 @@ void phaseUseCard()
     displayHand(&hand, xAnchorHand, yAnchorHand);
 
     // Update card description to blank
-    printLine(1U, 15U, cardDescStrings[14]);
-    printLine(1U, 16U, cardDescStrings[14]);
+    printLine(1U, 15U, cardDescStrings[14], FALSE);
+    printLine(1U, 16U, cardDescStrings[14], FALSE);
 
     // If attack card
     if (tempCardPtr->typeId == CT_ATTACK)
@@ -510,8 +515,8 @@ void phaseWinCheck()
                 displayCursor(m);
 
                 // Update card description of default selected card
-                printLine(1U, 15U, cardDescStrings[hand.cards[m]->faceId<<1]);
-                printLine(1U, 16U, cardDescStrings[(hand.cards[m]->faceId<<1)+1]);
+                printLine(1U, 15U, cardDescStrings[hand.cards[m]->faceId<<1], FALSE);
+                printLine(1U, 16U, cardDescStrings[(hand.cards[m]->faceId<<1)+1], FALSE);
             }
         }
     }

@@ -13,7 +13,7 @@ UINT8 getRandUint(UINT8 modulo)
     return r;
 }
 
-void printLine(UINT8 xCoord, UINT8 yCoord, unsigned char* line)
+void printLine(UINT8 xCoord, UINT8 yCoord, unsigned char* line, UINT8 printToWindow)
 {
     unsigned char tempLine[18U];
     unsigned char* tempLinePtr = tempLine;
@@ -35,7 +35,10 @@ void printLine(UINT8 xCoord, UINT8 yCoord, unsigned char* line)
         size++;
     }
     
-    set_bkg_tiles(xCoord, yCoord, size, 1U, tempLinePtr-size);
+    if (printToWindow == FALSE)
+        set_bkg_tiles(xCoord, yCoord, size, 1U, tempLinePtr-size);
+    else
+        set_win_tiles(xCoord, yCoord, size, 1U, tempLinePtr-size);
 }
 
 void setBlankBg()

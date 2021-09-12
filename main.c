@@ -153,11 +153,12 @@ void titlePressStartLoop()
     if (curJoypad & J_START && !(prevJoypad & J_START))
     {
         fadeout();
-
+        
         SWITCH_ROM_MBC1(1U);
         set_bkg_data(0U, 40U, fontTiles);
         set_bkg_data(borderTileIndex, 8U, borderTiles);
         set_bkg_data(cardsTileIndex, 60U, cardTiles);
+        set_sprite_data(0U, 3U, cursorTiles);
         SWITCH_ROM_MBC1(2U);
         set_bkg_data(forestTileIndex, 60U, forestTiles);
 
@@ -172,15 +173,17 @@ void titlePressStartLoop()
     {
         fadeout();
 
+        initializeDeck(&deck);
         SWITCH_ROM_MBC1(1U);
         set_bkg_data(0U, 40U, fontTiles);
         set_bkg_data(borderTileIndex, 8U, borderTiles);
         set_bkg_data(cardsTileIndex, 60U, cardTiles);
+        set_sprite_data(0U, 3U, cursorTiles);
         SWITCH_ROM_MBC1(2U);
         set_bkg_data(forestTileIndex, 60U, forestTiles);
 
         move_bkg(0U, 0U);
-        set_bkg_data(0x28U, 4U, iconTiles);
+        set_bkg_data(0x28U, 7U, iconTiles);
         initrand(DIV_REG);
         initPlayer();
         gamestate = STATE_OVERWORLD;
@@ -204,5 +207,6 @@ void initPlayer()
     player.shieldCount = 0U;
     player.atk = 0U;
     player.def = 0U;
+    player.paper = 9U;
 }
 

@@ -26,9 +26,9 @@ void initializeDeck(DeckObject* deck)
 
         // initialize cardIds and discardPile
         deck->cardIds[deck->cardCount] = deck->cardCount;
-        // deck->discardPile[deck->cardCount] = deck->cardCount;
     }
     deck->discardCount = 0U;
+    deck->deckSize = 18U;
 }
 
 void shuffleDeck(DeckObject* deck, UINT8 shuffleCount, UINT8 includeDiscarded)

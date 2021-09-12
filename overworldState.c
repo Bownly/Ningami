@@ -23,8 +23,8 @@
 // #include "maps/cardDescStrings.c"
 // // #include "maps/scoreNumMaps.c"
 
-#define PLAYER_SPR_NUM_START 0U
-#define PLAYER_TILE_NUM_START 0U
+#define PLAYER_SPR_NUM_START 1U
+#define PLAYER_TILE_NUM_START 3U
 
 // extern const unsigned char borderTiles[];
 // extern const unsigned char cardTiles[];
@@ -175,8 +175,6 @@ void phaseInitOverworld()
     redraw = FALSE;
 
     substate = OW_INIT_MAP;
-
-    fadein();
 }
 
 void phaseInitMap()
@@ -210,6 +208,8 @@ void phaseInitMap()
     set_sprite_data(PLAYER_TILE_NUM_START, sizeof(player_data) >> 4U, player_data);
 
     substate = OW_PLAYER_INPUTS;
+
+    fadein();
 }
 
 void phasePlayerInputs()
@@ -287,6 +287,8 @@ void phasePlayerInputs()
             oldGamestate = gamestate;
             gamestate = STATE_PAUSEMENU;
             substate = PM_INIT;
+            hide_metasprite(player_metasprites[playerDir*3 + animFrame], PLAYER_SPR_NUM_START);
+            return;
         }
         else if (curJoypad & J_A && !(prevJoypad & J_A))
         {

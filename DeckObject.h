@@ -4,6 +4,8 @@
 #include "CardObject.h"
 #include "common.h"
 
+extern const CARDFACE defaultDeck[18U];
+
 typedef struct DeckObject {
     UINT8 cardCount;
     CardObject orderedCards[18U];
@@ -11,6 +13,7 @@ typedef struct DeckObject {
     CardObject emptyCard;
     UINT8 discardCount;
     UINT8 discardPile[18U];
+    UINT8 deckSize;
 } DeckObject;
 
 void initializeDeck(DeckObject* deck);
