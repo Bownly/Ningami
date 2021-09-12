@@ -2,7 +2,7 @@
 #include "rand.h"
 
 #include "CardObject.h"
-#include "enums.h"
+#include "../enums.h"
 
 typedef struct HandObject {
     UINT8 playerId;

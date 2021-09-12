@@ -2,7 +2,7 @@
 #define DECKOBJECT_H
 
 #include "CardObject.h"
-#include "common.h"
+#include "../common.h"
 
 extern const CARDFACE defaultDeck[18U];
 

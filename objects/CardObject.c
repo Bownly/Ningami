@@ -1,5 +1,5 @@
 #include <gb/gb.h>
-#include "enums.h"
+#include "../enums.h"
 
 const UINT8 cardCostsDict[7U] = { 1U, 2U, 3U, 0U, 1U, 2U, 2U };
 const UINT8 cardValsDict[7U]  = { 3U, 7U, 11U, 2U, 3U, 7U, 5U };

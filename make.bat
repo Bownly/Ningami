@@ -38,7 +38,11 @@ C:\gbdk2020\bin\lcc -Wa-l -c -o cardMaps.o maps/cardMaps.c
 C:\gbdk2020\bin\lcc -Wa-l -c -o textWindowMap.o maps/textWindowMap.c
 C:\gbdk2020\bin\lcc -Wa-l -c -o cardDescStrings.o maps/cardDescStrings.c
 
-C:\gbdk2020\bin\lcc -Wa-l -c -o main.o main.c CardObject.c DeckObject.c EnemyObject.c
+C:\gbdk2020\bin\lcc -Wa-l -c -o CardObject.o objects/CardObject.c
+C:\gbdk2020\bin\lcc -Wa-l -c -o DeckObject.o objects/DeckObject.c
+C:\gbdk2020\bin\lcc -Wa-l -c -o EnemyObject.o objects/EnemyObject.c
+
+C:\gbdk2020\bin\lcc -Wa-l -c -o main.o main.c  
 C:\gbdk2020\bin\lcc -Wl-yt3 -Wl-yo8 -Wl-ya4 -o Ningami.gb *.o sprites/*.c
 
 REM pause

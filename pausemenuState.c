@@ -6,9 +6,9 @@
 #include "enums.h"
 #include "fade.h"
 
-#include "CardObject.h"
-#include "DeckObject.h"
-#include "PlayerObject.h"
+#include "objects/CardObject.h"
+#include "objects/DeckObject.h"
+#include "objects/PlayerObject.h"
 
 #include "maps/textWindowMap.h"
 #include "maps/cardMaps.h"

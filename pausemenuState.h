@@ -8,9 +8,9 @@
 #include "enums.h"
 #include "fade.h"
 
-#include "CardObject.h"
-#include "DeckObject.h"
-#include "HandObject.h"
+#include "objects/CardObject.h"
+#include "objects/DeckObject.h"
+#include "objects/HandObject.h"
 
 void pausemenuStateMain();
 

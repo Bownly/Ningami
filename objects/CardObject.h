@@ -1,5 +1,5 @@
 #include <gb/gb.h>
-#include "enums.h"
+#include "../enums.h"
 
 #ifndef CARDOBJECT_H
 #define CARDOBJECT_H

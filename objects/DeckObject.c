@@ -3,8 +3,8 @@
 
 #include "CardObject.h"
 #include "DeckObject.h"
-#include "common.h"
-#include "enums.h"
+#include "../common.h"
+#include "../enums.h"
 
 // test deck
 const CARDFACE defaultDeck[18U] = { SHURIKEN, SHURIKEN, SHURIKEN, SHURIKEN, SHURIKEN,  SHOUZOKU,

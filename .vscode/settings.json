@@ -1,0 +1,8 @@
+{
+    "files.associations": {
+        "objects/cardobject.h": "c",
+        "objects/deckobject.h": "c",
+        "enums.h": "c",
+        "common.h": "c"
+    }
+}

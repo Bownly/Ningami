@@ -7,11 +7,11 @@
 #include "fade.h"
 
 // #include "CardObject.h"
-// #include "DeckObject.c"
+// #include "objects/DeckObject.c"
 // #include "EnemyObject.h"
 // #include "HandObject.c"
-#include "PlayerObject.h"
-#include "TileObject.h"
+#include "objects/PlayerObject.h"
+#include "objects/TileObject.h"
 #include "sprites/player.h"
 
 #include "maps/room1Map.c"

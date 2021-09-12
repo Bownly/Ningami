@@ -5,8 +5,8 @@
 #include "enums.h"
 #include "fade.h"
 
-#include "DeckObject.h"
-#include "PlayerObject.h"
+#include "objects/DeckObject.h"
+#include "objects/PlayerObject.h"
 
 #include "battleState.h"
 #include "overworldState.h"

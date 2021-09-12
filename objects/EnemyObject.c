@@ -1,5 +1,5 @@
 #include <gb/gb.h>
-#include "enums.h"
+#include "../enums.h"
 
 typedef struct EnemyObject {
     UINT8 hpMax;

@@ -5,11 +5,11 @@
 #include "enums.h"
 #include "fade.h"
 
-#include "CardObject.h"
-#include "DeckObject.h"
-#include "EnemyObject.h"
-#include "HandObject.c"
-#include "PlayerObject.h"
+#include "objects/CardObject.h"
+#include "objects/DeckObject.h"
+#include "objects/EnemyObject.h"
+#include "objects/HandObject.c"
+#include "objects/PlayerObject.h"
 
 #include "maps/textWindowMap.h"
 #include "maps/blankTileMap.c"
