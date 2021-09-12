@@ -200,6 +200,8 @@ void initPlayer()
 {
     player.x = 80U;
     player.y = 88U;
+    player.xTile = 4U;
+    player.yTile = 4U;
     player.hpMax = 10U;
     player.hpCur = 10U;
     player.mpMax = 3U;

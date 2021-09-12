@@ -70,6 +70,12 @@ typedef enum {
     E = 1U
 } DIRECTION;
 
+typedef enum {
+    EV_DIALOG,
+    EV_BATTLE,
+    EV_CARD_GET
+} EVENTTYPE;
+
 extern GAMESTATE gamestate;
 extern SUBSTATE substate;
 extern ANIMTYPE animtype;
@@ -77,5 +83,6 @@ extern CARDTYPE cardtype;
 extern CARDFACE cardface;
 extern PLAYERSTATE playerstate;
 extern DIRECTION direction;
+extern EVENTTYPE eventtype;
  
 #endif

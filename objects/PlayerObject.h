@@ -6,6 +6,8 @@
 typedef struct PlayerObject {
     UINT8 x;
     UINT8 y;
+    UINT8 xTile;
+    UINT8 yTile;
     UINT8 hpMax;
     UINT8 hpCur;
     UINT8 mpMax;

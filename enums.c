@@ -7,3 +7,4 @@ CARDTYPE cardtype;
 CARDFACE cardface;
 PLAYERSTATE playerstate;
 DIRECTION direction;
+EVENTTYPE eventtype;

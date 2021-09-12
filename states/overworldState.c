@@ -5,10 +5,10 @@
 #include "../common.h"
 #include "../enums.h"
 #include "../fade.h"
-
+#include "../database/RoomData.h"
 #include "../maps/room1Map.c"
 #include "../maps/room2Map.c"
-
+#include "../objects/EventObject.h"
 #include "../objects/PlayerObject.h"
 #include "../objects/TileObject.h"
 #include "../sprites/player.h"
@@ -22,6 +22,8 @@
 // extern const unsigned char emptyTiles[];
 // extern const unsigned char fontTiles[];
 extern const unsigned char forestMetaTiles[][4U];
+
+// extern const EventObject room1Events[];
 
 // const UINT8 borderTileIndex = 0x30;
 // const UINT8 cardsTileIndex  = 0x40;
@@ -57,6 +59,7 @@ UINT8 playerDir = 0U;
 TileObject playGrid[30U][30U];
 TileObject* tilePtr;
 const char * roomMapPtr;
+const EventObject * roomEventsPtr;
 
 UINT8 gridW = 20U;
 UINT8 gridH = 18U;
@@ -213,13 +216,19 @@ void phasePlayerInputs()
             {
                 player.y -= 4U;
                 if ((player.y + 8U) % 16U == 0U)  // +8 because of the annoying metatiles center + 16 vert offset for sprites
+                {
+                    player.yTile--;
                     checkUnderfootTile();
+                }
             }
             else
             {
                 camera_y -= 4U;
                 if (camera_y % 16U == 0U)
+                {
+                    player.yTile--;
                     checkUnderfootTile();
+                }
             }
         }
         else if (playerDir == S)
@@ -228,13 +237,19 @@ void phasePlayerInputs()
             {
                 player.y += 4U;
                 if ((player.y - 8U) % 16U == 0U)
+                {
+                    player.yTile++;
                     checkUnderfootTile();
+                }
             }
             else
             {
                 camera_y += 4U;
                 if (camera_y % 16U == 0U)
+                {
+                    player.yTile++;
                     checkUnderfootTile();
+                }
             }
         }
         else if (playerDir == W)
@@ -243,13 +258,19 @@ void phasePlayerInputs()
             {
                 player.x -= 4U;
                 if (player.x % 16U == 0U)
+                {
+                    player.xTile--;
                     checkUnderfootTile();
+                }
             }
             else
             {
                 camera_x -= 4U;
                 if (camera_x % 16U == 0U)
+                {
+                    player.xTile--;
                     checkUnderfootTile();
+                }
             }
         }
         else if (playerDir == E)
@@ -258,13 +279,19 @@ void phasePlayerInputs()
             {
                 player.x += 4U;
                 if (player.x % 16U == 0U)
+                {
+                    player.xTile++;
                     checkUnderfootTile();
+                }
             }
             else
             {
                 camera_x += 4U;
                 if (camera_x % 16U == 0U)
+                {
+                    player.xTile++;
                     checkUnderfootTile();
+                }
             }
         }
         SCX_REG = camera_x; SCY_REG = camera_y; 
@@ -396,6 +423,7 @@ void loadRoom()
             gridH = room1MapHeight;
             camera_max_x = (((room1MapWidth  - 20U) * 2U) + 20U) * 8U;
             camera_max_y = (((room1MapHeight - 18U) * 2U) + 18U) * 8U;
+            roomEventsPtr = room1Events;
             break;
         case 2U:
             roomMapPtr = room2Map;
@@ -403,6 +431,7 @@ void loadRoom()
             gridH = room2MapHeight;
             camera_max_x = (((room2MapWidth  - 20U) * 2U) + 20U) * 8U;
             camera_max_y = (((room2MapHeight - 18U) * 2U) + 18U) * 8U;
+            roomEventsPtr = room2Events;
             break;
         default:
             roomId = 1U;  // Eventually, I'll make a roomId = 0U default room. ...Maybe.
@@ -415,29 +444,13 @@ void checkUnderfootTile()
 {
     playerstate = IDLE;
 
-    // tilePtr = &playGrid[(map_pos_y>>1U) + ((player.y-16U)>>4U)][(map_pos_x>>1U) + ((player.x-8U)>>4U)];
-    // if (tilePtr->face == KEY)
-    // {
-    //     ++heldKeys;
-    //     updateUIKeys();
-    //     tilePtr->face = tilePtr->numAdjacent;
-    //     drawBkgTile(((map_pos_x) + ((player.x-16U)>>3U))%32U, ((map_pos_y) + ((player.y-24U)>>3U))%32U, tilePtr);
-    // }
-    // else if (tilePtr->face == CHEST_C)
-    // {
-    //     if (heldKeys != 0U)
-    //     {
-    //         --heldKeys;
-    //         updateUIKeys();
-    //         tilePtr->face = tilePtr->numAdjacent;
-    //         drawBkgTile(((map_pos_x) + ((player.x-16U)>>3U))%32U, ((map_pos_y) + ((player.y-24U)>>3U))%32U, tilePtr);
-    //     }
-    // }
-    // else if (tilePtr->face == STAIRS)
-    // {
-    //     fadeout();
-    //     initFloor();
-    // }
+    for (l = 0U; l != 2U; l++)
+    {
+        if (player.xTile == (roomEventsPtr+l)->x && player.yTile == (roomEventsPtr+l)->y)
+        {
+            set_bkg_tile_xy(5, 5, 0x28 + (roomEventsPtr+l)->value);
+        }
+    }
 }
 
 
