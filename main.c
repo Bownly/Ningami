@@ -8,15 +8,15 @@
 #include "objects/DeckObject.h"
 #include "objects/PlayerObject.h"
 
-#include "battleState.h"
-#include "overworldState.h"
-#include "pausemenuState.h"
-
 #include "maps/textWindowMap.h"
 #include "maps/blankTileMap.h"
 #include "maps/titlecardMap.c"
 // #include "maps/cardMaps.c"
 // #include "maps/scoreNumMaps.c"
+
+#include "states/battleState.h"
+#include "states/overworldState.h"
+#include "states/pausemenuState.h"
 
 extern const unsigned char borderTiles[];
 extern const unsigned char cardTiles[];

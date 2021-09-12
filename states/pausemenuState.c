@@ -2,17 +2,17 @@
 #include <gb/metasprites.h>
 #include <rand.h>
 
-#include "common.h"
-#include "enums.h"
-#include "fade.h"
+#include "../common.h"
+#include "../enums.h"
+#include "../fade.h"
 
-#include "objects/CardObject.h"
-#include "objects/DeckObject.h"
-#include "objects/PlayerObject.h"
+#include "../maps/textWindowMap.h"
+#include "../maps/cardMaps.h"
+#include "../maps/cardDescStrings.h"
 
-#include "maps/textWindowMap.h"
-#include "maps/cardMaps.h"
-#include "maps/cardDescStrings.h"
+#include "../objects/CardObject.h"
+#include "../objects/DeckObject.h"
+#include "../objects/PlayerObject.h"
 
 #define PLAYER_SPR_NUM_START 0U
 #define PLAYER_TILE_NUM_START 0U

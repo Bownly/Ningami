@@ -31,9 +31,9 @@ C:\gbdk2020\bin\png2mtspr sprites/player.png -sh 16 -sw 16 -pw 0 -ph 0 -spr8x8 -
 C:\gbdk2020\bin\lcc -Wa-l -c -o common.o common.c
 C:\gbdk2020\bin\lcc -Wa-l -c -o fade.o fade.c
 
-C:\gbdk2020\bin\lcc -Wa-l -Wf-bo1 -c -o battleState.o battleState.c
-C:\gbdk2020\bin\lcc -Wa-l -Wf-bo2 -c -o overworldState.o overworldState.c
-C:\gbdk2020\bin\lcc -Wa-l -Wf-bo3 -c -o pausemenuState.o pausemenuState.c
+C:\gbdk2020\bin\lcc -Wa-l -Wf-bo1 -c -o battleState.o states/battleState.c
+C:\gbdk2020\bin\lcc -Wa-l -Wf-bo2 -c -o overworldState.o states/overworldState.c
+C:\gbdk2020\bin\lcc -Wa-l -Wf-bo3 -c -o pausemenuState.o states/pausemenuState.c
 C:\gbdk2020\bin\lcc -Wa-l -c -o cardMaps.o maps/cardMaps.c
 C:\gbdk2020\bin\lcc -Wa-l -c -o textWindowMap.o maps/textWindowMap.c
 C:\gbdk2020\bin\lcc -Wa-l -c -o cardDescStrings.o maps/cardDescStrings.c

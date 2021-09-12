@@ -3,6 +3,8 @@
         "objects/cardobject.h": "c",
         "objects/deckobject.h": "c",
         "enums.h": "c",
-        "common.h": "c"
+        "common.h": "c",
+        "battlestate.h": "c",
+        "textwindowmap.h": "c"
     }
 }

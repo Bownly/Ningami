@@ -2,26 +2,16 @@
 #include <gb/metasprites.h>
 #include <rand.h>
 
-#include "common.h"
-#include "enums.h"
-#include "fade.h"
+#include "../common.h"
+#include "../enums.h"
+#include "../fade.h"
 
-// #include "CardObject.h"
-// #include "objects/DeckObject.c"
-// #include "EnemyObject.h"
-// #include "HandObject.c"
-#include "objects/PlayerObject.h"
-#include "objects/TileObject.h"
-#include "sprites/player.h"
+#include "../maps/room1Map.c"
+#include "../maps/room2Map.c"
 
-#include "maps/room1Map.c"
-#include "maps/room2Map.c"
-// #include "maps/textWindowMap.c"
-// #include "maps/blankTileMap.c"
-// #include "maps/cardMaps.c"
-// #include "maps/enemyMap.c"
-// #include "maps/cardDescStrings.c"
-// // #include "maps/scoreNumMaps.c"
+#include "../objects/PlayerObject.h"
+#include "../objects/TileObject.h"
+#include "../sprites/player.h"
 
 #define PLAYER_SPR_NUM_START 1U
 #define PLAYER_TILE_NUM_START 3U
@@ -96,7 +86,7 @@ extern UINT8 animFrame;
 
 // const unsigned char blankEnemyMap[16U] = { 0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF };
 
-// /* SUBSTATE METHODS */
+/* SUBSTATE METHODS */
 void phaseInitOverworld();
 void phaseInitMap();
 void phasePlayerInputs();
@@ -104,11 +94,11 @@ void phasePlayerMove();
 void phaseCheckSquare();
 void phasePause();
 
-// /* HELPER METHODS */
+/* HELPER METHODS */
 void loadRoom();
 void checkUnderfootTile();
 
-// /* DISPLAY METHODS */
+/* DISPLAY METHODS */
 void draw_new_bkg();
 void drawBkgTile(UINT8, UINT8, TileObject*);
 

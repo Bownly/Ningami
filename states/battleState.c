@@ -1,22 +1,22 @@
 #include <gb/gb.h>
 #include <rand.h>
 
-#include "common.h"
-#include "enums.h"
-#include "fade.h"
+#include "../common.h"
+#include "../enums.h"
+#include "../fade.h"
 
-#include "objects/CardObject.h"
-#include "objects/DeckObject.h"
-#include "objects/EnemyObject.h"
-#include "objects/HandObject.c"
-#include "objects/PlayerObject.h"
+#include "../maps/textWindowMap.h"
+#include "../maps/blankTileMap.c"
+#include "../maps/cardMaps.h"
+#include "../maps/enemyMap.c"
+#include "../maps/cardDescStrings.h"
+// #include "../maps/scoreNumMaps.c"
 
-#include "maps/textWindowMap.h"
-#include "maps/blankTileMap.c"
-#include "maps/cardMaps.h"
-#include "maps/enemyMap.c"
-#include "maps/cardDescStrings.h"
-// #include "maps/scoreNumMaps.c"
+#include "../objects/CardObject.h"
+#include "../objects/DeckObject.h"
+#include "../objects/EnemyObject.h"
+#include "../objects/HandObject.c"
+#include "../objects/PlayerObject.h"
 
 extern const unsigned char borderTiles[];
 extern const unsigned char cardTiles[];
