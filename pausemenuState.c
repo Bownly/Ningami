@@ -50,7 +50,7 @@ const UINT8 yAnchorHp = 2U;
 const UINT8 xAnchorPaper = 12U;
 const UINT8 yAnchorPaper = 2U;
 const UINT8 xAnchorCursor = 36U;
-const UINT8 yAnchorCursor = 40U;
+const UINT8 yAnchorCursor = 42U;
 
 /* SUBSTATE METHODS */
 void phaseInitPausemenu();
@@ -139,7 +139,14 @@ void phasePausemenuLoop()
     else if (curJoypad & J_UP && !(prevJoypad & J_UP))
     {
         if (n == 0)
-            n = 2;
+        {
+            n = 3U;
+            do
+            {
+                --n;
+                k = n*6U + m;
+            } while (k >= deck.deckSize);
+        }
         else
             --n;
         displayDeckCursor();
@@ -147,17 +154,21 @@ void phasePausemenuLoop()
     }
     else if (curJoypad & J_DOWN && !(prevJoypad & J_DOWN))
     {
-        if (n == 2)
+        ++n;
+        if ((n*6U + m) >= deck.deckSize)
             n = 0;
-        else
-            ++n;
         displayDeckCursor();
         displayCardDescWin();
     }
     else if (curJoypad & J_LEFT && !(prevJoypad & J_LEFT))
     {
         if (m == 0)
-            m = 5;
+        {
+            if (n == (deck.deckSize-1U)/6U)  // AkA, if we're on the bottommost row
+                m = (deck.deckSize-1U)%6U;
+            else
+                m = 5U;
+        }
         else
             --m;
         displayDeckCursor();
@@ -165,10 +176,9 @@ void phasePausemenuLoop()
     }
     else if (curJoypad & J_RIGHT && !(prevJoypad & J_RIGHT))
     {
-        if (m == 5)
+        ++m;
+        if (m == 6 || (n*6U + m) >= deck.deckSize)
             m = 0;
-        else
-            ++m;
         displayDeckCursor();
         displayCardDescWin();
     }
