@@ -34,6 +34,7 @@ C:\gbdk2020\bin\lcc -Wa-l -c -o fade.o fade.c
 C:\gbdk2020\bin\lcc -Wa-l -Wf-bo1 -c -o battleState.o states/battleState.c
 C:\gbdk2020\bin\lcc -Wa-l -Wf-bo2 -c -o overworldState.o states/overworldState.c
 C:\gbdk2020\bin\lcc -Wa-l -Wf-bo3 -c -o pausemenuState.o states/pausemenuState.c
+C:\gbdk2020\bin\lcc -Wa-l -Wf-bo4 -c -o dialogState.o states/dialogState.c
 C:\gbdk2020\bin\lcc -Wa-l -c -o cardMaps.o maps/cardMaps.c
 C:\gbdk2020\bin\lcc -Wa-l -c -o textWindowMap.o maps/textWindowMap.c
 C:\gbdk2020\bin\lcc -Wa-l -c -o cardDescStrings.o maps/cardDescStrings.c
@@ -43,6 +44,7 @@ C:\gbdk2020\bin\lcc -Wa-l -c -o DeckObject.o objects/DeckObject.c
 C:\gbdk2020\bin\lcc -Wa-l -c -o EnemyObject.o objects/EnemyObject.c
 
 C:\gbdk2020\bin\lcc -Wa-l -Wf-bo2 -c -o RoomData.o database/RoomData.c
+C:\gbdk2020\bin\lcc -Wa-l -Wf-bo4 -c -o StringData.o database/StringData.c
 
 C:\gbdk2020\bin\lcc -Wa-l -c -o main.o main.c  
 C:\gbdk2020\bin\lcc -Wl-yt3 -Wl-yo8 -Wl-ya4 -o Ningami.gb *.o sprites/*.c

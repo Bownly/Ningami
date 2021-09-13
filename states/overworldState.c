@@ -8,10 +8,13 @@
 #include "../database/RoomData.h"
 #include "../maps/room1Map.c"
 #include "../maps/room2Map.c"
+#include "../maps/textWindowMap.h"
 #include "../objects/EventObject.h"
 #include "../objects/PlayerObject.h"
 #include "../objects/TileObject.h"
 #include "../sprites/player.h"
+
+#include "../maps/cardDescStrings.h"
 
 #define PLAYER_SPR_NUM_START 1U
 #define PLAYER_TILE_NUM_START 3U
@@ -52,6 +55,7 @@ extern UINT8 oldSubstate;
 // HandObject hand;
 extern PlayerObject player;
 extern UINT8 roomId;
+extern UINT8 dialogId;
 
 UINT8 playerstate;
 UINT8 playerDir = 0U;
@@ -448,7 +452,16 @@ void checkUnderfootTile()
     {
         if (player.xTile == (roomEventsPtr+l)->x && player.yTile == (roomEventsPtr+l)->y)
         {
-            set_bkg_tile_xy(5, 5, 0x28 + (roomEventsPtr+l)->value);
+            if ((roomEventsPtr+l)->type == EV_DIALOG)
+            {
+                dialogId = ((roomEventsPtr+l)->value<<1)+1;
+                oldSubstate = substate;
+                oldGamestate = gamestate;
+                gamestate = STATE_DIALOG;
+                substate = DIALOG_INIT;
+            }
+            else
+                set_bkg_tile_xy(5, 5, 0x28 + (roomEventsPtr+l)->value);
         }
     }
 }

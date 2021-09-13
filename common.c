@@ -21,11 +21,14 @@ void printLine(UINT8 xCoord, UINT8 yCoord, unsigned char* line, UINT8 printToWin
     UINT8 diff = 0x37;
     while (*line)
     {
-
         if (*line <= 0x39) // 0-9
             diff = 0x30;
         else if (*line == 0x20)  // Space
             diff = 0xFF;
+        else if (*line == 0x40)  // Period... but actually an @
+            diff = 0x1C;
+        else if (*line == 0x3F)  // Question mark
+            diff = 0x1A;
         else  // A-Z
             diff = 0x37;
 

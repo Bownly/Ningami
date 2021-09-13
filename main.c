@@ -63,6 +63,9 @@ PlayerObject player;
 DeckObject deck;
 UINT8 enemyId;
 UINT8 roomId = 1U;
+UINT8 dialogId = 0U;
+UINT8 dialogQueue[8];
+UINT8 dialogQueueCount = 0U;
 
 UINT8 animFrame = 0U;
 UINT8 animTick = 0U;
@@ -111,6 +114,10 @@ void main()
                 SWITCH_ROM_MBC1(3U);
                 pausemenuStateMain();
                 break;
+            case STATE_DIALOG:
+                SWITCH_ROM_MBC1(4U);
+                pausemenuStateMain();
+                break;
         }
         // // music stuff
         // songPlayerUpdate();
@@ -134,6 +141,7 @@ void titleInit()
 
     substate = 1U;
     animTick = 0U;
+    dialogQueueCount = 0U;
 }
 
 void titlePressStartLoop()

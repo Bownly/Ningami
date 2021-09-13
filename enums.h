@@ -6,6 +6,7 @@ typedef enum {
     STATE_BATTLE,
     STATE_OVERWORLD,
     STATE_PAUSEMENU,
+    STATE_DIALOG,
     STATE_CREDITS
 } GAMESTATE;
 
@@ -28,6 +29,9 @@ typedef enum {
     OW_PLAYER_MOVE,
     OW_CHECK_SQUARE,
     OW_PAUSE,
+    DIALOG_INIT,
+    DIALOG_LOOP,
+    DIALOG_OPTION,
     PM_INIT,
     PM_LOOP
 } SUBSTATE;
