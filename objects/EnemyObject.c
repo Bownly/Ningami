@@ -12,5 +12,7 @@ typedef struct EnemyObject {
 
 const EnemyObject enemyDex[] = {
     { .hpMax = 10U, .hpCur = 10U, .shieldCount = 0U, .atk = 3U, .def = 0U, .enemySpr = 0U },
+    { .hpMax = 10U, .hpCur = 10U, .shieldCount = 0U, .atk = 3U, .def = 0U, .enemySpr = 0U },
+    { .hpMax = 10U, .hpCur = 10U, .shieldCount = 0U, .atk = 3U, .def = 0U, .enemySpr = 0U },
     { .hpMax = 11U, .hpCur = 11U, .shieldCount = 0U, .atk = 0U, .def = 0U, .enemySpr = 1U }
 };

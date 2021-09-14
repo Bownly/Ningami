@@ -5,16 +5,19 @@
 #include "../common.h"
 #include "../enums.h"
 #include "../fade.h"
+
 #include "../database/RoomData.h"
-#include "../maps/room1Map.c"
-#include "../maps/room2Map.c"
-#include "../maps/textWindowMap.h"
-#include "../objects/EventObject.h"
-#include "../objects/PlayerObject.h"
-#include "../objects/TileObject.h"
-#include "../sprites/player.h"
 
 #include "../maps/cardDescStrings.h"
+#include "../maps/textWindowMap.h"
+
+#include "../objects/EventObject.h"
+#include "../objects/PlayerObject.h"
+#include "../objects/RoomObject.h"
+#include "../objects/TileObject.h"
+
+#include "../sprites/player.h"
+
 
 #define PLAYER_SPR_NUM_START 1U
 #define PLAYER_TILE_NUM_START 3U
@@ -49,11 +52,9 @@ extern UINT8 substate;
 extern UINT8 oldGamestate;
 extern UINT8 oldSubstate;
 
-// CardObject* tempCardPtr;
 // DeckObject deck;
-// EnemyObject enemy;
-// HandObject hand;
 extern PlayerObject player;
+extern UINT8 enemyId;
 extern UINT8 roomId;
 extern UINT8 dialogId;
 extern UINT8 dialogQueue[];
@@ -66,8 +67,9 @@ TileObject playGrid[30U][30U];
 TileObject* tilePtr;
 const char * roomMapPtr;
 const EventObject * roomEventsPtr;
+RoomObject room;
 
-UINT8 encounterCounter = 255U;
+UINT8 encounterCounter = 10U;
 UINT8 encounterRate = 10U;
 
 UINT8 gridW = 20U;
@@ -420,29 +422,21 @@ void phasePlayerInputs()
 /******************************** HELPER METHODS *********************************/
 void loadRoom()
 {
-    switch (roomId)
+    if (roomId == 0U)
     {
-        case 1U:
-            roomMapPtr = room1Map;
-            gridW = room1MapWidth;
-            gridH = room1MapHeight;
-            camera_max_x = (((room1MapWidth  - 20U) * 2U) + 20U) * 8U;
-            camera_max_y = (((room1MapHeight - 18U) * 2U) + 18U) * 8U;
-            roomEventsPtr = room1Events;
-            break;
-        case 2U:
-            roomMapPtr = room2Map;
-            gridW = room2MapWidth;
-            gridH = room2MapHeight;
-            camera_max_x = (((room2MapWidth  - 20U) * 2U) + 20U) * 8U;
-            camera_max_y = (((room2MapHeight - 18U) * 2U) + 18U) * 8U;
-            roomEventsPtr = room2Events;
-            break;
-        default:
-            roomId = 1U;  // Eventually, I'll make a roomId = 0U default room. ...Maybe.
-            loadRoom();
-            break;
+        roomId = 1U;  // Eventually, I'll make a roomId = 0U default room. ...Maybe.
+        loadRoom();
+        return;
     }
+    room = roomDict[roomId];
+    gridW = room.w;
+    gridH = room.h;
+    camera_max_x = (((gridW - 20U) * 2U) + 20U) * 8U;
+    camera_max_y = (((gridH - 18U) * 2U) + 18U) * 8U;
+    roomMapPtr = room.roomMap;
+    roomEventsPtr = room.events;
+    encounterRate = room.encounterRate;
+    encounterCounter = encounterRate;
 }
 
 void checkUnderfootTile()
@@ -469,7 +463,7 @@ void checkUnderfootTile()
     if (substate != DIALOG_INIT)
     {
         --encounterCounter;
-        if (encounterCounter == 0)
+        if (encounterCounter == 0U && encounterRate != 0U)
         {
             encounterCounter = encounterRate;
             oldGamestate = STATE_OVERWORLD;
@@ -477,6 +471,9 @@ void checkUnderfootTile()
             gamestate = STATE_BATTLE;
             substate = GAME_KAISHI;
             shouldHidePlayer = TRUE;
+
+            enemyId = room.encounterSet[getRandUint(4U)];
+
             fadeout();
             // Reset encounterCounter
             // encounterCounter = 10U;

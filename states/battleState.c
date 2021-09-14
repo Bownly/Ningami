@@ -158,16 +158,9 @@ void phaseOpunZaGeimu()
     set_bkg_tiles(0U, 18U, 16U, 1U, blankEnemyMap);
     
     // Initialize enemy data
-    // TODO make this variable based on different enemy types    
+    // TODO make this variable based on different enemy types
     set_bkg_data(enemyTileIndex, 16U, enemyHorseTiles);
-
-    enemyId = 1U;
     enemy = enemyDex[enemyId];
-    enemy.hpMax = enemyDex[enemyId].hpMax;
-    enemy.hpCur = enemyDex[enemyId].hpCur;
-    enemy.shieldCount = enemyDex[enemyId].shieldCount;
-    enemy.atk = enemyDex[enemyId].atk;
-    enemy.def = enemyDex[enemyId].def;
 
     xAnchorHand = 6U;
 
@@ -195,6 +188,7 @@ void phaseOpunZaGeimu()
 
     // // test junk
     // displayFullDeck(&deck, 0, 0);
+    set_bkg_tile_xy(0U, 0U, enemyId);
 }
 
 void phaseStartTurn()

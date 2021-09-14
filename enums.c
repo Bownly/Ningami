@@ -5,6 +5,7 @@ SUBSTATE substate;
 ANIMTYPE animtype;
 CARDTYPE cardtype;
 CARDFACE cardface;
+ENEMYTYPE enemytype;
 PLAYERSTATE playerstate;
 DIRECTION direction;
 EVENTTYPE eventtype;

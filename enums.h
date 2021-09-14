@@ -63,6 +63,12 @@ typedef enum {
 } CARDFACE;
 
 typedef enum {
+    ENEMY_INU     = 0U,
+    ENEMY_KITSUNE = 1U,
+    ENEMY_TSURU   = 2U
+} ENEMYTYPE;
+
+typedef enum {
     IDLE     = 0U,
     WALKING  = 1U
 } PLAYERSTATE;
@@ -85,6 +91,7 @@ extern SUBSTATE substate;
 extern ANIMTYPE animtype;
 extern CARDTYPE cardtype;
 extern CARDFACE cardface;
+extern ENEMYTYPE enemytype;
 extern PLAYERSTATE playerstate;
 extern DIRECTION direction;
 extern EVENTTYPE eventtype;
