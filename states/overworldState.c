@@ -67,11 +67,15 @@ TileObject* tilePtr;
 const char * roomMapPtr;
 const EventObject * roomEventsPtr;
 
+UINT8 encounterCounter = 10U;
+UINT8 encounterRate = 10U;
+
 UINT8 gridW = 20U;
 UINT8 gridH = 18U;
 UINT16 camera_max_x = 10U * 16U;
 UINT16 camera_max_y = 9U * 16U;
 
+UINT8 shouldHidePlayer = FALSE;
 const UINT8 PLAYER_X_LEFT   = 16U;  // 8 offset due to GB specs, 8 offset due to metatile centering
 const UINT8 PLAYER_X_CENTER = 96U;
 const UINT8 PLAYER_X_RIGHT  = 160U;
@@ -99,9 +103,6 @@ extern UINT8 animFrame;
 void phaseInitOverworld();
 void phaseInitMap();
 void phasePlayerInputs();
-void phasePlayerMove();
-void phaseCheckSquare();
-void phasePause();
 
 /* HELPER METHODS */
 void loadRoom();
@@ -127,15 +128,6 @@ void overworldStateMain()
         case OW_PLAYER_INPUTS:
             phasePlayerInputs();
             break;
-        // case OW_PLAYER_MOVE:
-        //     phasePlayerMove();
-        //     break;
-        // case OW_CHECK_SQUARE:
-        //     phaseCheckSquare();
-        //     break;
-        // case OW_PAUSE:
-        //     phasePause();
-        //     break;
         default:  // Abort to title in the event of unexpected state
             gamestate = STATE_TITLE;
             substate = 0U;
@@ -213,6 +205,7 @@ void phaseInitMap()
 
 void phasePlayerInputs()
 {
+    shouldHidePlayer = FALSE;
     // Player movements and inputs
     if (playerstate == WALKING)
     {
@@ -400,7 +393,11 @@ void phasePlayerInputs()
         animFrame = 1U;
     if (curJoypad == 0U && playerstate == IDLE)
         animFrame = 1U;
-    move_metasprite(player_metasprites[playerDir*3 + animFrame], PLAYER_TILE_NUM_START, PLAYER_SPR_NUM_START, player.x, player.y);
+    
+    if (shouldHidePlayer == TRUE)
+        hide_metasprite(player_metasprites[playerDir*3 + animFrame], PLAYER_SPR_NUM_START);
+    else
+        move_metasprite(player_metasprites[playerDir*3 + animFrame], PLAYER_TILE_NUM_START, PLAYER_SPR_NUM_START, player.x, player.y);
 
     if (redraw && playerstate == WALKING)
     {
@@ -412,10 +409,6 @@ void phasePlayerInputs()
         wait_vbl_done();
 
 }
-
-void phasePlayerMove();
-void phaseCheckSquare();
-void phasePause();
 
 
 /******************************** HELPER METHODS *********************************/
@@ -460,11 +453,26 @@ void checkUnderfootTile()
                 ++dialogQueueCount;
                 oldGamestate = STATE_OVERWORLD;
                 oldSubstate = OW_PLAYER_INPUTS;
-                substate = DIALOG_INIT;
                 gamestate = STATE_DIALOG;
+                substate = DIALOG_INIT;
             }
-            else
-                set_bkg_tile_xy(5, 5, 0x28 + (roomEventsPtr+l)->value);
+        }
+    }
+
+    // Encounter check, but only if we didn't trigger an event flag above
+    if (substate != DIALOG_INIT)
+    {
+        --encounterCounter;
+        if (encounterCounter == 0)
+        {
+            encounterCounter = encounterRate;
+            oldGamestate = STATE_OVERWORLD;
+            oldSubstate = OW_PLAYER_INPUTS;
+            gamestate = STATE_BATTLE;
+            substate = GAME_KAISHI;
+            encounterCounter = 10U;
+            shouldHidePlayer = TRUE;
+            fadeout();
         }
     }
 }
