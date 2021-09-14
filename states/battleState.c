@@ -539,6 +539,7 @@ void phaseEndBattle()
 {
     // If win, end battle
     gamestate = STATE_OVERWORLD;
+    // substate = OW_INIT_OW;
     substate = OW_INIT_OW;
     move_sprite(0U, 0U, 0U);
     // If lose, goto title screen

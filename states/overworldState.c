@@ -67,7 +67,7 @@ TileObject* tilePtr;
 const char * roomMapPtr;
 const EventObject * roomEventsPtr;
 
-UINT8 encounterCounter = 10U;
+UINT8 encounterCounter = 255U;
 UINT8 encounterRate = 10U;
 
 UINT8 gridW = 20U;
@@ -183,11 +183,13 @@ void phaseInitMap()
         for (i = 0U; i != gridW; i++)
         {
             playGrid[j][i].face = *(roomMapPtr +c);
-            c++;
+            ++c;
         }
     }
 
     // Draw grid
+    // 11 and 10 instead of 10 and 9 because the battlestate writes 1 column and 1 row past
+    // ...the max resolution for screenshake reasons.
     for (i = 0U; i != 11U; i++)
     {
         for (j = 0U; j != 10U; j++)
@@ -389,17 +391,14 @@ void phasePlayerInputs()
 
     if (playerstate == WALKING)
     {
-        ++animTick;
         animFrame = animTick % 16U;
         animFrame /= 4U;
         if (animFrame == 3U)
             animFrame = 1U;
+        ++animTick;
     }
     else
-    {
-        animTick = 0U;
         animFrame = 1U;
-    }
     
     if (shouldHidePlayer == TRUE)
         hide_metasprite(player_metasprites[playerDir*3 + animFrame], PLAYER_SPR_NUM_START);

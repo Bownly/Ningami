@@ -113,6 +113,8 @@ void phaseDialogboxLoop()
         }
         else
         {
+            animTick = 0U;
+            animFrame = 0U;
             move_sprite(0U, 0U, 0U);
             gamestate = oldGamestate;
             substate = oldSubstate;

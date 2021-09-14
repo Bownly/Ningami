@@ -130,6 +130,8 @@ void phasePausemenuLoop()
     // If B or Start, hide window
     if (curJoypad & J_B && !(prevJoypad & J_B))
     {
+        animTick = 0U;
+        animFrame = 0U;
         m = oldM;
         move_sprite(0U, 0U, 0U);
         substate = oldSubstate;
