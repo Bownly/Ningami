@@ -81,9 +81,10 @@ void phaseEnemyTurn();
 void phaseAnimateEnemyMove();
 void phaseWinCheck();
 void phaseLoseCheck();
-void phaseShowMessages();
 void phaseCalcSpoils();
 void phaseEndBattle();
+
+/* HELPER METHODS */
 
 /* DISPLAY METHODS */
 void displayCursor(UINT8);
@@ -92,12 +93,6 @@ void displayHand(HandObject*, UINT8, UINT8);
 void displayHP();
 void displayMP();
 void displayShields();
-// void displayScore(UINT8);
-// void displayScoreDigit(UINT8, UINT8, UINT8);
-// void displayStack(StackObject*, UINT8, UINT8, UINT8);
-
-/* HELPER METHODS */
-void queueMessage(UINT8, UINT8);
 
 
 void battleStateMain()
@@ -132,9 +127,6 @@ void battleStateMain()
             break;
         case LOSE_CHECK:
             phaseLoseCheck();
-            break;
-        case SHOW_MESSAGES:
-            phaseShowMessages();
             break;
         case CALC_SPOILS:
             phaseCalcSpoils();
@@ -185,7 +177,7 @@ void phaseOpunZaGeimu()
     shuffleDeck(&deck, 64U, FALSE);
     initializeHand(&hand);
 
-    // Show enemies on screen
+    // Show enemy on screen
     set_bkg_tiles(xAnchorEnemy, yAnchorEnemy, 4U, 4U, enemyMap);
 
     // Show player stats on screen
@@ -193,7 +185,8 @@ void phaseOpunZaGeimu()
     displayMP();
     displayShields();
 
-    // Initialize score vals
+    // Draw the dialog box
+    set_bkg_tiles(0U, 14U, 20U, 4U, textWindowMap);
 
     // Set substate
     substate = TURN_KAISHI;
@@ -202,7 +195,6 @@ void phaseOpunZaGeimu()
 
     // // test junk
     // displayFullDeck(&deck, 0, 0);
-    set_bkg_tiles(0U, 14U, 20U, 4U, textWindowMap);
 }
 
 void phaseStartTurn()
@@ -302,7 +294,7 @@ void phaseSelectCard()
             substate = USE_CARD;
             move_sprite(0U, 0U, 0U);
         }
-        // TODO
+        // TODO sfx
         // else
         // {
         //     // Play buzzer sfx or something
@@ -495,8 +487,8 @@ void phaseWinCheck()
     {
         // Queue win message
 
-        // Goto SHOW_MESSAGES
-        substate = SHOW_MESSAGES;
+        // Goto BATTLE_END
+        substate = BATTLE_END;
     }
     else
     {
@@ -537,22 +529,6 @@ void phaseLoseCheck()
     }
 }
 
-void phaseShowMessages()
-{
-    // If messageQueueCount != 0
-        // If messageShown == TRUE
-            // Poll inputs
-            // A pops message from queue, decrements messageQueueCount
-            // Set messageShown to FALSE
-            // If messageType == MSG_WIN
-                // Goto CALC_SPOILS
-            // Else goto BATTLE_END
-        // Else if messageShown == FALSE
-            // Draw message to screen
-            // Decrement messageQueueCount
-            // Set messageShown to TRUE
-}
-
 void phaseCalcSpoils()
 {
     // Queue spoils message
@@ -562,18 +538,14 @@ void phaseCalcSpoils()
 void phaseEndBattle()
 {
     // If win, end battle
+    gamestate = STATE_OVERWORLD;
+    substate = OW_INIT_OW;
+    move_sprite(0U, 0U, 0U);
     // If lose, goto title screen
 }
 
 
 /******************************** HELPER METHODS ********************************/
-void queueMessage(UINT8 messageType, UINT8 value)
-{
-    m = messageType;
-    n = value;
-    // Push message of messageType with value to messageQueue
-    // Increment messageQueueCount
-}
 
 
 /******************************** DISPLAY METHODS ********************************/

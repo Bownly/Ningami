@@ -173,6 +173,7 @@ void phaseInitMap()
     // Check levelId, pull appropriate level
     loadRoom();
     // Check player coords/dir, draw player appropriately
+    
     // Reset camera
     // 
 
@@ -187,9 +188,9 @@ void phaseInitMap()
     }
 
     // Draw grid
-    for (i = 0U; i != 10U; i++)
+    for (i = 0U; i != 11U; i++)
     {
-        for (j = 0U; j != 9U; j++)
+        for (j = 0U; j != 10U; j++)
         {
             drawBkgTile(i<<1U, j<<1U, &playGrid[j][i]);
         }
@@ -293,7 +294,7 @@ void phasePlayerInputs()
                 }
             }
         }
-        SCX_REG = camera_x; SCY_REG = camera_y; 
+        SCX_REG = camera_x; SCY_REG = camera_y;
     }
     else
     {
@@ -386,13 +387,19 @@ void phasePlayerInputs()
         }
     } 
 
-    ++animTick;
-    animFrame = animTick % 16U;
-    animFrame /= 4U;
-    if (animFrame == 3U)
+    if (playerstate == WALKING)
+    {
+        ++animTick;
+        animFrame = animTick % 16U;
+        animFrame /= 4U;
+        if (animFrame == 3U)
+            animFrame = 1U;
+    }
+    else
+    {
+        animTick = 0U;
         animFrame = 1U;
-    if (curJoypad == 0U && playerstate == IDLE)
-        animFrame = 1U;
+    }
     
     if (shouldHidePlayer == TRUE)
         hide_metasprite(player_metasprites[playerDir*3 + animFrame], PLAYER_SPR_NUM_START);
@@ -470,9 +477,10 @@ void checkUnderfootTile()
             oldSubstate = OW_PLAYER_INPUTS;
             gamestate = STATE_BATTLE;
             substate = GAME_KAISHI;
-            encounterCounter = 10U;
             shouldHidePlayer = TRUE;
             fadeout();
+            // Reset encounterCounter
+            // encounterCounter = 10U;
         }
     }
 }
