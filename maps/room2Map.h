@@ -8,7 +8,7 @@
    Section       : 
    Bank          : 0
    Map size      : 20 x 26
-   Tile set      : C:\Projects\Gameboy\Kartomancer\raw graphics\forestTiles.gbr
+   Tile set      : forestTiles.gbr
    Plane count   : 1 plane (8 bits)
    Plane order   : Tiles are continues
    Tile offset   : 0

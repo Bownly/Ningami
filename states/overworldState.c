@@ -56,6 +56,8 @@ extern UINT8 oldSubstate;
 extern PlayerObject player;
 extern UINT8 roomId;
 extern UINT8 dialogId;
+extern UINT8 dialogQueue[];
+extern UINT8 dialogQueueCount;
 
 UINT8 playerstate;
 UINT8 playerDir = 0U;
@@ -448,17 +450,18 @@ void checkUnderfootTile()
 {
     playerstate = IDLE;
 
-    for (l = 0U; l != 2U; l++)
+    for (l = 0U; l != 3U; l++)  // TODO: Make this variable length, not a hard-coded 3
     {
         if (player.xTile == (roomEventsPtr+l)->x && player.yTile == (roomEventsPtr+l)->y)
         {
             if ((roomEventsPtr+l)->type == EV_DIALOG)
             {
-                dialogId = ((roomEventsPtr+l)->value<<1)+1;
-                oldSubstate = substate;
-                oldGamestate = gamestate;
-                gamestate = STATE_DIALOG;
+                dialogQueue[dialogQueueCount] = (roomEventsPtr+l)->value << 1U;
+                ++dialogQueueCount;
+                oldGamestate = STATE_OVERWORLD;
+                oldSubstate = OW_PLAYER_INPUTS;
                 substate = DIALOG_INIT;
+                gamestate = STATE_DIALOG;
             }
             else
                 set_bkg_tile_xy(5, 5, 0x28 + (roomEventsPtr+l)->value);

@@ -76,19 +76,22 @@ void phaseInitDialogbox()
 {
     // Draw window dialog box and text
     set_win_tiles(0U, 0U, 20U, 4U, textWindowMap);
-    printLine(1U, 1U, dialogStrings[dialogId], TRUE);
 
-    // Show window
-    move_win(7U, 112U);
-    SHOW_WIN;
+    if (dialogQueueCount != 0)
+    {
+        --dialogQueueCount;
+        printLine(1U, 1U, dialogStrings[dialogQueue[dialogQueueCount]], TRUE);
+        printLine(1U, 2U, dialogStrings[dialogQueue[dialogQueueCount]+1], TRUE);
 
-    // Draw cursor
-    // animTick = 0U;
-    // animFrame = 0U;
-    // oldM = m;
-    // m = 0U;
-    // n = 0U;
-    move_sprite(0U, xAnchorDialogCursor, yAnchorDialogCursor);
+        // Show window
+        move_win(7U, 112U);
+        SHOW_WIN;
+
+        // Draw cursor
+        // animTick = 0U;
+        // animFrame = 0U;
+        move_sprite(0U, xAnchorDialogCursor, yAnchorDialogCursor);
+    }
     
     substate = DIALOG_LOOP;
 }
@@ -104,17 +107,27 @@ void phaseDialogboxLoop()
     // If B or Start, hide window
     if (curJoypad & J_B && !(prevJoypad & J_B))
     {
-        move_sprite(0U, 0U, 0U);
-        substate = oldSubstate;
-        gamestate = oldGamestate;
-        HIDE_WIN;
+        if (dialogQueueCount != 0U)
+        {
+            substate = DIALOG_INIT;
+        }
+        else
+        {
+            move_sprite(0U, 0U, 0U);
+            gamestate = oldGamestate;
+            substate = oldSubstate;
+            HIDE_WIN;
+        }
     }
   
 }
 
 
 /******************************** HELPER METHODS *********************************/
+// void closeDialogWindow()
+// {
 
+// }
 
 /******************************** DISPLAY METHODS ********************************/
 
