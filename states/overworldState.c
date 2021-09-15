@@ -320,73 +320,90 @@ void phasePlayerInputs()
         else if ((curJoypad == J_UP) && (prevJoypad == J_UP))
         {
             playerDir = N;
-            // Move sprite, not camera
-            if (camera_y == 0U || player.y > PLAYER_Y_CENTER)
+
+            if (player.y != 0U && playGrid[player.yTile-1U][player.xTile].face < 3U)
             {
-                if (player.y != PLAYER_Y_UP)  // Bomb/covered check goes here
+                // Move sprite, not camera
+                if (camera_y == 0U || player.y > PLAYER_Y_CENTER)
                 {
-                    playerstate = WALKING;
+                    if (player.y != PLAYER_Y_UP)  // Bomb/covered check goes here
+                    {
+                        playerstate = WALKING;
+                    }
                 }
-            }
-            else  // Move camera
-            {
-                new_camera_y -= 16;
-                playerstate = WALKING;
-                redraw = TRUE;
+                else  // Move camera
+                {
+                    new_camera_y -= 16;
+                    playerstate = WALKING;
+                    redraw = TRUE;
+                }
             }
         }
         else if ((curJoypad == J_DOWN) && (prevJoypad == J_DOWN))
         {
             playerDir = S;
-            // Move sprite, not camera
-            if (camera_y == camera_max_y || player.y < PLAYER_Y_CENTER)
+
+            if (player.y != 0U && playGrid[player.yTile+1U][player.xTile].face < 3U)
             {
-                if (player.y != PLAYER_Y_DOWN)  // Bomb/covered check goes here
+                // Move sprite, not camera
+                if (camera_y == camera_max_y || player.y < PLAYER_Y_CENTER)
                 {
-                    playerstate = WALKING;
+                    if (player.y != PLAYER_Y_DOWN)  // Bomb/covered check goes here
+                    {
+                        playerstate = WALKING;
+                    }
                 }
-            }
-            else  // Move camera
-            {
-                new_camera_y += 16;
-                playerstate = WALKING;
-                redraw = TRUE;
+                else  // Move camera
+                {
+                    new_camera_y += 16;
+                    playerstate = WALKING;
+                    redraw = TRUE;
+                }
             }
         } 
         else if ((curJoypad == J_LEFT) && (prevJoypad == J_LEFT))
         {
             playerDir = W;
-            // Move sprite, not camera
-            if (camera_x == 0U || player.x > PLAYER_X_CENTER)
+
+            if (player.y != 0U && playGrid[player.yTile][player.xTile-1U].face < 3U)
             {
-                if (player.x != PLAYER_X_LEFT)  // Bomb/covered check goes here
+                // Move sprite, not camera
+                if (camera_x == 0U || player.x > PLAYER_X_CENTER)
                 {
-                    playerstate = WALKING;
+                    if (player.x != PLAYER_X_LEFT)  // Bomb/covered check goes here
+                    {
+                        playerstate = WALKING;
+                    }
                 }
-            }
-            else  // Move camera
-            {
-                new_camera_x -= 16;
-                playerstate = WALKING;
-                redraw = TRUE;
+                else  // Move camera
+                {
+                    new_camera_x -= 16;
+                    playerstate = WALKING;
+                    redraw = TRUE;
+                }
             }
         }
         else if ((curJoypad == J_RIGHT) && (prevJoypad == J_RIGHT))
         {
             playerDir = E;
-            // Move sprite, not camera
-            if (camera_x == camera_max_x || player.x < PLAYER_X_CENTER)
+
+            if (player.y != 0U && playGrid[player.yTile][player.xTile+1U].face < 3U)
             {
-                if (player.x != PLAYER_X_RIGHT)  // Bomb/covered check goes here
+
+                // Move sprite, not camera
+                if (camera_x == camera_max_x || player.x < PLAYER_X_CENTER)
                 {
-                    playerstate = WALKING;
+                    if (player.x != PLAYER_X_RIGHT)  // Bomb/covered check goes here
+                    {
+                        playerstate = WALKING;
+                    }
                 }
-            }
-            else  // Move camera
-            {
-                new_camera_x += 16;
-                playerstate = WALKING;
-                redraw = TRUE;
+                else  // Move camera
+                {
+                    new_camera_x += 16;
+                    playerstate = WALKING;
+                    redraw = TRUE;
+                }
             }
         }
     } 
