@@ -22,10 +22,14 @@
 
 */
 
+#ifndef __fontTiles_h_INCLUDE
+#define __fontTiles_h_INCLUDE
 
 /* Bank of tiles. */
 #define fontTilesBank 0
 /* Start of tile array. */
-const extern unsigned char fontTiles[];
+extern const unsigned char fontTiles[];
+
+#endif
 
 /* End of FONTTILES.H */

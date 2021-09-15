@@ -326,6 +326,9 @@ void phaseSelectCard()
 
 void phaseUseCard()
 {
+    // Hide cursor
+    move_sprite(0U, 0U, 0U);
+
     // Remove card from hand and discard it
     tempCardPtr = removeCardFromHand(&hand, m);
     discardCard(&deck, tempCardPtr->id);
@@ -338,7 +341,7 @@ void phaseUseCard()
     printLine(1U, 16U, cardDescStrings[14], FALSE);
 
     // If attack card
-    if (tempCardPtr->typeId == CT_ATTACK)
+    if (tempCardPtr->typeId == CT_ATTACK || tempCardPtr->typeId == CT_ATKDEF)
     {
         // Run damage calcs on target
         k = tempCardPtr->pointVal + player.atk - enemy.def;
@@ -346,26 +349,30 @@ void phaseUseCard()
             enemy.hpCur -= k;
         else
             enemy.hpCur = 0;
-        curAnim = ANIM_ATTACK;
         displayEnemyHP();
     }
-    else if (tempCardPtr->typeId == CT_SHIELD)
+    if (tempCardPtr->typeId == CT_SHIELD || tempCardPtr->typeId == CT_ATKDEF)
     {
         k = tempCardPtr->pointVal + player.def;
         player.shieldCount += k;
-        curAnim = ANIM_SHIELD;
         displayShields();
     }
-    else if (tempCardPtr->typeId == CT_HEAL)
+    if (tempCardPtr->typeId == CT_HEAL)
     {
         player.hpCur += tempCardPtr->pointVal;
         if (player.hpCur > player.hpMax)
         {
             player.hpCur = player.hpMax;
         }
-        curAnim = ANIM_HEAL;
         displayHP();
     }
+    else if (tempCardPtr->typeId == CT_MANA)
+    {
+        player.mpCur += tempCardPtr->pointVal;
+        displayMP();
+    }
+
+    curAnim = tempCardPtr->typeId;
 
     // Goto PLAYER_ANIM
     substate = PLAYER_ANIM;
@@ -375,22 +382,22 @@ void phaseAnimatePlayerMove()
 {
     if (animTick != maxAnimTick)
     {
-        switch (curAnim)
+        if (curAnim == CT_ATTACK || curAnim == CT_ATKDEF)  // If attacking, blink target
         {
-            case ANIM_ATTACK:  // If ANIM_ENEMY_BLINK, blink target
-                if ((animTick >> 2U) % 2U == 0U)
-                    set_bkg_tiles(xAnchorEnemy, yAnchorEnemy, 4U, 4U, blankEnemyMap);
-                else
-                    set_bkg_tiles(xAnchorEnemy, yAnchorEnemy, 4U, 4U, enemyMap);
-                break;
-            case ANIM_HEAL:  // If ANIM_HEAL, show heart popup
-                // TODO: display heal anim
-                // TODO: display number popup anim
-                break;
-            case ANIM_SHIELD:  // If ANIM_SHIELD, show shield popup
-                // TODO: display shield anim
-                // TODO: display number popup anim
-                break;
+            if ((animTick >> 2U) % 2U == 0U)
+                set_bkg_tiles(xAnchorEnemy, yAnchorEnemy, 4U, 4U, blankEnemyMap);
+            else
+                set_bkg_tiles(xAnchorEnemy, yAnchorEnemy, 4U, 4U, enemyMap);
+        }
+        else if (curAnim == CT_HEAL)  // If healing, show heart popup
+        {
+            // TODO: display heal anim
+            // TODO: display number popup anim
+        }
+        else if (curAnim == CT_SHIELD || curAnim == CT_ATKDEF)  // If shielding, show shield popup
+        {
+            // TODO: display shield anim
+            // TODO: display number popup anim
         }
         ++animTick;
     }
@@ -602,6 +609,12 @@ void displayCard(CardObject* card, UINT8 x, UINT8 y)
             break;
         case HAATO:
             set_bkg_tiles(x, y, 2U, 3U, card7Map);
+            break;
+        case MAKIMONO:
+            set_bkg_tiles(x, y, 2U, 3U, card8Map);
+            break;
+        case FUUSEN:
+            set_bkg_tiles(x, y, 2U, 3U, card9Map);
             break;
         default:
             set_bkg_tiles(x, y, 2U, 3U, cardBackMap);

@@ -105,7 +105,7 @@ void phaseDialogboxLoop()
     set_sprite_tile(0U, animFrame);
 
     // If B or Start, hide window
-    if (curJoypad & J_B && !(prevJoypad & J_B))
+    if ((curJoypad & J_A && !(prevJoypad & J_A)) || (curJoypad & J_B && !(prevJoypad & J_B)))
     {
         if (dialogQueueCount != 0U)
         {

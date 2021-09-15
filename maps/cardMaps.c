@@ -25,10 +25,10 @@ const unsigned char card6Map[] =      { 0x64, 0x67,
 const unsigned char card7Map[] =      { 0x6A, 0x6D,
                                         0x6B, 0x6E,
                                         0x6C, 0x6F };
-const unsigned char cardBoltMap[] =   { 0x70, 0x73,
+const unsigned char card8Map[] =      { 0x70, 0x73,
                                         0x71, 0x74,
                                         0x72, 0x75 };
-const unsigned char cardMirrorMap[] = { 0x76, 0x79,
+const unsigned char card9Map[] =      { 0x76, 0x79,
                                         0x77, 0x7A,
                                         0x78, 0x7B };
 const unsigned char cardEmptyMap[] =  { 0xFF, 0xFF,

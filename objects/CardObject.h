@@ -12,8 +12,8 @@ typedef struct CardObject {
     UINT8 mpCost;
 } CardObject;
 
-extern const UINT8 cardCostsDict[7U];
-extern const UINT8 cardValsDict[7U];
-extern const UINT8 cardTypesDict[7U];
+extern const UINT8 cardCostsDict[9U];
+extern const UINT8 cardValsDict[9U];
+extern const UINT8 cardTypesDict[9U];
 
 #endif

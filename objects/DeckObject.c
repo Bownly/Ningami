@@ -7,7 +7,7 @@
 #include "../enums.h"
 
 // test deck
-const CARDFACE defaultDeck[18U] = { SHURIKEN, SHURIKEN, SHURIKEN, SHURIKEN, SHURIKEN,  SHOUZOKU,
+const CARDFACE defaultDeck[18U] = { SHURIKEN, SHURIKEN, SHURIKEN, SHURIKEN, MAKIMONO,    FUUSEN,
                                     SHOUZOKU, SHOUZOKU, SHOUZOKU,   KATANA,   KATANA,    HASAMI,
                                      HIKOUKI,  HIKOUKI,   KABUTO,   KABUTO,    HAATO,     HAATO };
 

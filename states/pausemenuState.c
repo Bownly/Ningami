@@ -92,13 +92,11 @@ void phaseInitPausemenu()
 {
     setBlankWin();
 
-    // Draw cursor
     animTick = 0U;
     animFrame = 0U;
     oldM = m;
     m = 0U;
     n = 0U;
-    move_sprite(0U, xAnchorCursor, yAnchorCursor);
     
     // Draw cards
     displayFullDeck(&deck, 4U, 4U);
@@ -115,6 +113,10 @@ void phaseInitPausemenu()
     move_win(7U, 0U);
     // move_win(SCX_REG, SCY_REG);
     SHOW_WIN;
+
+    // Draw cursor
+    move_sprite(0U, xAnchorCursor, yAnchorCursor);
+
 
     substate = PM_LOOP;
 }
@@ -215,6 +217,12 @@ void displayCardWin(CARDFACE cardFace, UINT8 x, UINT8 y)
             break;
         case HAATO:
             set_win_tiles(x, y, 2U, 3U, card7Map);
+            break;
+        case MAKIMONO:
+            set_win_tiles(x, y, 2U, 3U, card8Map);
+            break;
+        case FUUSEN:
+            set_win_tiles(x, y, 2U, 3U, card9Map);
             break;
         default:
             set_win_tiles(x, y, 2U, 3U, cardBackMap);

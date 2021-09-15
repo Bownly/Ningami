@@ -39,13 +39,16 @@ typedef enum {
 typedef enum {
     CT_ATTACK,
     CT_SHIELD,
-    CT_HEAL
+    CT_HEAL,
+    CT_ATKDEF,
+    CT_MANA
 } CARDTYPE;
 
 typedef enum {
     ANIM_ATTACK,
     ANIM_SHIELD,
     ANIM_HEAL,
+    ANIM_MANA,
     ANIM_ENEMY_ATTACK,
     ANIM_ENEMY_SHIELD,
     ANIM_ENEMY_HEAL
@@ -59,7 +62,9 @@ typedef enum {
     SHOUZOKU = 4U,  // Low cost shield
     KABUTO   = 5U,  // High cost shield
     HAATO    = 6U,  // Heal
-    EMPTY    = 7U
+    MAKIMONO = 7U,  // Gain 1 MP
+    FUUSEN   = 8U,  // Low damage and low shield
+    EMPTY    = 9U
 } CARDFACE;
 
 typedef enum {
