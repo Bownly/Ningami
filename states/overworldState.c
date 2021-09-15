@@ -61,7 +61,6 @@ extern UINT8 dialogQueue[];
 extern UINT8 dialogQueueCount;
 
 UINT8 playerstate;
-UINT8 playerDir = 0U;
 
 TileObject playGrid[30U][30U];
 TileObject* tilePtr;
@@ -214,7 +213,7 @@ void phasePlayerInputs()
     // Player movements and inputs
     if (playerstate == WALKING)
     {
-        if (playerDir == N)
+        if (player.dir == N)
         {
             if (camera_y == 0U || player.y != PLAYER_Y_CENTER)
             {
@@ -235,7 +234,7 @@ void phasePlayerInputs()
                 }
             }
         }
-        else if (playerDir == S)
+        else if (player.dir == S)
         {
             if (camera_y == camera_max_y || player.y != PLAYER_Y_CENTER)
             {
@@ -256,7 +255,7 @@ void phasePlayerInputs()
                 }
             }
         }
-        else if (playerDir == W)
+        else if (player.dir == W)
         {
             if (camera_x == 0U || player.x != PLAYER_X_CENTER)
             {
@@ -277,7 +276,7 @@ void phasePlayerInputs()
                 }
             }
         }
-        else if (playerDir == E)
+        else if (player.dir == E)
         {
             if (camera_x == camera_max_x || player.x != PLAYER_X_CENTER)
             {
@@ -308,7 +307,7 @@ void phasePlayerInputs()
             oldGamestate = gamestate;
             gamestate = STATE_PAUSEMENU;
             substate = PM_INIT;
-            hide_metasprite(player_metasprites[playerDir*3 + animFrame], PLAYER_SPR_NUM_START);
+            hide_metasprite(player_metasprites[player.dir*3 + animFrame], PLAYER_SPR_NUM_START);
             return;
         }
         else if (curJoypad & J_A && !(prevJoypad & J_A))
@@ -319,7 +318,7 @@ void phasePlayerInputs()
         // Cardinal movement
         else if ((curJoypad == J_UP) && (prevJoypad == J_UP))
         {
-            playerDir = N;
+            player.dir = N;
 
             if (player.y != 0U && playGrid[player.yTile-1U][player.xTile].face < 3U)
             {
@@ -341,7 +340,7 @@ void phasePlayerInputs()
         }
         else if ((curJoypad == J_DOWN) && (prevJoypad == J_DOWN))
         {
-            playerDir = S;
+            player.dir = S;
 
             if (player.y != 0U && playGrid[player.yTile+1U][player.xTile].face < 3U)
             {
@@ -363,7 +362,7 @@ void phasePlayerInputs()
         } 
         else if ((curJoypad == J_LEFT) && (prevJoypad == J_LEFT))
         {
-            playerDir = W;
+            player.dir = W;
 
             if (player.y != 0U && playGrid[player.yTile][player.xTile-1U].face < 3U)
             {
@@ -385,7 +384,7 @@ void phasePlayerInputs()
         }
         else if ((curJoypad == J_RIGHT) && (prevJoypad == J_RIGHT))
         {
-            playerDir = E;
+            player.dir = E;
 
             if (player.y != 0U && playGrid[player.yTile][player.xTile+1U].face < 3U)
             {
@@ -420,9 +419,9 @@ void phasePlayerInputs()
         animFrame = 1U;
     
     if (shouldHidePlayer == TRUE)
-        hide_metasprite(player_metasprites[playerDir*3 + animFrame], PLAYER_SPR_NUM_START);
+        hide_metasprite(player_metasprites[player.dir*3 + animFrame], PLAYER_SPR_NUM_START);
     else
-        move_metasprite(player_metasprites[playerDir*3 + animFrame], PLAYER_TILE_NUM_START, PLAYER_SPR_NUM_START, player.x, player.y);
+        move_metasprite(player_metasprites[player.dir*3 + animFrame], PLAYER_TILE_NUM_START, PLAYER_SPR_NUM_START, player.x, player.y);
 
     if (redraw && playerstate == WALKING)
     {

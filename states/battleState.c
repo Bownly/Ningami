@@ -355,8 +355,8 @@ void phaseUseCard()
     displayHand(&hand, xAnchorHand, yAnchorHand);
 
     // Update card description to blank
-    printLine(1U, 15U, cardDescStrings[14], FALSE);
-    printLine(1U, 16U, cardDescStrings[14], FALSE);
+    printLine(1U, 15U, cardDescStrings[18], FALSE);
+    printLine(1U, 16U, cardDescStrings[18], FALSE);
 
     // If attack card
     if (tempCardPtr->typeId == CT_ATTACK || tempCardPtr->typeId == CT_ATKDEF)
@@ -430,17 +430,18 @@ void phaseAnimatePlayerMove()
             else
                 set_bkg_tiles(xAnchorEnemy, yAnchorEnemy, 4U, 4U, enemyMap);
         }
+
         if (curAnim != CT_ATTACK)
         {
             if (animTick == 0U)
             {
                 set_bkg_tiles(xAnchorEnemy+1U, yAnchorEnemy+4U, 2U, 2U, battleAnimMaps[0]);
             }
-            else if (animTick == 1U)
+            else if (animTick>>1U == 2U)
                 set_bkg_tiles(xAnchorEnemy+1U, yAnchorEnemy+4U, 2U, 2U, battleAnimMaps[1]);
-            else if (animTick == 3U)
+            else if (animTick == 6U)
                 set_bkg_tiles(xAnchorEnemy+1U, yAnchorEnemy+4U, 2U, 2U, battleAnimMaps[2]);
-            else if (animTick == 4U)
+            else if (animTick == 7U)
             {
                 move_sprite(1U, 72U, 80U);
                 move_sprite(2U, 72U, 88U);
