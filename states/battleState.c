@@ -23,6 +23,8 @@ extern const unsigned char cardTiles[];
 extern const unsigned char cursorTiles[];
 extern const unsigned char emptyTiles[];
 extern const unsigned char enemyHorseTiles[];
+extern const unsigned char enemyDogTiles[];
+extern const unsigned char enemyKitsuneTiles[];
 extern const unsigned char fontTiles[];
 // extern const unsigned char scorenumTiles[];
 
@@ -63,6 +65,13 @@ const UINT8 xAnchorShield = 15U;
 const UINT8 yAnchorShield = 13U;
 const UINT8 xAnchorEnemy = 8U;
 const UINT8 yAnchorEnemy = 4U;
+const UINT8 xAnchorEnemyHP = 2U;
+const UINT8 yAnchorEnemyHP = 5U;
+const UINT8 xAnchorEnemyAtk = 15U;
+const UINT8 yAnchorEnemyAtk = 5U;
+const UINT8 xAnchorEnemyShield = 15U;
+const UINT8 yAnchorEnemyShield = 6U;
+
 
 extern UINT8 animFrame;
 extern UINT8 animTick;
@@ -93,7 +102,9 @@ void displayHand(HandObject*, UINT8, UINT8);
 void displayHP();
 void displayMP();
 void displayShields();
-
+void displayEnemyHP();
+void displayEnemyAtk();
+void displayEnemyShields();
 
 void battleStateMain()
 {
@@ -159,7 +170,21 @@ void phaseOpunZaGeimu()
     
     // Initialize enemy data
     // TODO make this variable based on different enemy types
-    set_bkg_data(enemyTileIndex, 16U, enemyHorseTiles);
+    switch (enemyId)
+    {
+        case ENEMY_INU:
+            set_bkg_data(enemyTileIndex, 16U, enemyDogTiles);
+            break;
+        case ENEMY_KITSUNE:
+            set_bkg_data(enemyTileIndex, 16U, enemyKitsuneTiles);
+            break;
+        case ENEMY_TSURU:
+            set_bkg_data(enemyTileIndex, 16U, enemyHorseTiles);
+            break;
+        default:
+            set_bkg_data(enemyTileIndex, 16U, enemyDogTiles);
+            break;
+    }
     enemy = enemyDex[enemyId];
 
     xAnchorHand = 6U;
@@ -173,10 +198,13 @@ void phaseOpunZaGeimu()
     // Show enemy on screen
     set_bkg_tiles(xAnchorEnemy, yAnchorEnemy, 4U, 4U, enemyMap);
 
-    // Show player stats on screen
+    // Show player and enemy stats on screen
     displayHP();
     displayMP();
     displayShields();
+    displayEnemyHP();
+    displayEnemyAtk();
+    displayEnemyShields();
 
     // Draw the dialog box
     set_bkg_tiles(0U, 14U, 20U, 4U, textWindowMap);
@@ -188,7 +216,6 @@ void phaseOpunZaGeimu()
 
     // // test junk
     // displayFullDeck(&deck, 0, 0);
-    set_bkg_tile_xy(0U, 0U, enemyId);
 }
 
 void phaseStartTurn()
@@ -320,6 +347,7 @@ void phaseUseCard()
         else
             enemy.hpCur = 0;
         curAnim = ANIM_ATTACK;
+        displayEnemyHP();
     }
     else if (tempCardPtr->typeId == CT_SHIELD)
     {
@@ -622,5 +650,39 @@ void displayShields()
         set_bkg_tile_xy(xAnchorShield, yAnchorShield, 0xFFU);
     set_bkg_tile_xy(xAnchorShield+1, yAnchorShield, player.shieldCount%10U);
     set_bkg_tile_xy(xAnchorShield+2, yAnchorShield, 0x29U);
+}
+
+void displayEnemyHP()
+{
+    if (enemy.hpCur/10U != 0)
+        set_bkg_tile_xy(xAnchorHP, yAnchorEnemyHP, enemy.hpCur/10U);
+    else
+        set_bkg_tile_xy(xAnchorHP, yAnchorEnemyHP, 0xFFU);
+    set_bkg_tile_xy(xAnchorHP+1, yAnchorEnemyHP, enemy.hpCur%10U);
+    set_bkg_tile_xy(xAnchorHP+2, yAnchorEnemyHP, 0x28U);
+
+    set_bkg_tile_xy(xAnchorHP, yAnchorEnemyHP+1, 0x27U);
+    set_bkg_tile_xy(xAnchorHP+1, yAnchorEnemyHP+1, enemy.hpMax/10U);
+    set_bkg_tile_xy(xAnchorHP+2, yAnchorEnemyHP+1, enemy.hpMax%10U);
+}
+
+void displayEnemyAtk()
+{
+    if (enemy.atk/10U != 0)
+        set_bkg_tile_xy(xAnchorEnemyAtk, yAnchorEnemyAtk, enemy.atk/10U);
+    else
+        set_bkg_tile_xy(xAnchorEnemyAtk, yAnchorEnemyAtk, 0xFFU);
+    set_bkg_tile_xy(xAnchorEnemyAtk+1, yAnchorEnemyAtk, enemy.atk%10U);
+    set_bkg_tile_xy(xAnchorEnemyAtk+2, yAnchorEnemyAtk, 0x2CU);
+}
+
+void displayEnemyShields()
+{
+    if (enemy.shieldCount/10U != 0)
+        set_bkg_tile_xy(xAnchorEnemyShield, yAnchorEnemyShield, enemy.shieldCount/10U);
+    else
+        set_bkg_tile_xy(xAnchorEnemyShield, yAnchorEnemyShield, 0xFFU);
+    set_bkg_tile_xy(xAnchorEnemyShield+1, yAnchorEnemyShield, enemy.shieldCount%10U);
+    set_bkg_tile_xy(xAnchorEnemyShield+2, yAnchorEnemyShield, 0x29U);
 }
 
