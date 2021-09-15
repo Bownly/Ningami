@@ -28,6 +28,8 @@ extern const unsigned char enemyHorseTiles[];
 extern const unsigned char enemyKitsuneTiles[];
 extern const unsigned char fontTiles[];
 extern const unsigned char glintTiles[];
+extern const unsigned char healAnimTiles[];
+extern const unsigned char manaAnimTiles[];
 extern const unsigned char shieldAnimTiles[];
 // extern const unsigned char scorenumTiles[];
 
@@ -84,6 +86,7 @@ const UINT8 maxAnimTick = 16U;
 ANIMTYPE curAnim = ANIM_ENEMY_ATTACK;
 
 const unsigned char blankEnemyMap[16U] = { 0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF };
+const unsigned char blankTile8x8[16U]  = { 0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00 };
 
 /* SUBSTATE METHODS */
 void phaseOpunZaGeimu();
@@ -171,7 +174,6 @@ void phaseOpunZaGeimu()
     SHOW_BKG;
     SHOW_SPRITES;
     // set_bkg_data(scoreNumsTileIndex, 20U, scorenumTiles);
-    set_bkg_data(battleAnimTileIndex, 12U, shieldAnimTiles);
     set_bkg_data(glintTileIndex, 2U, glintTiles);
 
     set_sprite_tile(1U, glintTileIndex);
@@ -369,7 +371,6 @@ void phaseUseCard()
     }
     if (tempCardPtr->typeId == CT_SHIELD || tempCardPtr->typeId == CT_ATKDEF)
     {
-        set_bkg_data(battleAnimTileIndex, 12U, shieldAnimTiles);
         k = tempCardPtr->pointVal + player.def;
         player.shieldCount += k;
     }
@@ -396,6 +397,30 @@ void phaseUseCard()
 
 void phaseAnimatePlayerMove()
 {
+    if (animTick == 0U)
+    {
+        // Load appropriate graphics
+        if (curAnim == CT_ATTACK)
+        {
+            for (k = 0; k != 12U; ++k)
+            {
+                set_bkg_data(battleAnimTileIndex + k, 1U, blankTile8x8);
+            }
+        }
+        if (curAnim == CT_HEAL)
+        {
+            set_bkg_data(battleAnimTileIndex, 12U, healAnimTiles);
+        }
+        if (curAnim == CT_SHIELD || curAnim == CT_ATKDEF)
+        {
+            set_bkg_data(battleAnimTileIndex, 12U, shieldAnimTiles);
+        }
+        if (curAnim == CT_MANA)
+        {
+            set_bkg_data(battleAnimTileIndex, 12U, manaAnimTiles);
+        }
+    }
+
     if (animTick != maxAnimTick)
     {
         if (curAnim == CT_ATTACK || curAnim == CT_ATKDEF)  // If attacking, blink target
@@ -405,15 +430,12 @@ void phaseAnimatePlayerMove()
             else
                 set_bkg_tiles(xAnchorEnemy, yAnchorEnemy, 4U, 4U, enemyMap);
         }
-        if (curAnim == CT_HEAL)  // If healing, show heart popup
-        {
-            // TODO: display heal anim
-            // TODO: display number popup anim
-        }
-        if (curAnim == CT_SHIELD || curAnim == CT_ATKDEF)  // If shielding, show shield popup
+        if (curAnim != CT_ATTACK)
         {
             if (animTick == 0U)
+            {
                 set_bkg_tiles(xAnchorEnemy+1U, yAnchorEnemy+4U, 2U, 2U, battleAnimMaps[0]);
+            }
             else if (animTick == 1U)
                 set_bkg_tiles(xAnchorEnemy+1U, yAnchorEnemy+4U, 2U, 2U, battleAnimMaps[1]);
             else if (animTick == 3U)
@@ -433,7 +455,7 @@ void phaseAnimatePlayerMove()
     }
     else  // Final frame
     {
-        if (curAnim == CT_ATTACK || curAnim == CT_ATKDEF)  // If ANIM_ENEMY_BLINK, blink target
+        if (curAnim == CT_ATTACK || curAnim == CT_ATKDEF)
         {
             // If dead, undraw
             if (enemy.hpCur == 0)
@@ -442,11 +464,19 @@ void phaseAnimatePlayerMove()
                 // TODO: play sfx
             }
         }
-        if (curAnim == CT_HEAL)  // If ANIM_HEAL, redraw hp
+        if (curAnim == CT_HEAL)
         {
+            set_bkg_tiles(xAnchorEnemy+1U, yAnchorEnemy+4U, 2U, 2U, blankEnemyMap);
+            hideGlintSprites();
             displayHP();
         }
-        if (curAnim == CT_SHIELD || curAnim == CT_ATKDEF)  // If ANIM_SHIELD, redraw shields
+        if (curAnim == CT_SHIELD || curAnim == CT_ATKDEF)
+        {
+            set_bkg_tiles(xAnchorEnemy+1U, yAnchorEnemy+4U, 2U, 2U, blankEnemyMap);
+            hideGlintSprites();
+            displayShields();
+        }
+        if (curAnim == CT_MANA || curAnim == CT_MANA)
         {
             set_bkg_tiles(xAnchorEnemy+1U, yAnchorEnemy+4U, 2U, 2U, blankEnemyMap);
             hideGlintSprites();

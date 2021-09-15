@@ -22,6 +22,8 @@ C:\gbdk2020\bin\lcc -Wa-l -c -o fonttiles.o tiles/fontTiles.c
 C:\gbdk2020\bin\lcc -Wa-l -c -o icontiles.o tiles/iconTiles.c
 @REM C:\gbdk2020\bin\lcc -Wa-l -c -o scorenumtiles.o tiles/scorenumTiles.c
 C:\gbdk2020\bin\lcc -Wa-l -Wf-bo1 -c -o glintTiles.o tiles/glintTiles.c
+C:\gbdk2020\bin\lcc -Wa-l -Wf-bo1 -c -o healAnimTiles.o tiles/healAnimTiles.c
+C:\gbdk2020\bin\lcc -Wa-l -Wf-bo1 -c -o manaAnimTiles.o tiles/manaAnimTiles.c
 C:\gbdk2020\bin\lcc -Wa-l -Wf-bo1 -c -o shieldAnimTiles.o tiles/shieldAnimTiles.c
 C:\gbdk2020\bin\lcc -Wa-l -Wf-bo2 -c -o foresttiles.o tiles/forestTiles.c
 C:\gbdk2020\bin\lcc -Wa-l -Wf-bo2 -c -o forestmetatiles.o tiles/forestMetaTiles.c
