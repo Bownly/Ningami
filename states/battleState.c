@@ -10,6 +10,7 @@
 #include "../maps/cardMaps.h"
 #include "../maps/enemyMap.c"
 #include "../maps/cardDescStrings.h"
+#include "../maps/battleAnimMaps.h"
 // #include "../maps/scoreNumMaps.c"
 
 #include "../objects/CardObject.h"
@@ -22,13 +23,17 @@ extern const unsigned char borderTiles[];
 extern const unsigned char cardTiles[];
 extern const unsigned char cursorTiles[];
 extern const unsigned char emptyTiles[];
-extern const unsigned char enemyHorseTiles[];
 extern const unsigned char enemyDogTiles[];
+extern const unsigned char enemyHorseTiles[];
 extern const unsigned char enemyKitsuneTiles[];
 extern const unsigned char fontTiles[];
+extern const unsigned char glintTiles[];
+extern const unsigned char shieldAnimTiles[];
 // extern const unsigned char scorenumTiles[];
 
 const UINT8 enemyTileIndex  = 0xE0;
+const UINT8 battleAnimTileIndex  = 0xF0;
+const UINT8 glintTileIndex  = 0xFC;
 // const UINT8 scoreNumsTileIndex = 0xB0;
 
 extern UINT8 curJoypad;
@@ -105,6 +110,8 @@ void displayShields();
 void displayEnemyHP();
 void displayEnemyAtk();
 void displayEnemyShields();
+void hideGlintSprites();
+
 
 void battleStateMain()
 {
@@ -164,6 +171,15 @@ void phaseOpunZaGeimu()
     SHOW_BKG;
     SHOW_SPRITES;
     // set_bkg_data(scoreNumsTileIndex, 20U, scorenumTiles);
+    set_bkg_data(battleAnimTileIndex, 12U, shieldAnimTiles);
+    set_bkg_data(glintTileIndex, 2U, glintTiles);
+
+    set_sprite_tile(1U, glintTileIndex);
+    set_sprite_tile(2U, glintTileIndex+1U);
+    set_sprite_prop(1U, get_sprite_prop(1U) & ~S_FLIPX);
+    set_sprite_prop(1U, get_sprite_prop(1U) & ~S_FLIPY);
+    set_sprite_prop(2U, get_sprite_prop(2U) & ~S_FLIPX);
+    set_sprite_prop(2U, get_sprite_prop(2U) & ~S_FLIPY);
 
     move_bkg(0, 0);
     set_bkg_tiles(0U, 18U, 16U, 1U, blankEnemyMap);
@@ -353,9 +369,9 @@ void phaseUseCard()
     }
     if (tempCardPtr->typeId == CT_SHIELD || tempCardPtr->typeId == CT_ATKDEF)
     {
+        set_bkg_data(battleAnimTileIndex, 12U, shieldAnimTiles);
         k = tempCardPtr->pointVal + player.def;
         player.shieldCount += k;
-        displayShields();
     }
     if (tempCardPtr->typeId == CT_HEAL)
     {
@@ -389,37 +405,54 @@ void phaseAnimatePlayerMove()
             else
                 set_bkg_tiles(xAnchorEnemy, yAnchorEnemy, 4U, 4U, enemyMap);
         }
-        else if (curAnim == CT_HEAL)  // If healing, show heart popup
+        if (curAnim == CT_HEAL)  // If healing, show heart popup
         {
             // TODO: display heal anim
             // TODO: display number popup anim
         }
-        else if (curAnim == CT_SHIELD || curAnim == CT_ATKDEF)  // If shielding, show shield popup
+        if (curAnim == CT_SHIELD || curAnim == CT_ATKDEF)  // If shielding, show shield popup
         {
-            // TODO: display shield anim
-            // TODO: display number popup anim
+            if (animTick == 0U)
+                set_bkg_tiles(xAnchorEnemy+1U, yAnchorEnemy+4U, 2U, 2U, battleAnimMaps[0]);
+            else if (animTick == 1U)
+                set_bkg_tiles(xAnchorEnemy+1U, yAnchorEnemy+4U, 2U, 2U, battleAnimMaps[1]);
+            else if (animTick == 3U)
+                set_bkg_tiles(xAnchorEnemy+1U, yAnchorEnemy+4U, 2U, 2U, battleAnimMaps[2]);
+            else if (animTick == 4U)
+            {
+                move_sprite(1U, 72U, 80U);
+                move_sprite(2U, 72U, 88U);
+            }
+            else
+            {
+                scroll_sprite(1U, 2U, 0U);
+                scroll_sprite(2U, 2U, 0U);
+            }
         }
         ++animTick;
     }
-    else
+    else  // Final frame
     {
-        switch (curAnim)
+        if (curAnim == CT_ATTACK || curAnim == CT_ATKDEF)  // If ANIM_ENEMY_BLINK, blink target
         {
-            case ANIM_ATTACK:  // If ANIM_ENEMY_BLINK, blink target
-                // If dead, undraw
-                if (enemy.hpCur == 0)
-                {
-                    set_bkg_tiles(8U, 4U, 4U, 4U, blankEnemyMap);
-                    // TODO: play sfx
-                }
-                break;
-            case ANIM_HEAL:  // If ANIM_HEAL, redraw hp
-                displayHP();
-                break;
-            case ANIM_SHIELD:  // If ANIM_SHIELD, redraw shields
-                displayShields();
-                break;
+            // If dead, undraw
+            if (enemy.hpCur == 0)
+            {
+                set_bkg_tiles(8U, 4U, 4U, 4U, blankEnemyMap);
+                // TODO: play sfx
+            }
         }
+        if (curAnim == CT_HEAL)  // If ANIM_HEAL, redraw hp
+        {
+            displayHP();
+        }
+        if (curAnim == CT_SHIELD || curAnim == CT_ATKDEF)  // If ANIM_SHIELD, redraw shields
+        {
+            set_bkg_tiles(xAnchorEnemy+1U, yAnchorEnemy+4U, 2U, 2U, blankEnemyMap);
+            hideGlintSprites();
+            displayShields();
+        }
+
         // Goto WIN_CHECK
         substate = WIN_CHECK;
     }
@@ -568,9 +601,10 @@ void phaseEndBattle()
 {
     // If win, end battle
     gamestate = STATE_OVERWORLD;
-    // substate = OW_INIT_OW;
     substate = OW_INIT_OW;
     move_sprite(0U, 0U, 0U);
+    fadeout();
+
     // If lose, goto title screen
 }
 
@@ -699,3 +733,8 @@ void displayEnemyShields()
     set_bkg_tile_xy(xAnchorEnemyShield+2, yAnchorEnemyShield, 0x29U);
 }
 
+void hideGlintSprites()
+{
+    move_sprite(1U, 0U, 0U);
+    move_sprite(2U, 0U, 0U);
+}

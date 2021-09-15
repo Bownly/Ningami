@@ -10,6 +10,7 @@ typedef struct CardObject {
     CARDFACE faceId;
     UINT8 pointVal;
     UINT8 mpCost;
+    UINT8 paperCost;
 } CardObject;
 
 extern const UINT8 cardCostsDict[9U];

@@ -47,18 +47,18 @@ const UINT8 xAnchorCursor = 36U;
 const UINT8 yAnchorCursor = 42U;
 
 /* SUBSTATE METHODS */
-void phaseInitPausemenu();
-void phasePausemenuLoop();
+void phaseInitShop();
+void phaseShopLoop();
+void phaseBuyYNLoop();
 
 /* HELPER METHODS */
 
 /* DISPLAY METHODS */
-void displayDeckCursor();
-void displayCardWin(CARDFACE, UINT8, UINT8);
-void displayCardDescWin();
-void displayFullDeck(DeckObject*, UINT8, UINT8);
-void displayHp();
-void displayPaper();
+void displayShopCursor();
+void displayCardWinShop(CARDFACE, UINT8, UINT8);
+void displayCardDescWinShop();
+void displayShopStock(DeckObject*, UINT8, UINT8);
+void displayShopPaper();
 
 void pausemenuStateMain()
 {
@@ -67,10 +67,10 @@ void pausemenuStateMain()
     switch (substate)
     {
         case PM_INIT:
-            phaseInitPausemenu();
+            phaseInitShop();
             break;
         case PM_LOOP:
-            phasePausemenuLoop();
+            phaseShopLoop();
             break;
         default:  // Abort to title in the event of unexpected state
             gamestate = STATE_TITLE;
@@ -93,19 +93,17 @@ void phaseInitPausemenu()
     n = 0U;
     
     // Draw cards
-    displayFullDeck(&deck, 4U, 4U);
-    displayCardDescWin();
+    // displayShopStock(&deck, 4U, 4U);
+    displayCardDescWinShop();
 
     // Draw text window
     set_win_tiles(0U, 14U, 20U, 4U, textWindowMap);
 
     // Draw player stats
-    displayHp();
-    displayPaper();
+    displayShopPaper();
 
     // Show window
     move_win(7U, 0U);
-    // move_win(SCX_REG, SCY_REG);
     SHOW_WIN;
 
     // Draw cursor
@@ -114,7 +112,7 @@ void phaseInitPausemenu()
     substate = PM_LOOP;
 }
 
-void phasePausemenuLoop()
+void phaseShopLoop()
 {
     ++animTick;
     animFrame = animTick / 8U % 4U;
@@ -146,16 +144,16 @@ void phasePausemenuLoop()
         }
         else
             --n;
-        displayDeckCursor();
-        displayCardDescWin();
+        displayShopCursor();
+        displayCardDescWinShop();
     }
     else if (curJoypad & J_DOWN && !(prevJoypad & J_DOWN))
     {
         ++n;
         if ((n*6U + m) >= deck.deckSize)
             n = 0;
-        displayDeckCursor();
-        displayCardDescWin();
+        displayShopCursor();
+        displayCardDescWinShop();
     }
     else if (curJoypad & J_LEFT && !(prevJoypad & J_LEFT))
     {
@@ -168,16 +166,16 @@ void phasePausemenuLoop()
         }
         else
             --m;
-        displayDeckCursor();
-        displayCardDescWin();
+        displayShopCursor();
+        displayCardDescWinShop();
     }
     else if (curJoypad & J_RIGHT && !(prevJoypad & J_RIGHT))
     {
         ++m;
         if (m == 6 || (n*6U + m) >= deck.deckSize)
             m = 0;
-        displayDeckCursor();
-        displayCardDescWin();
+        displayShopCursor();
+        displayCardDescWinShop();
     }
 }
 
@@ -186,7 +184,7 @@ void phasePausemenuLoop()
 
 
 /******************************** DISPLAY METHODS ********************************/
-void displayCardWin(CARDFACE cardFace, UINT8 x, UINT8 y)
+void displayCardWinShop(CARDFACE cardFace, UINT8 x, UINT8 y)
 {
     switch (cardFace)
     {
@@ -224,18 +222,18 @@ void displayCardWin(CARDFACE cardFace, UINT8 x, UINT8 y)
     }
 }
 
-void displayCardDescWin()
+void displayCardDescWinShop()
 {
     printLine(1U, 15U, cardDescStrings[(defaultDeck[n*6U + m])<<1], TRUE);
     printLine(1U, 16U, cardDescStrings[((defaultDeck[n*6U + m])<<1)+1], TRUE);
 }
 
-void displayDeckCursor()
+void displayShopCursor()
 {
     move_sprite(0U, xAnchorCursor + m*16U, yAnchorCursor + n*24U);
 }
 
-void displayFullDeck(DeckObject* deck, UINT8 x, UINT8 y)
+void displayShopStock(DeckObject* deck, UINT8 x, UINT8 y)
 {
     for (i = 0U; i != deck->deckSize; i++)
     {
@@ -243,21 +241,7 @@ void displayFullDeck(DeckObject* deck, UINT8 x, UINT8 y)
     }
 }
 
-void displayHp()
-{
-    if (player.hpCur/10U != 0)
-        set_win_tile_xy(xAnchorHp, yAnchorHp, player.hpCur/10U);
-    else
-        set_win_tile_xy(xAnchorHp, yAnchorHp, 0xFFU);
-    set_win_tile_xy(xAnchorHp+1, yAnchorHp, player.hpCur%10U);
-    set_win_tile_xy(xAnchorHp+2, yAnchorHp, 0x27U);
-
-    set_win_tile_xy(xAnchorHp+3, yAnchorHp, player.hpMax/10U);
-    set_win_tile_xy(xAnchorHp+4, yAnchorHp, player.hpMax%10U);
-    set_win_tile_xy(xAnchorHp+5, yAnchorHp, 0x28U);
-}
-
-void displayPaper()
+void displayShopPaper()
 {
     if (player.paper/100U != 0)
         set_win_tile_xy(xAnchorPaper, yAnchorPaper, player.paper/100U);
