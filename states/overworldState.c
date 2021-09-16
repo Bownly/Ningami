@@ -22,19 +22,7 @@
 #define PLAYER_SPR_NUM_START 1U
 #define PLAYER_TILE_NUM_START 3U
 
-// extern const unsigned char borderTiles[];
-// extern const unsigned char cardTiles[];
-// extern const unsigned char cursorTiles[];
-// extern const unsigned char emptyTiles[];
-// extern const unsigned char fontTiles[];
 extern const unsigned char forestMetaTiles[][4U];
-
-// extern const EventObject room1Events[];
-
-// const UINT8 borderTileIndex = 0x30;
-// const UINT8 cardsTileIndex  = 0x40;
-// const UINT8 enemyTileIndex  = 0xB0;
-// // const UINT8 scoreNumsTileIndex = 0xB0;
 
 extern UINT8 curJoypad;
 extern UINT8 prevJoypad;
@@ -83,7 +71,7 @@ const UINT8 PLAYER_X_RIGHT  = 160U;
 const UINT8 PLAYER_Y_UP     = 24U;
 const UINT8 PLAYER_Y_CENTER = 88U;
 const UINT8 PLAYER_Y_DOWN   = 152U;
-#define STARTPOS 4U
+#define STARTPOS 0U
 #define STARTCAM 0U
 
 // current and new positions of the camera in pixels
@@ -95,10 +83,6 @@ UBYTE redraw;
 
 extern UINT8 animTick;
 extern UINT8 animFrame;
-// const UINT8 maxAnimTick = 16U;
-// ANIMTYPE curAnim = ANIM_ENEMY_ATTACK;
-
-// const unsigned char blankEnemyMap[16U] = { 0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF };
 
 /* SUBSTATE METHODS */
 void phaseInitOverworld();
@@ -173,10 +157,9 @@ void phaseInitMap()
 {
     // Check levelId, pull appropriate level
     loadRoom();
+
     // Check player coords/dir, draw player appropriately
-    
     // Reset camera
-    // 
 
     UINT16 c = 0U;
     for (j = 0U; j != gridH; j++)
@@ -189,13 +172,11 @@ void phaseInitMap()
     }
 
     // Draw grid
-    // 11 and 10 instead of 10 and 9 because the battlestate writes 1 column and 1 row past
-    // ...the max resolution for screenshake reasons.
-    for (i = 0U; i != 11U; i++)
+    for (i = 0U; i != 10U; i++)
     {
-        for (j = 0U; j != 10U; j++)
+        for (j = 0U; j != 9U; j++)
         {
-            drawBkgTile(i<<1U, j<<1U, &playGrid[j][i]);
+            drawBkgTile((map_pos_x+(i<<1U))%32U, (map_pos_y+(j<<1U))%32U, &playGrid[(map_pos_y>>1U)+j][(map_pos_x>>1U)+i]);
         }
     }
 
@@ -501,7 +482,7 @@ void checkUnderfootTile()
 /******************************** DISPLAY METHODS ********************************/
 void draw_new_bkg() {
     // Vertical
-    new_map_pos_y = (BYTE)(new_camera_y >> 3u);
+    new_map_pos_y = (BYTE)(new_camera_y >> 3U);
     if (map_pos_y != new_map_pos_y) { 
         if (new_camera_y < camera_y) 
         {
