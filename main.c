@@ -188,10 +188,8 @@ void titlePressStartLoop()
 
 void initPlayer()
 {
-    player.x = 80U;
-    player.y = 88U;
-    player.xTile = 4U;
-    player.yTile = 4U;
+    player.xTile = 3U;
+    player.yTile = 5U;
     player.dir = S;
     player.hpMax = 10U;
     player.hpCur = 10U;

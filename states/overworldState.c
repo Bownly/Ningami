@@ -146,37 +146,6 @@ void phaseInitMap()
     loadRoom();
 
     // Check player coords/dir, draw player appropriately
-    // Reset camera
-    if (player.xTile > 4)
-    {
-        // map_pos_x = player.xTile*2U;
-        map_pos_x = (BYTE)(camera_x >> 3U);
-        camera_x = (player.xTile-4U)*16U;
-        if (camera_x > camera_max_x)
-            camera_x = camera_max_x;
-        new_camera_x = camera_x;
-    }
-    else
-    {
-        map_pos_x = 0U;
-        camera_x = 0U;
-        new_camera_x = camera_x;
-    }
-    if (player.yTile > 4)
-    {
-        // map_pos_y = player.yTile*2U;
-        map_pos_y = (BYTE)(camera_y >> 3U);
-        camera_y = (player.yTile-4U)*16U;
-        if (camera_y > camera_max_y)
-            camera_y = camera_max_y;
-        new_camera_y = camera_y;
-    }
-    else
-    {
-        map_pos_y = 0U;
-        camera_y = 0U;
-        new_camera_y = camera_y;
-    }
     SCX_REG = camera_x; SCY_REG = camera_y;
 
     // Load room map into playGrid
@@ -201,6 +170,7 @@ void phaseInitMap()
 
     // Spawn player
     set_sprite_data(PLAYER_TILE_NUM_START, sizeof(player_data) >> 4U, player_data);
+    move_metasprite(player_metasprites[player.dir*3 + 1U], PLAYER_TILE_NUM_START, PLAYER_SPR_NUM_START, player.x, player.y);
 
     substate = OW_PLAYER_INPUTS;
 
@@ -444,6 +414,7 @@ void loadRoom()
         loadRoom();
         return;
     }
+
     room = roomDict[roomId];
     gridW = room.w;
     gridH = room.h;
@@ -453,6 +424,63 @@ void loadRoom()
     roomEventsPtr = room.events;
     encounterRate = room.encounterRate;
     encounterCounter = encounterRate;
+
+    // Reset camera and player position
+    if (player.xTile > 5)  // 5 is the x offset from left to center
+    {
+        // If on the far right side
+        if (player.xTile > (gridW - 5U))  // 5 is the x offset from right to center
+        {
+            camera_x = camera_max_x;
+            new_camera_x = camera_x;
+            map_pos_x = (BYTE)(camera_x >> 3U);
+            player.x = PLAYER_X_RIGHT - ((gridW - player.xTile) * 16U) + 16U;  // Classic annoying padding
+        }
+        else
+        {
+            camera_x = (player.xTile-5U)*16U;
+            if (camera_x > camera_max_x)
+                camera_x = camera_max_x;
+            new_camera_x = camera_x;
+            map_pos_x = (BYTE)(camera_x >> 3U);
+            player.x = PLAYER_X_CENTER;
+        }
+    }
+    else
+    {
+        map_pos_x = 0U;
+        camera_x = 0U;
+        new_camera_x = camera_x;
+        player.x = player.xTile % 20U * 16U + 16U;  // Classic annoying padding
+    }
+    if (player.yTile > 4)  // 4 is the y offset from top to center
+    {
+        // If on the far bottom
+        if (player.yTile > (gridH - 4U))  // 4 is the y offset from bottom to center
+        {
+            camera_y = camera_max_y;
+            new_camera_y = camera_y;
+            map_pos_y = (BYTE)(camera_y >> 3U);
+            player.y = PLAYER_Y_DOWN - ((gridH - player.yTile) * 16U) + 16U;  // Classic annoying padding
+        }
+        else
+        {
+            camera_y = (player.yTile-4U)*16U;
+            if (camera_y > camera_max_y)
+                camera_y = camera_max_y;
+            new_camera_y = camera_y;
+            map_pos_y = (BYTE)(camera_y >> 3U);
+            player.y = PLAYER_Y_CENTER;
+        }
+    }
+    else
+    {
+        map_pos_y = 0U;
+        camera_y = 0U;
+        new_camera_y = camera_y;
+        player.y = player.yTile % 18U * 16U + 24U;  // Classic annoying padding
+    }
+
 }
 
 void checkUnderfootTile()
@@ -460,7 +488,7 @@ void checkUnderfootTile()
     playerstate = IDLE;
     UINT8 didEvent = FALSE;
 
-    for (l = 0U; l != 3U; l++)  // TODO: Make this variable length, not a hard-coded 3
+    for (l = 0U; l != 4U; l++)  // TODO: Make this variable length, not a hard-coded 4
     {
         if (player.xTile == (roomEventsPtr+l)->x && player.yTile == (roomEventsPtr+l)->y)
         {
@@ -478,14 +506,19 @@ void checkUnderfootTile()
             {
                 didEvent = TRUE;
                 fadeout();
-                player.xTile = 3U;
-                player.yTile = 3U;
-                player.x = player.xTile % 18U * 16U + 16U;  // Weird padding for some reason
-                player.y = player.yTile % 20U * 16U + 24U;
-                roomId = 2U;
-                // player.xTile = spawnLocations[roomEventsPtr->value][1];
-                // player.yTile = spawnLocations[roomEventsPtr->value][2];
-                // roomId = spawnLocations[roomEventsPtr->value][0];
+                roomId = spawnLocations[(roomEventsPtr+l)->value][0];
+                player.xTile = spawnLocations[(roomEventsPtr+l)->value][1];
+                player.yTile = spawnLocations[(roomEventsPtr+l)->value][2];
+                player.dir = spawnLocations[(roomEventsPtr+l)->value][3];
+
+                // set_bkg_tile_xy(24, 25, spawnLocations[(roomEventsPtr+l)->value][0]);
+                // set_bkg_tile_xy(25, 25, spawnLocations[(roomEventsPtr+l)->value][1]);
+                // set_bkg_tile_xy(26, 25, spawnLocations[(roomEventsPtr+l)->value][2]);
+                // set_bkg_tile_xy(27, 25, spawnLocations[(roomEventsPtr+l)->value][3]);
+
+                // roomId = 2U;
+                // player.xTile = 1U;
+                // player.yTile = 18U;
 
                 gamestate = STATE_OVERWORLD;
                 substate = OW_INIT_OW;

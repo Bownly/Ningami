@@ -10,7 +10,8 @@
 
 
 const EventObject room1Events[] = {
-    { .x =  5U, .y =  5U, .type = EV_DIALOG,   .value = 2U },
+    { .x =  9U, .y =  9U, .type = EV_DIALOG,   .value = 2U },
+    { .x =  9U, .y =  9U, .type = EV_DIALOG,   .value = 6U },
     { .x = 10U, .y = 10U, .type = EV_DIALOG,   .value = 3U },
     { .x = 25U, .y =  9U, .type = EV_LOADROOM, .value = 1U }
 };
@@ -22,10 +23,10 @@ const EventObject room2Events[] = {
     { .x =  0U, .y = 18U, .type = EV_LOADROOM, .value = 0U }
 };
 
-const UINT8 spawnLocations[][3] = {
-    // Room num; x coord; y coord
-    { 1U, 24U,  9U},
-    { 2U,  1U, 18U}
+const UINT8 spawnLocations[][4] = {
+    // Room num; x coord; y coord; dir
+    { 1U, 24U,  9U, W},
+    { 2U,  1U, 18U, E}
 };
 
 const RoomObject roomDict[] = {
