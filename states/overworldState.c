@@ -134,20 +134,7 @@ void phaseInitOverworld()
     SHOW_SPRITES;
     HIDE_WIN;
 
-    // Initiatlize window
-    for (i = 0U; i != 2U; ++i)
-    {
-        for (j = 0U; j != 18U; ++j)
-        {
-            set_win_tile_xy(i, j, 0x32U);
-        }
-    }
-    // Draw pause window data: deck, hp, mp, paper
-
-    // set_bkg_data(0U, 40U, fontTiles);
-
     initrand(DIV_REG);
-    SCX_REG = camera_x; SCY_REG = camera_y; 
     redraw = FALSE;
 
     substate = OW_INIT_MAP;
@@ -160,7 +147,39 @@ void phaseInitMap()
 
     // Check player coords/dir, draw player appropriately
     // Reset camera
+    if (player.xTile > 4)
+    {
+        // map_pos_x = player.xTile*2U;
+        map_pos_x = (BYTE)(camera_x >> 3U);
+        camera_x = (player.xTile-4U)*16U;
+        if (camera_x > camera_max_x)
+            camera_x = camera_max_x;
+        new_camera_x = camera_x;
+    }
+    else
+    {
+        map_pos_x = 0U;
+        camera_x = 0U;
+        new_camera_x = camera_x;
+    }
+    if (player.yTile > 4)
+    {
+        // map_pos_y = player.yTile*2U;
+        map_pos_y = (BYTE)(camera_y >> 3U);
+        camera_y = (player.yTile-4U)*16U;
+        if (camera_y > camera_max_y)
+            camera_y = camera_max_y;
+        new_camera_y = camera_y;
+    }
+    else
+    {
+        map_pos_y = 0U;
+        camera_y = 0U;
+        new_camera_y = camera_y;
+    }
+    SCX_REG = camera_x; SCY_REG = camera_y;
 
+    // Load room map into playGrid
     UINT16 c = 0U;
     for (j = 0U; j != gridH; j++)
     {
@@ -191,6 +210,7 @@ void phaseInitMap()
 void phasePlayerInputs()
 {
     shouldHidePlayer = FALSE;
+
     // Player movements and inputs
     if (playerstate == WALKING)
     {
@@ -369,7 +389,6 @@ void phasePlayerInputs()
 
             if (player.y != 0U && playGrid[player.yTile][player.xTile+1U].face < 3U)
             {
-
                 // Move sprite, not camera
                 if (camera_x == camera_max_x || player.x < PLAYER_X_CENTER)
                 {
@@ -439,6 +458,7 @@ void loadRoom()
 void checkUnderfootTile()
 {
     playerstate = IDLE;
+    UINT8 didEvent = FALSE;
 
     for (l = 0U; l != 3U; l++)  // TODO: Make this variable length, not a hard-coded 3
     {
@@ -446,6 +466,7 @@ void checkUnderfootTile()
         {
             if ((roomEventsPtr+l)->type == EV_DIALOG)
             {
+                didEvent = TRUE;
                 dialogQueue[dialogQueueCount] = (roomEventsPtr+l)->value << 1U;
                 ++dialogQueueCount;
                 oldGamestate = STATE_OVERWORLD;
@@ -453,11 +474,28 @@ void checkUnderfootTile()
                 gamestate = STATE_DIALOG;
                 substate = DIALOG_INIT;
             }
+            else if ((roomEventsPtr+l)->type == EV_LOADROOM)
+            {
+                didEvent = TRUE;
+                fadeout();
+                player.xTile = 3U;
+                player.yTile = 3U;
+                player.x = player.xTile % 18U * 16U + 16U;  // Weird padding for some reason
+                player.y = player.yTile % 20U * 16U + 24U;
+                roomId = 2U;
+                // player.xTile = spawnLocations[roomEventsPtr->value][1];
+                // player.yTile = spawnLocations[roomEventsPtr->value][2];
+                // roomId = spawnLocations[roomEventsPtr->value][0];
+
+                gamestate = STATE_OVERWORLD;
+                substate = OW_INIT_OW;
+            }
+
         }
     }
 
     // Encounter check, but only if we didn't trigger an event flag above
-    if (substate != DIALOG_INIT)
+    if (didEvent == FALSE)
     {
         --encounterCounter;
         if (encounterCounter == 0U && encounterRate != 0U)
@@ -499,6 +537,7 @@ void draw_new_bkg() {
         }
         map_pos_y = new_map_pos_y; 
     }
+  
     // Horizontal 
     new_map_pos_x = (BYTE)(new_camera_x >> 3U);
     if (map_pos_x != new_map_pos_x) {

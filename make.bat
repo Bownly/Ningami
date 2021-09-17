@@ -38,7 +38,7 @@ C:\gbdk2020\bin\lcc -Wa-l -Wf-bo1 -c -o battleState.o states/battleState.c
 C:\gbdk2020\bin\lcc -Wa-l -Wf-bo2 -c -o overworldState.o states/overworldState.c
 C:\gbdk2020\bin\lcc -Wa-l -Wf-bo3 -c -o pausemenuState.o states/pausemenuState.c
 C:\gbdk2020\bin\lcc -Wa-l -Wf-bo4 -c -o dialogState.o states/dialogState.c
-C:\gbdk2020\bin\lcc -Wa-l -Wf-bo5 -c -o dialogState.o states/dialogState.c
+@REM C:\gbdk2020\bin\lcc -Wa-l -Wf-bo5 -c -o shopState.o states/shopState.c
 
 C:\gbdk2020\bin\lcc -Wa-l -c -o cardDescStrings.o maps/cardDescStrings.c
 C:\gbdk2020\bin\lcc -Wa-l -c -o cardMaps.o maps/cardMaps.c

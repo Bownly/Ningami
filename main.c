@@ -15,6 +15,7 @@
 // #include "maps/scoreNumMaps.c"
 
 #include "states/battleState.h"
+#include "states/dialogState.h"
 #include "states/overworldState.h"
 #include "states/pausemenuState.h"
 
@@ -116,7 +117,7 @@ void main()
                 break;
             case STATE_DIALOG:
                 SWITCH_ROM_MBC1(4U);
-                pausemenuStateMain();
+                dialogStateMain();
                 break;
         }
         // // music stuff

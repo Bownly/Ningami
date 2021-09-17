@@ -88,6 +88,7 @@ typedef enum {
 typedef enum {
     EV_DIALOG,
     EV_BATTLE,
+    EV_LOADROOM,
     EV_CARD_GET
 } EVENTTYPE;
 

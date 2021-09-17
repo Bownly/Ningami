@@ -9,7 +9,7 @@ typedef struct EventObject {
     UINT8 y;
     EVENTTYPE type;
     UINT8 value;
-    void (*funPtr)(int);
+    
 } EventObject;
 
 #endif

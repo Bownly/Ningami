@@ -7,6 +7,6 @@ const unsigned char cardDescStrings[19][18] = { "SHURIKEN        ", "DEAL 3 DAMA
                                                 "KABUTO HELMET   ", "ADD 7 SHIELDS   ",
                                                 "HEART           ", "HEAL 5 HEALTH   ",
                                                 "SCROLL          ", "GAIN 1 MANA     ",
-                                                "SMOKE BALLOON   ", "3 DMG, 3 SHIELD ",
+                                                "SMOKE BALLOON   ", "3 DMG, 3 SHIELDS",
                                                 "                "
 };
