@@ -32,7 +32,7 @@ const UINT8 spawnLocations[][4] = {
 const RoomObject roomDict[] = {
     {.id = 0U, .w = room1MapWidth, .h = room1MapHeight, .encounterRate = 10U, .roomMap = room1Map, .events = room1Events,
         .encounterSet = {ENEMY_INU, ENEMY_INU, ENEMY_KITSUNE, ENEMY_TSURU}},
-    {.id = 0U, .w = room1MapWidth, .h = room1MapHeight, .encounterRate = 0U, .roomMap = room1Map, .events = room1Events,
+    {.id = 0U, .w = room1MapWidth, .h = room1MapHeight, .encounterRate = 10U, .roomMap = room1Map, .events = room1Events,
         .encounterSet = {ENEMY_INU, ENEMY_INU, ENEMY_KITSUNE, ENEMY_TSURU}},
     {.id = 0U, .w = room2MapWidth, .h = room2MapHeight, .encounterRate =  0U, .roomMap = room2Map, .events = room2Events,
         .encounterSet = {ENEMY_TSURU, ENEMY_TSURU, ENEMY_TSURU, ENEMY_TSURU}}

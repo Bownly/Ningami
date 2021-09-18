@@ -11,10 +11,15 @@ const CARDFACE defaultDeck[18U] = { SHURIKEN, SHURIKEN, SHURIKEN, SHURIKEN, MAKI
                                     SHOUZOKU, SHOUZOKU, SHOUZOKU,   KATANA,   KATANA,    HASAMI,
                                      HIKOUKI,  HIKOUKI,   KABUTO,   KABUTO,    HAATO,     HAATO };
 
+const CARDFACE startDeck[9U] = { SHURIKEN, SHURIKEN, SHURIKEN,
+                                 SHURIKEN, SHOUZOKU, SHOUZOKU,
+                                 SHOUZOKU, SHOUZOKU,    HAATO };
+
+
 void initializeDeck(DeckObject* deck)
 {
     deck->emptyCard.faceId = EMPTY;
-    for (deck->cardCount = 0U; deck->cardCount != 18U; deck->cardCount++)
+    for (deck->cardCount = 0U; deck->cardCount != deck->deckSize; deck->cardCount++)
     {
         CardObject card;
         card.faceId = defaultDeck[deck->cardCount];
@@ -22,13 +27,12 @@ void initializeDeck(DeckObject* deck)
         card.mpCost = cardCostsDict[card.faceId];
         card.pointVal = cardValsDict[card.faceId];
         card.id = deck->cardCount;
-        deck->orderedCards[deck->cardCount] = card; 
+        deck->orderedCards[deck->cardCount] = card;
 
         // initialize cardIds and discardPile
         deck->cardIds[deck->cardCount] = deck->cardCount;
     }
     deck->discardCount = 0U;
-    deck->deckSize = 18U;
 }
 
 void shuffleDeck(DeckObject* deck, UINT8 shuffleCount, UINT8 includeDiscarded)

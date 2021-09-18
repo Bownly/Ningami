@@ -7,6 +7,7 @@ typedef enum {
     STATE_OVERWORLD,
     STATE_PAUSEMENU,
     STATE_DIALOG,
+    STATE_SHOP,
     STATE_CREDITS
 } GAMESTATE;
 
@@ -33,7 +34,10 @@ typedef enum {
     DIALOG_LOOP,
     DIALOG_OPTION,
     PM_INIT,
-    PM_LOOP
+    PM_LOOP,
+    SHOP_INIT,
+    SHOP_LOOP,
+    SHOP_YN_LOOP,
 } SUBSTATE;
 
 typedef enum {

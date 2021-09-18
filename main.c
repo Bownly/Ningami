@@ -18,6 +18,7 @@
 #include "states/dialogState.h"
 #include "states/overworldState.h"
 #include "states/pausemenuState.h"
+#include "states/shopState.h"
 
 extern const unsigned char borderTiles[];
 extern const unsigned char cardTiles[];
@@ -27,11 +28,6 @@ extern const unsigned char forestTiles[];
 extern const unsigned char iconTiles[];
 extern const unsigned char titlecardTiles[];
 // extern const unsigned char scorenumTiles[];
-
-void setBlankBg();
-void titleInit();
-void titlePressStartLoop();
-void initPlayer();
 
 // Save data stuff
 const UBYTE RAM_SIG[8U] = {'N','I','N','G','A','M','I',' '};
@@ -62,6 +58,7 @@ UINT8 oldSubstate;
 
 PlayerObject player;
 DeckObject deck;
+
 UINT8 enemyId;
 UINT8 roomId = 1U;
 UINT8 dialogId = 0U;
@@ -74,6 +71,13 @@ UINT8 animTick = 0U;
 
 unsigned char blankTile[1U]       = { 0xFF };
 unsigned char pressStartText[12U] = { 0x19, 0x1B, 0x0E, 0x1C, 0x1C, 0xFF, 0x1C, 0x1D, 0x0A, 0x1B, 0x1D };
+
+void setBlankBg();
+void titleInit();
+void titlePressStartLoop();
+void initDeck();
+void initPlayer();
+
 
 void vbl_update() {
 	++vbl_count;
@@ -118,6 +122,10 @@ void main()
             case STATE_DIALOG:
                 SWITCH_ROM_MBC1(4U);
                 dialogStateMain();
+                break;
+            case STATE_SHOP:
+                SWITCH_ROM_MBC1(5U);
+                shopStateMain();
                 break;
         }
         // // music stuff
@@ -175,7 +183,9 @@ void titlePressStartLoop()
         move_bkg(0U, 0U);
         set_bkg_data(0x28U, 7U, iconTiles);
         initrand(DIV_REG);
+        initDeck();
         initPlayer();
+
         gamestate = STATE_OVERWORLD;
         substate = OW_INIT_OW;
     }
@@ -185,6 +195,12 @@ void titlePressStartLoop()
     }
     prevJoypad = curJoypad;
 }
+
+void initDeck()
+{
+    deck.deckSize = 18U;
+}
+
 
 void initPlayer()
 {
@@ -198,6 +214,6 @@ void initPlayer()
     player.shieldCount = 0U;
     player.atk = 0U;
     player.def = 0U;
-    player.paper = 9U;
+    player.paper = 123U;
 }
 

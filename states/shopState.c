@@ -24,9 +24,7 @@ extern UINT8 l;  // Used for whatever
 extern UINT8 m;  // Used for menus generally
 extern UINT8 n;  // Used for menus generally
 extern UINT8 r;  // Used for randomization stuff
-UINT8 oldM;  
-UINT8 mMax;  // Used for looping through cards
-UINT8 nMax;
+UINT8 prevM;
 
 extern UINT8 gamestate;
 extern UINT8 substate;
@@ -39,12 +37,18 @@ extern PlayerObject player;
 extern UINT8 animTick;
 extern UINT8 animFrame;
 
-const UINT8 xAnchorHp = 4U;
-const UINT8 yAnchorHp = 2U;
-const UINT8 xAnchorPaper = 12U;
-const UINT8 yAnchorPaper = 2U;
-const UINT8 xAnchorCursor = 36U;
-const UINT8 yAnchorCursor = 42U;
+#define stringA "A TO BUY         "
+#define stringB "B TO NOT BUY     "
+
+const UINT8 xAnchorCursorShop = 28U;
+const UINT8 yAnchorCursorShop = 58U;
+const UINT8 xAnchorDeckSizeShop = 3U;
+const UINT8 yAnchorDeckSizeShop = 2U;
+const UINT8 xAnchorPaperShop = 13U;
+const UINT8 yAnchorPaperShop = 2U;
+
+// TODO: This is a temp array
+const CARDFACE testShopStock[6U] = { HIKOUKI, MAKIMONO, FUUSEN, HAATO, KATANA, KABUTO };
 
 /* SUBSTATE METHODS */
 void phaseInitShop();
@@ -54,23 +58,28 @@ void phaseBuyYNLoop();
 /* HELPER METHODS */
 
 /* DISPLAY METHODS */
-void displayShopCursor();
-void displayCardWinShop(CARDFACE, UINT8, UINT8);
 void displayCardDescWinShop();
-void displayShopStock(DeckObject*, UINT8, UINT8);
+void displayCardWinShop(CARDFACE, UINT8, UINT8);
+void displayDeckSize();
+void displayShopCursor();
 void displayShopPaper();
+void displayShopStock(UINT8, UINT8);
+void displayYNText();
 
-void pausemenuStateMain()
+void shopStateMain()
 {
     curJoypad = joypad();
 
     switch (substate)
     {
-        case PM_INIT:
+        case SHOP_INIT:
             phaseInitShop();
             break;
-        case PM_LOOP:
+        case SHOP_LOOP:
             phaseShopLoop();
+            break;
+        case SHOP_YN_LOOP:
+            phaseBuyYNLoop();
             break;
         default:  // Abort to title in the event of unexpected state
             gamestate = STATE_TITLE;
@@ -82,18 +91,17 @@ void pausemenuStateMain()
 
 
 /******************************** SUBSTATE METHODS *******************************/
-void phaseInitPausemenu()
+void phaseInitShop()
 {
     setBlankWin();
 
     animTick = 0U;
     animFrame = 0U;
-    oldM = m;
+    prevM = m;
     m = 0U;
-    n = 0U;
     
     // Draw cards
-    // displayShopStock(&deck, 4U, 4U);
+    displayShopStock(3U, 6U);
     displayCardDescWinShop();
 
     // Draw text window
@@ -101,80 +109,100 @@ void phaseInitPausemenu()
 
     // Draw player stats
     displayShopPaper();
+    displayDeckSize();
 
     // Show window
     move_win(7U, 0U);
     SHOW_WIN;
 
     // Draw cursor
-    move_sprite(0U, xAnchorCursor, yAnchorCursor);
+    move_sprite(0U, xAnchorCursorShop, yAnchorCursorShop);
 
-    substate = PM_LOOP;
+    substate = SHOP_LOOP;
 }
 
 void phaseShopLoop()
 {
+    // Cursor anim
     ++animTick;
     animFrame = animTick / 8U % 4U;
     if (animFrame == 3U)
         animFrame = 1U;
     set_sprite_tile(0U, animFrame);
 
-    // If B or Start, hide window
-    if (curJoypad & J_B && !(prevJoypad & J_B))
+    if (curJoypad & J_A && !(prevJoypad & J_A))
+    {
+        displayYNText();
+        substate = SHOP_YN_LOOP;
+    }
+    else if (curJoypad & J_B && !(prevJoypad & J_B))
     {
         animTick = 0U;
         animFrame = 0U;
-        m = oldM;
+        m = prevM;
         move_sprite(0U, 0U, 0U);
         substate = oldSubstate;
         gamestate = oldGamestate;
         HIDE_WIN;
     }
-    else if (curJoypad & J_UP && !(prevJoypad & J_UP))
-    {
-        if (n == 0)
-        {
-            n = 3U;
-            do
-            {
-                --n;
-                k = n*6U + m;
-            } while (k >= deck.deckSize);
-        }
-        else
-            --n;
-        displayShopCursor();
-        displayCardDescWinShop();
-    }
-    else if (curJoypad & J_DOWN && !(prevJoypad & J_DOWN))
-    {
-        ++n;
-        if ((n*6U + m) >= deck.deckSize)
-            n = 0;
-        displayShopCursor();
-        displayCardDescWinShop();
-    }
     else if (curJoypad & J_LEFT && !(prevJoypad & J_LEFT))
     {
-        if (m == 0)
-        {
-            if (n == (deck.deckSize-1U)/6U)  // AkA, if we're on the bottommost row
-                m = (deck.deckSize-1U)%6U;
-            else
-                m = 5U;
-        }
-        else
-            --m;
+        if (m-- == 0U)
+            m = 3U;  // Magic number equal to amount of cards in stock - 1
+
         displayShopCursor();
         displayCardDescWinShop();
+        // TODO: playMoveSfx();
     }
     else if (curJoypad & J_RIGHT && !(prevJoypad & J_RIGHT))
     {
-        ++m;
-        if (m == 6 || (n*6U + m) >= deck.deckSize)
-            m = 0;
+        if (++m == 4U)  // Magic number equal to amount of cards in stock
+            m = 0U;
+
         displayShopCursor();
+        displayCardDescWinShop();
+        // TODO: playMoveSfx();
+    }
+}
+
+void phaseBuyYNLoop()
+{
+    if (curJoypad & J_A && !(prevJoypad & J_A))
+    {
+        k = cardPaperCostsDict[testShopStock[m]];
+        if (player.paper >= k && deck.deckSize != 18U)
+        {
+            // Subtract paper
+            player.paper -= k;
+
+            // Add card to deck
+            CardObject card;
+            // card.faceId = testShopStock[m];
+            card.faceId = HASAMI;
+            card.typeId = cardTypesDict[card.faceId];
+            card.mpCost = cardCostsDict[card.faceId];
+            card.pointVal = cardValsDict[card.faceId];
+            card.id = deck.cardCount;
+            deck.orderedCards[deck.cardCount] = card;
+            deck.cardIds[deck.cardCount] = deck.cardCount;
+            deck.cardCount++;
+            deck.deckSize++;
+
+            // Update UI
+            displayShopPaper();
+            displayDeckSize();
+
+            // Retvrn to loop
+            substate = SHOP_LOOP;
+            displayCardDescWinShop();
+
+            // TODO: sfx
+        }
+
+    }
+    else if (curJoypad & J_B && !(prevJoypad & J_B))
+    {
+        substate = SHOP_LOOP;
         displayCardDescWinShop();
     }
 }
@@ -184,6 +212,12 @@ void phaseShopLoop()
 
 
 /******************************** DISPLAY METHODS ********************************/
+void displayCardDescWinShop()
+{
+    printLine(1U, 15U, cardDescStrings[(testShopStock[m])<<1U], TRUE);
+    printLine(1U, 16U, cardDescStrings[((testShopStock[m])<<1U)+1U], TRUE);
+}
+
 void displayCardWinShop(CARDFACE cardFace, UINT8 x, UINT8 y)
 {
     switch (cardFace)
@@ -220,38 +254,60 @@ void displayCardWinShop(CARDFACE cardFace, UINT8 x, UINT8 y)
             set_win_tile_xy(x, y, cardFace);
             break;
     }
+
+    // Paper cost
+    k = cardPaperCostsDict[cardFace];
+    y+=3;  // Increment once instead of once per line for the next 3 lines
+    if (k > 9U)
+        set_win_tile_xy(x-1U, y, k/10U);
+    set_win_tile_xy(x, y, k%10U);
+    set_win_tile_xy(x+1U, y, 0x2D);
+
 }
 
-void displayCardDescWinShop()
+void displayDeckSize()
 {
-    printLine(1U, 15U, cardDescStrings[(defaultDeck[n*6U + m])<<1], TRUE);
-    printLine(1U, 16U, cardDescStrings[((defaultDeck[n*6U + m])<<1)+1], TRUE);
+    if (deck.deckSize/10U != 0U)
+        set_win_tile_xy(xAnchorDeckSizeShop, yAnchorDeckSizeShop, deck.deckSize/10U);
+    else
+        set_win_tile_xy(xAnchorDeckSizeShop, yAnchorDeckSizeShop, 0xFFU);
+    set_win_tile_xy(xAnchorDeckSizeShop+1U, yAnchorDeckSizeShop, deck.deckSize%10U);
+    set_win_tile_xy(xAnchorDeckSizeShop+2U, yAnchorDeckSizeShop, 0x27U);
+
+    set_win_tile_xy(xAnchorDeckSizeShop+3U, yAnchorDeckSizeShop, 1U);
+    set_win_tile_xy(xAnchorDeckSizeShop+4U, yAnchorDeckSizeShop, 8U);
+    set_win_tile_xy(xAnchorDeckSizeShop+5U, yAnchorDeckSizeShop, 0x2BU);
 }
 
 void displayShopCursor()
 {
-    move_sprite(0U, xAnchorCursor + m*16U, yAnchorCursor + n*24U);
-}
-
-void displayShopStock(DeckObject* deck, UINT8 x, UINT8 y)
-{
-    for (i = 0U; i != deck->deckSize; i++)
-    {
-        displayCardWin(defaultDeck[i], (i*2U)%12U + x, y + (i/6U * 3U));
-    }
+    move_sprite(0U, xAnchorCursorShop + m*32U, yAnchorCursorShop);
 }
 
 void displayShopPaper()
 {
-    if (player.paper/100U != 0)
-        set_win_tile_xy(xAnchorPaper, yAnchorPaper, player.paper/100U);
+    if (player.paper/100U != 0U)
+        set_win_tile_xy(xAnchorPaperShop, yAnchorPaperShop, player.paper/100U);
     else
-        set_win_tile_xy(xAnchorPaper, yAnchorPaper, 0xFFU);
-    if (player.paper/10U != 0)
-        set_win_tile_xy(xAnchorPaper+1, yAnchorPaper, player.paper/10U %10U);
+        set_win_tile_xy(xAnchorPaperShop, yAnchorPaperShop, 0xFFU);
+    if (player.paper/10U != 0U)
+        set_win_tile_xy(xAnchorPaperShop+1U, yAnchorPaperShop, player.paper/10U %10U);
     else
-        set_win_tile_xy(xAnchorPaper+1, yAnchorPaper, 0xFFU);
-    set_win_tile_xy(xAnchorPaper+2, yAnchorPaper, player.paper%10U);
-    set_win_tile_xy(xAnchorPaper+3, yAnchorPaper, 0x2BU);
+        set_win_tile_xy(xAnchorPaperShop+1U, yAnchorPaperShop, 0xFFU);
+    set_win_tile_xy(xAnchorPaperShop+2U, yAnchorPaperShop, player.paper%10U);
+    set_win_tile_xy(xAnchorPaperShop+3U, yAnchorPaperShop, 0x2DU);
 }
 
+void displayShopStock(UINT8 x, UINT8 y)
+{
+    for (i = 0U; i != 4U; ++i)
+    {
+        displayCardWinShop(testShopStock[i], (i*4U) + x, y);
+    }
+}
+
+void displayYNText()
+{
+    printLine(1U, 15U, stringA, TRUE);
+    printLine(1U, 16U, stringB, TRUE);
+}

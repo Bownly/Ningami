@@ -25,8 +25,6 @@ extern UINT8 m;  // Used for menus generally
 extern UINT8 n;  // Used for menus generally
 extern UINT8 r;  // Used for randomization stuff
 UINT8 oldM;  
-UINT8 mMax;  // Used for looping through cards
-UINT8 nMax;
 
 extern UINT8 gamestate;
 extern UINT8 substate;
@@ -226,8 +224,8 @@ void displayCardWin(CARDFACE cardFace, UINT8 x, UINT8 y)
 
 void displayCardDescWin()
 {
-    printLine(1U, 15U, cardDescStrings[(defaultDeck[n*6U + m])<<1], TRUE);
-    printLine(1U, 16U, cardDescStrings[((defaultDeck[n*6U + m])<<1)+1], TRUE);
+    printLine(1U, 15U, cardDescStrings[(defaultDeck[n*6U + m])<<1U], TRUE);
+    printLine(1U, 16U, cardDescStrings[((defaultDeck[n*6U + m])<<1U)+1U], TRUE);
 }
 
 void displayDeckCursor()
@@ -245,29 +243,29 @@ void displayFullDeck(DeckObject* deck, UINT8 x, UINT8 y)
 
 void displayHp()
 {
-    if (player.hpCur/10U != 0)
+    if (player.hpCur/10U != 0U)
         set_win_tile_xy(xAnchorHp, yAnchorHp, player.hpCur/10U);
     else
         set_win_tile_xy(xAnchorHp, yAnchorHp, 0xFFU);
-    set_win_tile_xy(xAnchorHp+1, yAnchorHp, player.hpCur%10U);
-    set_win_tile_xy(xAnchorHp+2, yAnchorHp, 0x27U);
+    set_win_tile_xy(xAnchorHp+1U, yAnchorHp, player.hpCur%10U);
+    set_win_tile_xy(xAnchorHp+2U, yAnchorHp, 0x27U);
 
-    set_win_tile_xy(xAnchorHp+3, yAnchorHp, player.hpMax/10U);
-    set_win_tile_xy(xAnchorHp+4, yAnchorHp, player.hpMax%10U);
-    set_win_tile_xy(xAnchorHp+5, yAnchorHp, 0x28U);
+    set_win_tile_xy(xAnchorHp+3U, yAnchorHp, player.hpMax/10U);
+    set_win_tile_xy(xAnchorHp+4U, yAnchorHp, player.hpMax%10U);
+    set_win_tile_xy(xAnchorHp+5U, yAnchorHp, 0x28U);
 }
 
 void displayPaper()
 {
-    if (player.paper/100U != 0)
+    if (player.paper/100U != 0U)
         set_win_tile_xy(xAnchorPaper, yAnchorPaper, player.paper/100U);
     else
         set_win_tile_xy(xAnchorPaper, yAnchorPaper, 0xFFU);
-    if (player.paper/10U != 0)
-        set_win_tile_xy(xAnchorPaper+1, yAnchorPaper, player.paper/10U %10U);
+    if (player.paper/10U != 0U)
+        set_win_tile_xy(xAnchorPaper+1U, yAnchorPaper, player.paper/10U %10U);
     else
-        set_win_tile_xy(xAnchorPaper+1, yAnchorPaper, 0xFFU);
-    set_win_tile_xy(xAnchorPaper+2, yAnchorPaper, player.paper%10U);
-    set_win_tile_xy(xAnchorPaper+3, yAnchorPaper, 0x2BU);
+        set_win_tile_xy(xAnchorPaper+1U, yAnchorPaper, 0xFFU);
+    set_win_tile_xy(xAnchorPaper+2U, yAnchorPaper, player.paper%10U);
+    set_win_tile_xy(xAnchorPaper+3U, yAnchorPaper, 0x2BU);
 }
 

@@ -281,6 +281,15 @@ void phasePlayerInputs()
             hide_metasprite(player_metasprites[player.dir*3 + animFrame], PLAYER_SPR_NUM_START);
             return;
         }
+        else if (curJoypad & J_SELECT && !(prevJoypad & J_SELECT))
+        {
+            oldSubstate = substate;
+            oldGamestate = gamestate;
+            gamestate = STATE_SHOP;
+            substate = SHOP_INIT;
+            hide_metasprite(player_metasprites[player.dir*3 + animFrame], PLAYER_SPR_NUM_START);
+            return;
+        }
         else if (curJoypad & J_A && !(prevJoypad & J_A))
         {
             // Check for NPC in front of player

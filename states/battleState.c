@@ -209,7 +209,7 @@ void phaseOpunZaGeimu()
 
     initrand(DIV_REG);
     // Initialize deck and hand; shuffle deck
-    initializeDeck(&deck);
+    // initializeDeck(&deck);
     shuffleDeck(&deck, 64U, FALSE);
     initializeHand(&hand);
 
@@ -303,21 +303,21 @@ void phaseSelectCard()
         gamestate = STATE_PAUSEMENU;
         substate = PM_INIT;
     }
-    else if (curJoypad & J_RIGHT && !(prevJoypad & J_RIGHT))
+    else if (curJoypad & J_LEFT && !(prevJoypad & J_LEFT))
     {
-        if (++m == hand.cardCount)
-            m = 0U;
-        // playMoveSfx();
+        if (m-- == 0U)
+            m = hand.cardCount - 1U;
+        // TODO: playMoveSfx();
 
         // Update card description as selected card changes
         printLine(1U, 15U, cardDescStrings[hand.cards[m]->faceId<<1U], FALSE);
         printLine(1U, 16U, cardDescStrings[(hand.cards[m]->faceId<<1U)+1U], FALSE);
     }
-    else if (curJoypad & J_LEFT && !(prevJoypad & J_LEFT))
+    else if (curJoypad & J_RIGHT && !(prevJoypad & J_RIGHT))
     {
-        if (m-- == 0U)
-            m = hand.cardCount - 1U;
-        // playMoveSfx();
+        if (++m == hand.cardCount)
+            m = 0U;
+        // TODO: playMoveSfx();
 
         // Update card description as selected card changes
         printLine(1U, 15U, cardDescStrings[hand.cards[m]->faceId<<1U], FALSE);
