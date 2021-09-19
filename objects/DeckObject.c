@@ -6,33 +6,25 @@
 #include "../common.h"
 #include "../enums.h"
 
-// test deck
-const CARDFACE defaultDeck[18U] = { SHURIKEN, SHURIKEN, SHURIKEN, SHURIKEN, MAKIMONO,    FUUSEN,
-                                    SHOUZOKU, SHOUZOKU, SHOUZOKU,   KATANA,   KATANA,    HASAMI,
-                                     HIKOUKI,  HIKOUKI,   KABUTO,   KABUTO,    HAATO,     HAATO };
+// const CARDFACE startDeck[9U] = { SHURIKEN, SHURIKEN, SHURIKEN,
+//                                  SHURIKEN, SHOUZOKU, SHOUZOKU,
+//                                  SHOUZOKU, SHOUZOKU,    HAATO };
 
-const CARDFACE startDeck[9U] = { SHURIKEN, SHURIKEN, SHURIKEN,
-                                 SHURIKEN, SHOUZOKU, SHOUZOKU,
-                                 SHOUZOKU, SHOUZOKU,    HAATO };
+const CARDFACE startDeck[18U] = { SHURIKEN, SHURIKEN, SHURIKEN,   HAATO, MAKIMONO,    FUUSEN,
+                                  SHOUZOKU, SHOUZOKU, SHOUZOKU,  KATANA,   KATANA,    HASAMI,
+                                  HIKOUKI,  HIKOUKI,   KABUTO,   KABUTO,    HAATO,  SHURIKEN };
 
 
 void initializeDeck(DeckObject* deck)
 {
-    deck->emptyCard.faceId = EMPTY;
+    deck->discardCount = 0U;
+    deck->deckSize = 17U;
+
     for (deck->cardCount = 0U; deck->cardCount != deck->deckSize; deck->cardCount++)
     {
-        CardObject card;
-        card.faceId = defaultDeck[deck->cardCount];
-        card.typeId = cardTypesDict[card.faceId];
-        card.mpCost = cardCostsDict[card.faceId];
-        card.pointVal = cardValsDict[card.faceId];
-        card.id = deck->cardCount;
-        deck->orderedCards[deck->cardCount] = card;
-
-        // initialize cardIds and discardPile
+        deck->orderedCards[deck->cardCount] = startDeck[deck->cardCount];
         deck->cardIds[deck->cardCount] = deck->cardCount;
     }
-    deck->discardCount = 0U;
 }
 
 void shuffleDeck(DeckObject* deck, UINT8 shuffleCount, UINT8 includeDiscarded)
@@ -63,10 +55,10 @@ void shuffleDeck(DeckObject* deck, UINT8 shuffleCount, UINT8 includeDiscarded)
     }
 }
 
-CardObject* drawCard(DeckObject* deck)
+UINT8 drawCard(DeckObject* deck)
 {
     deck->cardCount--;
-    return &deck->orderedCards[deck->cardIds[deck->cardCount]];
+    return deck->orderedCards[deck->cardIds[deck->cardCount]];
 }
 
 void discardCard(DeckObject* deck, UINT8 cardId)

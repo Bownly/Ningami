@@ -6,6 +6,8 @@
 #include "../enums.h"
 #include "../fade.h"
 
+#include "../database/CardData.h"
+
 #include "../maps/textWindowMap.h"
 #include "../maps/cardMaps.h"
 #include "../maps/cardDescStrings.h"
@@ -37,8 +39,13 @@ extern PlayerObject player;
 extern UINT8 animTick;
 extern UINT8 animFrame;
 
-#define stringA "A TO BUY         "
-#define stringB "B TO NOT BUY     "
+#define stringA     "A TO BUY         "
+#define stringB     "B TO NOT BUY     "
+#define stringPoor1 "NO CAN DO. YOU   "
+#define stringPoor2 "NEED MORE PAPER. "
+#define stringDeck1 "SORRY, PAL. YOUR "
+#define stringDeck2 "DECK IS FULL.    "
+
 
 const UINT8 xAnchorCursorShop = 28U;
 const UINT8 yAnchorCursorShop = 58U;
@@ -52,8 +59,9 @@ const CARDFACE testShopStock[6U] = { HIKOUKI, MAKIMONO, FUUSEN, HAATO, KATANA, K
 
 /* SUBSTATE METHODS */
 void phaseInitShop();
-void phaseShopLoop();
+void phaseSelectCardToBuy();
 void phaseBuyYNLoop();
+void phaseRejectMessageLoop();
 
 /* HELPER METHODS */
 
@@ -75,11 +83,14 @@ void shopStateMain()
         case SHOP_INIT:
             phaseInitShop();
             break;
-        case SHOP_LOOP:
-            phaseShopLoop();
+        case SHOP_SELECT_CARD:
+            phaseSelectCardToBuy();
             break;
         case SHOP_YN_LOOP:
             phaseBuyYNLoop();
+            break;
+        case SHOP_REJECT_LOOP:
+            phaseRejectMessageLoop();
             break;
         default:  // Abort to title in the event of unexpected state
             gamestate = STATE_TITLE;
@@ -100,12 +111,12 @@ void phaseInitShop()
     prevM = m;
     m = 0U;
     
+    // Draw text window
+    set_win_tiles(0U, 14U, 20U, 4U, textWindowMap);
+
     // Draw cards
     displayShopStock(3U, 6U);
     displayCardDescWinShop();
-
-    // Draw text window
-    set_win_tiles(0U, 14U, 20U, 4U, textWindowMap);
 
     // Draw player stats
     displayShopPaper();
@@ -118,10 +129,10 @@ void phaseInitShop()
     // Draw cursor
     move_sprite(0U, xAnchorCursorShop, yAnchorCursorShop);
 
-    substate = SHOP_LOOP;
+    substate = SHOP_SELECT_CARD;
 }
 
-void phaseShopLoop()
+void phaseSelectCardToBuy()
 {
     // Cursor anim
     ++animTick;
@@ -169,21 +180,29 @@ void phaseBuyYNLoop()
 {
     if (curJoypad & J_A && !(prevJoypad & J_A))
     {
-        k = cardPaperCostsDict[testShopStock[m]];
-        if (player.paper >= k && deck.deckSize != 18U)
+        k = cardDex[testShopStock[m]].paperCost;
+
+        if (deck.deckSize == 18U)
+        {
+            printLine(1U, 15U, stringDeck1, TRUE);
+            printLine(1U, 16U, stringDeck2, TRUE);
+            substate = SHOP_REJECT_LOOP;
+            // TODO: sfx
+        }
+        else if (player.paper < k)  // Too poor
+        {
+            printLine(1U, 15U, stringPoor1, TRUE);
+            printLine(1U, 16U, stringPoor2, TRUE);
+            substate = SHOP_REJECT_LOOP;
+            // TODO: sfx
+        }
+        else
         {
             // Subtract paper
             player.paper -= k;
 
             // Add card to deck
-            CardObject card;
-            // card.faceId = testShopStock[m];
-            card.faceId = HASAMI;
-            card.typeId = cardTypesDict[card.faceId];
-            card.mpCost = cardCostsDict[card.faceId];
-            card.pointVal = cardValsDict[card.faceId];
-            card.id = deck.cardCount;
-            deck.orderedCards[deck.cardCount] = card;
+            deck.orderedCards[deck.cardCount] = testShopStock[m];
             deck.cardIds[deck.cardCount] = deck.cardCount;
             deck.cardCount++;
             deck.deckSize++;
@@ -193,7 +212,7 @@ void phaseBuyYNLoop()
             displayDeckSize();
 
             // Retvrn to loop
-            substate = SHOP_LOOP;
+            substate = SHOP_SELECT_CARD;
             displayCardDescWinShop();
 
             // TODO: sfx
@@ -202,11 +221,20 @@ void phaseBuyYNLoop()
     }
     else if (curJoypad & J_B && !(prevJoypad & J_B))
     {
-        substate = SHOP_LOOP;
+        substate = SHOP_SELECT_CARD;
         displayCardDescWinShop();
     }
 }
 
+void phaseRejectMessageLoop()
+{
+    if ((curJoypad & J_A && !(prevJoypad & J_A))
+        || (curJoypad & J_B && !(prevJoypad & J_B)))
+    {
+        substate = SHOP_SELECT_CARD;
+        displayCardDescWinShop();
+    }
+}
 
 /******************************** HELPER METHODS *********************************/
 
@@ -256,8 +284,8 @@ void displayCardWinShop(CARDFACE cardFace, UINT8 x, UINT8 y)
     }
 
     // Paper cost
-    k = cardPaperCostsDict[cardFace];
-    y+=3;  // Increment once instead of once per line for the next 3 lines
+    k = cardDex[cardFace].paperCost;
+    y += 3;  // Increment once instead of once per line for the next 3 lines
     if (k > 9U)
         set_win_tile_xy(x-1U, y, k/10U);
     set_win_tile_xy(x, y, k%10U);

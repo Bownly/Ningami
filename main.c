@@ -75,7 +75,6 @@ unsigned char pressStartText[12U] = { 0x19, 0x1B, 0x0E, 0x1C, 0x1C, 0xFF, 0x1C, 
 void setBlankBg();
 void titleInit();
 void titlePressStartLoop();
-void initDeck();
 void initPlayer();
 
 
@@ -183,7 +182,7 @@ void titlePressStartLoop()
         move_bkg(0U, 0U);
         set_bkg_data(0x28U, 7U, iconTiles);
         initrand(DIV_REG);
-        initDeck();
+        initializeDeck(&deck);
         initPlayer();
 
         gamestate = STATE_OVERWORLD;
@@ -195,12 +194,6 @@ void titlePressStartLoop()
     }
     prevJoypad = curJoypad;
 }
-
-void initDeck()
-{
-    deck.deckSize = 18U;
-}
-
 
 void initPlayer()
 {

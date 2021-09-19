@@ -36,8 +36,9 @@ typedef enum {
     PM_INIT,
     PM_LOOP,
     SHOP_INIT,
-    SHOP_LOOP,
+    SHOP_SELECT_CARD,
     SHOP_YN_LOOP,
+    SHOP_REJECT_LOOP
 } SUBSTATE;
 
 typedef enum {

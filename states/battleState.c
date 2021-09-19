@@ -5,13 +5,14 @@
 #include "../enums.h"
 #include "../fade.h"
 
+#include "../database/CardData.h"
+
 #include "../maps/textWindowMap.h"
 #include "../maps/blankTileMap.c"
 #include "../maps/cardMaps.h"
 #include "../maps/enemyMap.c"
 #include "../maps/cardDescStrings.h"
 #include "../maps/battleAnimMaps.h"
-// #include "../maps/scoreNumMaps.c"
 
 #include "../objects/CardObject.h"
 #include "../objects/DeckObject.h"
@@ -54,6 +55,7 @@ extern UINT8 oldGamestate;
 extern UINT8 substate;
 extern UINT8 oldSubstate;
 
+UINT8 tempCardId;
 CardObject* tempCardPtr;
 extern DeckObject deck;
 HandObject hand;
@@ -105,7 +107,8 @@ void phaseEndBattle();
 
 /* DISPLAY METHODS */
 void displayCursor(UINT8);
-void displayCard(CardObject*, UINT8, UINT8);
+void displayCard(UINT8, UINT8, UINT8);
+void displayCardDesc();
 void displayHand(HandObject*, UINT8, UINT8);
 void displayHP();
 void displayMP();
@@ -208,8 +211,7 @@ void phaseOpunZaGeimu()
     xAnchorHand = 6U;
 
     initrand(DIV_REG);
-    // Initialize deck and hand; shuffle deck
-    // initializeDeck(&deck);
+    // Initialize hand; shuffle deck
     shuffleDeck(&deck, 64U, FALSE);
     initializeHand(&hand);
 
@@ -249,8 +251,8 @@ void phaseStartTurn()
     {
         for (i = 0U; i != hand.cardCount;)
         {
-            tempCardPtr = removeCardFromHand(&hand, i);
-            discardCard(&deck, tempCardPtr->id);
+            tempCardId = removeCardFromHand(&hand, i);
+            discardCard(&deck, tempCardId);
         }
     }
 
@@ -264,11 +266,11 @@ void phaseStartTurn()
             shuffleDeck(&deck, 64U, TRUE);
             for (i = 0; i != hand.cardCount; ++i)
             {
-                deck.cardIds[deck.cardCount + i] = hand.cards[i]->id;
+                deck.cardIds[deck.cardCount + i] = hand.cardIds[i];
             }
         }
-        tempCardPtr = drawCard(&deck);
-        addCardToHand(&hand, tempCardPtr);
+        tempCardId = drawCard(&deck);
+        addCardToHand(&hand, tempCardId);
     }
 
     // Show hand
@@ -279,8 +281,7 @@ void phaseStartTurn()
     displayCursor(m);
 
     // Update card description of default selected card
-    printLine(1U, 15U, cardDescStrings[hand.cards[m]->faceId<<1], FALSE);
-    printLine(1U, 16U, cardDescStrings[(hand.cards[m]->faceId<<1)+1], FALSE);
+    displayCardDesc();
 
     // Reset MP to max, and update shown value
     animTick = 0U;
@@ -310,8 +311,7 @@ void phaseSelectCard()
         // TODO: playMoveSfx();
 
         // Update card description as selected card changes
-        printLine(1U, 15U, cardDescStrings[hand.cards[m]->faceId<<1U], FALSE);
-        printLine(1U, 16U, cardDescStrings[(hand.cards[m]->faceId<<1U)+1U], FALSE);
+        displayCardDesc();
     }
     else if (curJoypad & J_RIGHT && !(prevJoypad & J_RIGHT))
     {
@@ -320,14 +320,13 @@ void phaseSelectCard()
         // TODO: playMoveSfx();
 
         // Update card description as selected card changes
-        printLine(1U, 15U, cardDescStrings[hand.cards[m]->faceId<<1U], FALSE);
-        printLine(1U, 16U, cardDescStrings[(hand.cards[m]->faceId<<1U)+1U], FALSE);
+        displayCardDesc();
     }
     else if (curJoypad & J_A && !(prevJoypad & J_A))
     {
-        if (player.mpCur >= hand.cards[m]->mpCost)
+        if (player.mpCur >= cardDex[hand.cardIds[m]].mpCost)
         {
-            player.mpCur -= hand.cards[m]->mpCost;
+            player.mpCur -= cardDex[hand.cardIds[m]].mpCost;
             displayMP();
             animTick = 0U;
             substate = USE_CARD;
@@ -348,8 +347,8 @@ void phaseUseCard()
     move_sprite(0U, 0U, 0U);
 
     // Remove card from hand and discard it
-    tempCardPtr = removeCardFromHand(&hand, m);
-    discardCard(&deck, tempCardPtr->id);
+    tempCardId = removeCardFromHand(&hand, m);
+    discardCard(&deck, tempCardId);
 
     // Redraw hand
     displayHand(&hand, xAnchorHand, yAnchorHand);
@@ -359,37 +358,37 @@ void phaseUseCard()
     printLine(1U, 16U, cardDescStrings[18], FALSE);
 
     // If attack card
-    if (tempCardPtr->typeId == CT_ATTACK || tempCardPtr->typeId == CT_ATKDEF)
+    if (cardDex[tempCardId].typeId == CT_ATTACK || cardDex[tempCardId].typeId == CT_ATKDEF)
     {
         // Run damage calcs on target
-        k = tempCardPtr->pointVal + player.atk - enemy.def;
+        k = cardDex[tempCardId].pointVal + player.atk - enemy.def;
         if (k < enemy.hpCur)
             enemy.hpCur -= k;
         else
             enemy.hpCur = 0;
         displayEnemyHP();
     }
-    if (tempCardPtr->typeId == CT_SHIELD || tempCardPtr->typeId == CT_ATKDEF)
+    if (cardDex[tempCardId].typeId == CT_SHIELD || cardDex[tempCardId].typeId == CT_ATKDEF)
     {
-        k = tempCardPtr->pointVal + player.def;
+        k = cardDex[tempCardId].pointVal + player.def;
         player.shieldCount += k;
     }
-    if (tempCardPtr->typeId == CT_HEAL)
+    if (cardDex[tempCardId].typeId == CT_HEAL)
     {
-        player.hpCur += tempCardPtr->pointVal;
+        player.hpCur += cardDex[tempCardId].pointVal;
         if (player.hpCur > player.hpMax)
         {
             player.hpCur = player.hpMax;
         }
         displayHP();
     }
-    else if (tempCardPtr->typeId == CT_MANA)
+    else if (cardDex[tempCardId].typeId == CT_MANA)
     {
-        player.mpCur += tempCardPtr->pointVal;
+        player.mpCur += cardDex[tempCardId].pointVal;
         displayMP();
     }
 
-    curAnim = tempCardPtr->typeId;
+    curAnim = cardDex[tempCardId].typeId;
 
     // Goto PLAYER_ANIM
     substate = PLAYER_ANIM;
@@ -591,7 +590,7 @@ void phaseWinCheck()
 
         for (i = 0U; i != hand.cardCount; ++i)
         {
-            if (hand.cards[i]->mpCost <= player.mpCur)
+            if (cardDex[hand.cardIds[i]].mpCost <= player.mpCur)
             {
                 animTick = 0U;
                 substate = CARD_SELECT;
@@ -600,8 +599,7 @@ void phaseWinCheck()
                 displayCursor(m);
 
                 // Update card description of default selected card
-                printLine(1U, 15U, cardDescStrings[hand.cards[m]->faceId<<1], FALSE);
-                printLine(1U, 16U, cardDescStrings[(hand.cards[m]->faceId<<1)+1], FALSE);
+                displayCardDesc();
             }
         }
     }
@@ -650,9 +648,9 @@ void displayCursor(UINT8 xindex)
     move_sprite(0U, 56U + (xindex << 4U), 96U);
 }
 
-void displayCard(CardObject* card, UINT8 x, UINT8 y)
+void displayCard(UINT8 cardId, UINT8 x, UINT8 y)
 {
-    switch (card->faceId)
+    switch (cardId)
     {
         case SHURIKEN:
             set_bkg_tiles(x, y, 2U, 3U, card1Map);
@@ -683,16 +681,22 @@ void displayCard(CardObject* card, UINT8 x, UINT8 y)
             break;
         default:
             set_bkg_tiles(x, y, 2U, 3U, cardBackMap);
-            set_bkg_tile_xy(x, y, card->faceId);
+            set_bkg_tile_xy(x, y, cardId);
             break;
     }
+}
+
+void displayCardDesc()
+{
+    printLine(1U, 15U, cardDescStrings[hand.cardIds[m]<<1U], FALSE);
+    printLine(1U, 16U, cardDescStrings[(hand.cardIds[m]<<1U)+1U], FALSE);
 }
 
 void displayHand(HandObject* hand, UINT8 x, UINT8 y)
 {
     for (i = 0U; i != hand->cardCount; ++i)
     {
-        displayCard(hand->cards[i], i*2U + x, y);
+        displayCard(hand->cardIds[i], i*2U + x, y);
     }
     for (; i != 4U; ++i)
     {

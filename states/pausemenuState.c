@@ -90,12 +90,12 @@ void phaseInitPausemenu()
     m = 0U;
     n = 0U;
     
+    // Draw text window
+    set_win_tiles(0U, 14U, 20U, 4U, textWindowMap);
+
     // Draw cards
     displayFullDeck(&deck, 4U, 4U);
     displayCardDescWin();
-
-    // Draw text window
-    set_win_tiles(0U, 14U, 20U, 4U, textWindowMap);
 
     // Draw player stats
     displayHp();
@@ -224,8 +224,8 @@ void displayCardWin(CARDFACE cardFace, UINT8 x, UINT8 y)
 
 void displayCardDescWin()
 {
-    printLine(1U, 15U, cardDescStrings[(defaultDeck[n*6U + m])<<1U], TRUE);
-    printLine(1U, 16U, cardDescStrings[((defaultDeck[n*6U + m])<<1U)+1U], TRUE);
+    printLine(1U, 15U, cardDescStrings[(deck.orderedCards[n*6U + m])<<1U], TRUE);
+    printLine(1U, 16U, cardDescStrings[((deck.orderedCards[n*6U + m])<<1U)+1U], TRUE);
 }
 
 void displayDeckCursor()
@@ -235,9 +235,9 @@ void displayDeckCursor()
 
 void displayFullDeck(DeckObject* deck, UINT8 x, UINT8 y)
 {
-    for (i = 0U; i != deck->deckSize; i++)
+    for (i = 0U; i != deck->deckSize; ++i)
     {
-        displayCardWin(defaultDeck[i], (i*2U)%12U + x, y + (i/6U * 3U));
+        displayCardWin(deck->orderedCards[i], (i*2U)%12U + x, y + (i/6U * 3U));
     }
 }
 
@@ -266,6 +266,6 @@ void displayPaper()
     else
         set_win_tile_xy(xAnchorPaper+1U, yAnchorPaper, 0xFFU);
     set_win_tile_xy(xAnchorPaper+2U, yAnchorPaper, player.paper%10U);
-    set_win_tile_xy(xAnchorPaper+3U, yAnchorPaper, 0x2BU);
+    set_win_tile_xy(xAnchorPaper+3U, yAnchorPaper, 0x2DU);
 }
 

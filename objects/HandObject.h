@@ -7,13 +7,13 @@
 typedef struct HandObject {
     UINT8 playerId;
     UINT8 cardCount;
-    CardObject* cards[18U];
+    UINT8 cardIds[4U];
     CardObject emptyCard;
 } HandObject;
 
 void initializeHand(HandObject* hand);
-void addCardToHand(HandObject* hand, CardObject* card);
-CardObject* removeCardFromHand(HandObject* hand, UINT8 cardIndex);
+void addCardToHand(HandObject* hand, UINT8 cardId);
+UINT8 removeCardFromHand(HandObject* hand, UINT8 cardIndex);
 void sortHand(HandObject* hand);
 UINT8 checkHandIsEmpty(HandObject* hand);
 

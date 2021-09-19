@@ -7,7 +7,7 @@
 typedef struct HandObject {
     UINT8 playerId;
     UINT8 cardCount;
-    CardObject* cards[4U];
+    UINT8 cardIds[4U];
     CardObject emptyCard;
 } HandObject;
 
@@ -17,23 +17,23 @@ void initializeHand(HandObject* hand)
 
     for (UINT8 iter = 0U; iter != 4U; iter++)
     {
-        hand->cards[iter] = &hand->emptyCard;
+        hand->cardIds[iter] = EMPTY;
     }
     hand->cardCount = 0U;
 }
 
-void addCardToHand(HandObject* hand, CardObject* card)
+void addCardToHand(HandObject* hand, UINT8 cardId)
 {
-    hand->cards[hand->cardCount] = card;
+    hand->cardIds[hand->cardCount] = cardId;
     hand->cardCount++;
 }
 
-CardObject* removeCardFromHand(HandObject* hand, UINT8 cardIndex)
+UINT8 removeCardFromHand(HandObject* hand, UINT8 cardIndex)
 {
-    CardObject* returnVal = hand->cards[cardIndex];
+    UINT8 returnVal = hand->cardIds[cardIndex];
     for (UINT8 iterator = cardIndex; iterator != (hand->cardCount-1U); iterator++)
     {
-        hand->cards[iterator] = hand->cards[iterator+1U];
+        hand->cardIds[iterator] = hand->cardIds[iterator+1U];
     }
     hand->cardCount--;
     return returnVal;
@@ -44,9 +44,9 @@ void sortHand(HandObject* hand)
     UINT8 blah = 0U;
     for (UINT8 iter = 0U; iter != 4U; iter++)
     {
-        if (hand->cards[iter]->faceId != EMPTY)
+        if (hand->cardIds[iter] != EMPTY)
         {
-            hand->cards[blah] = hand->cards[iter];
+            hand->cardIds[blah] = hand->cardIds[iter];
             blah++;
         }
     }
