@@ -46,7 +46,6 @@ extern UINT8 animFrame;
 #define stringDeck1 "SORRY, PAL. YOUR "
 #define stringDeck2 "DECK IS FULL.    "
 
-
 const UINT8 xAnchorCursorShop = 28U;
 const UINT8 yAnchorCursorShop = 58U;
 const UINT8 xAnchorDeckSizeShop = 3U;

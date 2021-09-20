@@ -37,6 +37,11 @@ extern PlayerObject player;
 extern UINT8 animTick;
 extern UINT8 animFrame;
 
+#define stringDiscardA     "A TO DISCARD CARD"
+#define stringDiscardB     "B TO KEEP CARD   "
+#define stringCantDiscardA "CANNOT DISCARD   "
+#define stringCantDiscardB "DIS CARD.        "
+
 const UINT8 xAnchorHp = 4U;
 const UINT8 yAnchorHp = 2U;
 const UINT8 xAnchorPaper = 12U;
@@ -47,6 +52,8 @@ const UINT8 yAnchorCursor = 42U;
 /* SUBSTATE METHODS */
 void phaseInitPausemenu();
 void phasePausemenuLoop();
+void phaseDiscardCard();
+void phaseRejectDiscardLoop();
 
 /* HELPER METHODS */
 
@@ -69,6 +76,12 @@ void pausemenuStateMain()
             break;
         case PM_LOOP:
             phasePausemenuLoop();
+            break;
+        case PM_DISCARD_LOOP:
+            phaseDiscardCard();
+            break;
+        case PM_REJECT_LOOP:
+            phaseRejectDiscardLoop();
             break;
         default:  // Abort to title in the event of unexpected state
             gamestate = STATE_TITLE;
@@ -120,8 +133,25 @@ void phasePausemenuLoop()
         animFrame = 1U;
     set_sprite_tile(0U, animFrame);
 
-    // If B or Start, hide window
-    if (curJoypad & J_B && !(prevJoypad & J_B))
+    if (curJoypad & J_A && !(prevJoypad & J_A) && oldGamestate == STATE_OVERWORLD)
+    {
+        k = n*6U + m;
+        if (k < 7U)  // Starter cards
+        {
+            printLine(1U, 15U, stringCantDiscardA, TRUE);
+            printLine(1U, 16U, stringCantDiscardB, TRUE);
+            substate = PM_REJECT_LOOP;
+        }
+        else
+        {
+            // Print A for discard, B for not
+            printLine(1U, 15U, stringDiscardA, TRUE);
+            printLine(1U, 16U, stringDiscardB, TRUE);
+            substate = PM_DISCARD_LOOP;
+        }
+    }
+    else if ((curJoypad & J_B && !(prevJoypad & J_B))
+        || (curJoypad & J_START && !(prevJoypad & J_START)))
     {
         animTick = 0U;
         animFrame = 0U;
@@ -179,6 +209,40 @@ void phasePausemenuLoop()
     }
 }
 
+void phaseDiscardCard()
+{
+    if (curJoypad & J_A && !(prevJoypad & J_A))
+    {
+        // Delete card from deck and redraw deck
+        removeCardFromDeck(&deck, k);
+        displayFullDeck(&deck, 4U, 4U);
+        displayCardDescWin();
+
+        // Reset cursor position
+        m = 0U;
+        n = 0U;
+        displayDeckCursor();
+
+        // TODO: sfx
+
+        substate = PM_LOOP;
+    }
+    if (curJoypad & J_B && !(prevJoypad & J_B))
+    {
+        substate = PM_LOOP;
+    }
+}
+
+void phaseRejectDiscardLoop()
+{
+    if ((curJoypad & J_A && !(prevJoypad & J_A))
+        || (curJoypad & J_B && !(prevJoypad & J_B)))
+    {
+        substate = PM_LOOP;
+        displayCardDescWin();
+    }
+}
+
 
 /******************************** HELPER METHODS *********************************/
 
@@ -215,6 +279,9 @@ void displayCardWin(CARDFACE cardFace, UINT8 x, UINT8 y)
         case FUUSEN:
             set_win_tiles(x, y, 2U, 3U, card9Map);
             break;
+        case EMPTY:
+            set_win_tiles(x, y, 2U, 3U, cardEmptyMap);
+            break;
         default:
             set_win_tiles(x, y, 2U, 3U, cardBackMap);
             set_win_tile_xy(x, y, cardFace);
@@ -239,6 +306,11 @@ void displayFullDeck(DeckObject* deck, UINT8 x, UINT8 y)
     {
         displayCardWin(deck->orderedCards[i], (i*2U)%12U + x, y + (i/6U * 3U));
     }
+    for (; i != 18U; ++i)  // 18 here is a magic number that correlates with max deck size
+    {
+        displayCardWin(EMPTY, (i*2U)%12U + x, y + (i/6U * 3U));
+    }
+
 }
 
 void displayHp()
@@ -268,4 +340,3 @@ void displayPaper()
     set_win_tile_xy(xAnchorPaper+2U, yAnchorPaper, player.paper%10U);
     set_win_tile_xy(xAnchorPaper+3U, yAnchorPaper, 0x2DU);
 }
-

@@ -10,15 +10,15 @@
 //                                  SHURIKEN, SHOUZOKU, SHOUZOKU,
 //                                  SHOUZOKU, SHOUZOKU,    HAATO };
 
-const CARDFACE startDeck[18U] = { SHURIKEN, SHURIKEN, SHURIKEN,   HAATO, MAKIMONO,    FUUSEN,
-                                  SHOUZOKU, SHOUZOKU, SHOUZOKU,  KATANA,   KATANA,    HASAMI,
-                                  HIKOUKI,  HIKOUKI,   KABUTO,   KABUTO,    HAATO,  SHURIKEN };
+const CARDFACE startDeck[18U] = { SHURIKEN, SHURIKEN, SHURIKEN, SHOUZOKU, SHOUZOKU, SHOUZOKU,
+                                     HAATO, MAKIMONO,   FUUSEN,   KATANA,   KATANA,   HASAMI,
+                                   HIKOUKI,  HIKOUKI,   KABUTO,   KABUTO,    HAATO, SHURIKEN };
 
 
 void initializeDeck(DeckObject* deck)
 {
     deck->discardCount = 0U;
-    deck->deckSize = 17U;
+    deck->deckSize = 9U;
 
     for (deck->cardCount = 0U; deck->cardCount != deck->deckSize; deck->cardCount++)
     {
@@ -65,4 +65,19 @@ void discardCard(DeckObject* deck, UINT8 cardId)
 {
     deck->discardPile[deck->discardCount] = cardId;
     deck->discardCount++;
+}
+
+void removeCardFromDeck(DeckObject* deck, UINT8 index)
+{
+    deck->deckSize--;
+    for (UINT8 c = index; c != deck->deckSize; ++c)
+    {
+        deck->orderedCards[c] = deck->orderedCards[c+1U];
+    }
+
+    // Reset cardIds
+    for (deck->cardCount = 0U; deck->cardCount != deck->deckSize; deck->cardCount++)
+    {
+        deck->cardIds[deck->cardCount] = deck->orderedCards[deck->cardCount];
+    }
 }

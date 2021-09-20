@@ -35,6 +35,8 @@ typedef enum {
     DIALOG_OPTION,
     PM_INIT,
     PM_LOOP,
+    PM_DISCARD_LOOP,
+    PM_REJECT_LOOP,
     SHOP_INIT,
     SHOP_SELECT_CARD,
     SHOP_YN_LOOP,

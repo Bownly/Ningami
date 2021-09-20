@@ -20,5 +20,6 @@ void addCardToDeck(DeckObject* deck, CardObject* card);
 void shuffleDeck(DeckObject* deck, UINT8 shuffleCount, UINT8 includeDiscarded);
 UINT8 drawCard(DeckObject* deck);
 void discardCard(DeckObject* deck, UINT8 cardId);
+void removeCardFromDeck(DeckObject* deck, UINT8 index);
 
 #endif
