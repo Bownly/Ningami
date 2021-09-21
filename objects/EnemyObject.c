@@ -13,8 +13,8 @@
 // } EnemyObject;
 
 const EnemyObject enemyDex[] = {
-    { .hpMax = 10U, .hpCur = 10U, .shieldCount = 0U, .atk = 3U, .def = 0U, .enemySpr = 0U },
-    { .hpMax = 15U, .hpCur = 15U, .shieldCount = 0U, .atk = 4U, .def = 0U, .enemySpr = 1U },
-    { .hpMax = 20U, .hpCur = 20U, .shieldCount = 0U, .atk = 4U, .def = 1U, .enemySpr = 2U },
-    { .hpMax = 11U, .hpCur = 11U, .shieldCount = 0U, .atk = 0U, .def = 0U, .enemySpr = 1U }
+    { .hpMax = 10U, .hpCur = 10U, .shieldCount = 0U, .atk = 3U, .def = 0U, .paperAmount =  5U, .enemySpr = 0U },
+    { .hpMax = 15U, .hpCur = 15U, .shieldCount = 0U, .atk = 4U, .def = 0U, .paperAmount = 10U, .enemySpr = 1U },
+    { .hpMax = 20U, .hpCur = 20U, .shieldCount = 0U, .atk = 4U, .def = 1U, .paperAmount = 15U, .enemySpr = 2U },
+    { .hpMax = 11U, .hpCur = 11U, .shieldCount = 0U, .atk = 0U, .def = 0U, .paperAmount = 20U, .enemySpr = 1U }
 };

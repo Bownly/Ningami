@@ -22,7 +22,6 @@ typedef enum {
     ENEMY_ANIM,
     WIN_CHECK,
     LOSE_CHECK,
-    CALC_SPOILS,
     BATTLE_END,
     OW_INIT_OW,
     OW_INIT_MAP,

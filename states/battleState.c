@@ -20,6 +20,9 @@
 #include "../objects/HandObject.c"
 #include "../objects/PlayerObject.h"
 
+#define stringWonA "   YOU DEFEATED  "
+#define stringWonB "  WON SOME PAPER "
+
 extern const unsigned char borderTiles[];
 extern const unsigned char cardTiles[];
 extern const unsigned char cursorTiles[];
@@ -80,6 +83,8 @@ const UINT8 xAnchorEnemyAtk = 15U;
 const UINT8 yAnchorEnemyAtk = 5U;
 const UINT8 xAnchorEnemyShield = 15U;
 const UINT8 yAnchorEnemyShield = 6U;
+// const UINT8 xAnchorPaperWinnings = 6U;
+// const UINT8 yAnchorPaperWinnings = 6U;
 
 extern UINT8 animFrame;
 extern UINT8 animTick;
@@ -99,8 +104,7 @@ void phaseEnemyTurn();
 void phaseAnimateEnemyMove();
 void phaseWinCheck();
 void phaseLoseCheck();
-void phaseCalcSpoils();
-void phaseEndBattle();
+void phaseWinLoop();
 
 /* HELPER METHODS */
 
@@ -111,6 +115,7 @@ void displayCardDesc();
 void displayHand(HandObject*, UINT8, UINT8);
 void displayHP();
 void displayMP();
+void displayPaperEarnings();
 void displayShields();
 void displayEnemyHP();
 void displayEnemyAtk();
@@ -151,11 +156,8 @@ void battleStateMain()
         case LOSE_CHECK:
             phaseLoseCheck();
             break;
-        case CALC_SPOILS:
-            phaseCalcSpoils();
-            break;
         case BATTLE_END:
-            phaseEndBattle();
+            phaseWinLoop();
             break;
         default:  // Abort to title in the event of unexpected state
             gamestate = STATE_TITLE;
@@ -355,8 +357,8 @@ void phaseUseCard()
     displayHand(&hand, xAnchorHand, yAnchorHand);
 
     // Update card description to blank
-    printLine(1U, 15U, cardDescStrings[18], FALSE);
-    printLine(1U, 16U, cardDescStrings[18], FALSE);
+    printLine(1U, 15U, cardDescStrings[20], FALSE);
+    printLine(1U, 16U, cardDescStrings[20], FALSE);
 
     // Convert tempCardId from an index for deck position to cardDex index 
     tempCardId = deck.orderedCards[tempCardId];
@@ -581,7 +583,22 @@ void phaseWinCheck()
     // If enemy is dead
     if (enemy.hpCur == 0U)
     {
-        // Queue win message
+        // Hide extra enemy stats and stuff
+        set_bkg_tiles( 2U, 5U, 3U, 2U, blankEnemyMap);
+        set_bkg_tiles(16U, 5U, 2U, 2U, blankEnemyMap);
+
+        // Display win message
+        printLine(1U,  4U, stringWonA, FALSE);
+        printLine(1U, 15U, cardDescStrings[20U], FALSE);
+        printLine(1U, 16U, cardDescStrings[20U], FALSE);
+        printLine(1U,  6U, stringWonB, FALSE);
+
+        // Calc and display paper winnings
+        if (255U - enemyDex[enemyId].paperAmount <= player.paper)
+            player.paper = 255U;
+        else
+            player.paper += enemyDex[enemyId].paperAmount;
+        displayPaperEarnings();
 
         // Goto BATTLE_END
         substate = BATTLE_END;
@@ -614,8 +631,8 @@ void phaseLoseCheck()
     // If player is dead
     if (player.hpCur == 0U)
     {
-        // Queue lose message
-        substate = TURN_KAISHI;
+        gamestate = STATE_TITLE;
+        substate = 0U;
     }
     else
     {
@@ -624,21 +641,16 @@ void phaseLoseCheck()
     }
 }
 
-void phaseCalcSpoils()
+void phaseWinLoop()
 {
-    // Queue spoils message
-    // Goto SHOW_MESSAGES
-}
-
-void phaseEndBattle()
-{
-    // If win, end battle
-    gamestate = STATE_OVERWORLD;
-    substate = OW_INIT_OW;
-    move_sprite(0U, 0U, 0U);
-    fadeout();
-
-    // If lose, goto title screen
+    if ((curJoypad & J_A && !(prevJoypad & J_A))
+        || (curJoypad & J_B && !(prevJoypad & J_B)))
+    {
+        gamestate = STATE_OVERWORLD;
+        substate = OW_INIT_OW;
+        move_sprite(0U, 0U, 0U);
+        fadeout();
+    }
 }
 
 
@@ -729,6 +741,16 @@ void displayMP()
 {
     set_bkg_tile_xy(xAnchorMP, yAnchorMP, player.mpCur%10U);
     set_bkg_tile_xy(xAnchorMP+1, yAnchorMP, 0x2AU);
+}
+
+void displayPaperEarnings()
+{
+    // Paper won
+    // set_bkg_tile_xy(xAnchorEnemy, yAnchorEnemy, 0x27U);
+    if (enemyDex[enemyId].paperAmount/10U != 0U)
+        set_bkg_tile_xy(xAnchorEnemy+1U, yAnchorEnemy+3U, enemyDex[enemyId].paperAmount/10U %10U);
+    set_bkg_tile_xy(xAnchorEnemy+2U, yAnchorEnemy+3U, enemyDex[enemyId].paperAmount%10U);
+    set_bkg_tile_xy(xAnchorEnemy+3U, yAnchorEnemy+3U, 0x2DU);
 }
 
 void displayShields()

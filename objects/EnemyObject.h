@@ -9,6 +9,7 @@ typedef struct EnemyObject {
     UINT8 shieldCount;
     UINT8 atk;
     UINT8 def;
+    UINT8 paperAmount;
     UINT8 enemySpr;
 } EnemyObject;
 
