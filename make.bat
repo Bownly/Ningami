@@ -46,7 +46,6 @@ C:\gbdk2020\bin\lcc -Wa-l -c -o textWindowMap.o maps/textWindowMap.c
 C:\gbdk2020\bin\lcc -Wa-l -Wf-bo1 -c -o battleAnimMaps.o maps/battleAnimMaps.c
 
 C:\gbdk2020\bin\lcc -Wa-l -c -o CardData.o database/CardData.c
-C:\gbdk2020\bin\lcc -Wa-l -c -o CardObject.o objects/CardObject.c
 C:\gbdk2020\bin\lcc -Wa-l -c -o DeckObject.o objects/DeckObject.c
 C:\gbdk2020\bin\lcc -Wa-l -c -o EnemyObject.o objects/EnemyObject.c
 

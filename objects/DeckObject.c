@@ -12,7 +12,7 @@
 
 const CARDFACE startDeck[18U] = { SHURIKEN, SHURIKEN, SHURIKEN, SHOUZOKU, SHOUZOKU, SHOUZOKU,
                                      HAATO, MAKIMONO,   FUUSEN,   KATANA,   KATANA,   HASAMI,
-                                   HIKOUKI,  HIKOUKI,   KABUTO,   KABUTO,    HAATO, SHURIKEN };
+                                   HIKOUKI,  HIKOUKI,   KABUTO,   KABUTO,  ONIGIRI, SHURIKEN };
 
 
 void initializeDeck(DeckObject* deck)
@@ -29,7 +29,6 @@ void initializeDeck(DeckObject* deck)
 
 void shuffleDeck(DeckObject* deck, UINT8 shuffleCount, UINT8 includeDiscarded)
 {
-    // CardObject tempCard;
     UINT8 index;
     UINT8 temp;
     UINT8 r;
@@ -37,11 +36,12 @@ void shuffleDeck(DeckObject* deck, UINT8 shuffleCount, UINT8 includeDiscarded)
     // Return discarded cards to deck
     if (includeDiscarded == TRUE)
     {
-        for (deck->discardCount; deck->discardCount != 0; deck->discardCount--)
+        for (index = 0U; index != deck->discardCount; ++index)
         {
-            deck->cardIds[deck->cardIds[deck->cardCount + deck->discardCount] = deck->discardPile[deck->discardCount]];
+            deck->cardIds[deck->cardCount] = deck->discardPile[index];
             deck->cardCount++;
         }
+        deck->discardCount = 0U;
     }
 
     for (shuffleCount; shuffleCount-- != 0U;)
@@ -58,7 +58,7 @@ void shuffleDeck(DeckObject* deck, UINT8 shuffleCount, UINT8 includeDiscarded)
 UINT8 drawCard(DeckObject* deck)
 {
     deck->cardCount--;
-    return deck->orderedCards[deck->cardIds[deck->cardCount]];
+    return deck->cardIds[deck->cardCount];
 }
 
 void discardCard(DeckObject* deck, UINT8 cardId)
@@ -78,6 +78,6 @@ void removeCardFromDeck(DeckObject* deck, UINT8 index)
     // Reset cardIds
     for (deck->cardCount = 0U; deck->cardCount != deck->deckSize; deck->cardCount++)
     {
-        deck->cardIds[deck->cardCount] = deck->orderedCards[deck->cardCount];
+        deck->cardIds[deck->cardCount] = deck->cardCount;
     }
 }

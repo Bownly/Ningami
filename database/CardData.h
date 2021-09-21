@@ -6,6 +6,6 @@
  
 #include "../objects/CardObject.h"
 
-extern const CardObject cardDex[9];
+extern const CardObject cardDex[10U];
 
 #endif

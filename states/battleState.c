@@ -81,7 +81,6 @@ const UINT8 yAnchorEnemyAtk = 5U;
 const UINT8 xAnchorEnemyShield = 15U;
 const UINT8 yAnchorEnemyShield = 6U;
 
-
 extern UINT8 animFrame;
 extern UINT8 animTick;
 const UINT8 maxAnimTick = 16U;
@@ -212,7 +211,7 @@ void phaseOpunZaGeimu()
 
     initrand(DIV_REG);
     // Initialize hand; shuffle deck
-    shuffleDeck(&deck, 64U, FALSE);
+    shuffleDeck(&deck, 64U, TRUE);
     initializeHand(&hand);
 
     // Show enemy on screen
@@ -264,7 +263,8 @@ void phaseStartTurn()
         if (deck.cardCount == 0U)
         {
             shuffleDeck(&deck, 64U, TRUE);
-            for (i = 0; i != hand.cardCount; ++i)
+            // Ensure the IDs in the hand return to the deck
+            for (i = 0U; i != hand.cardCount; ++i)
             {
                 deck.cardIds[deck.cardCount + i] = hand.cardIds[i];
             }
@@ -324,9 +324,10 @@ void phaseSelectCard()
     }
     else if (curJoypad & J_A && !(prevJoypad & J_A))
     {
-        if (player.mpCur >= cardDex[hand.cardIds[m]].mpCost)
+        tempCardId = deck.orderedCards[hand.cardIds[m]];
+        if (player.mpCur >= cardDex[tempCardId].mpCost)
         {
-            player.mpCur -= cardDex[hand.cardIds[m]].mpCost;
+            player.mpCur -= cardDex[tempCardId].mpCost;
             displayMP();
             animTick = 0U;
             substate = USE_CARD;
@@ -356,6 +357,9 @@ void phaseUseCard()
     // Update card description to blank
     printLine(1U, 15U, cardDescStrings[18], FALSE);
     printLine(1U, 16U, cardDescStrings[18], FALSE);
+
+    // Convert tempCardId from an index for deck position to cardDex index 
+    tempCardId = deck.orderedCards[tempCardId];
 
     // If attack card
     if (cardDex[tempCardId].typeId == CT_ATTACK || cardDex[tempCardId].typeId == CT_ATKDEF)
@@ -590,7 +594,7 @@ void phaseWinCheck()
 
         for (i = 0U; i != hand.cardCount; ++i)
         {
-            if (cardDex[hand.cardIds[i]].mpCost <= player.mpCur)
+            if (cardDex[deck.orderedCards[hand.cardIds[i]]].mpCost <= player.mpCur)
             {
                 animTick = 0U;
                 substate = CARD_SELECT;
@@ -679,6 +683,9 @@ void displayCard(UINT8 cardId, UINT8 x, UINT8 y)
         case FUUSEN:
             set_bkg_tiles(x, y, 2U, 3U, card9Map);
             break;
+        case ONIGIRI:
+            set_bkg_tiles(x, y, 2U, 3U, card10Map);
+            break;
         default:
             set_bkg_tiles(x, y, 2U, 3U, cardBackMap);
             set_bkg_tile_xy(x, y, cardId);
@@ -688,15 +695,15 @@ void displayCard(UINT8 cardId, UINT8 x, UINT8 y)
 
 void displayCardDesc()
 {
-    printLine(1U, 15U, cardDescStrings[hand.cardIds[m]<<1U], FALSE);
-    printLine(1U, 16U, cardDescStrings[(hand.cardIds[m]<<1U)+1U], FALSE);
+    printLine(1U, 15U, cardDescStrings[deck.orderedCards[hand.cardIds[m]]<<1U], FALSE);
+    printLine(1U, 16U, cardDescStrings[(deck.orderedCards[hand.cardIds[m]]<<1U)+1U], FALSE);
 }
 
 void displayHand(HandObject* hand, UINT8 x, UINT8 y)
 {
     for (i = 0U; i != hand->cardCount; ++i)
     {
-        displayCard(hand->cardIds[i], i*2U + x, y);
+        displayCard(deck.orderedCards[hand->cardIds[i]], i*2U + x, y);
     }
     for (; i != 4U; ++i)
     {

@@ -174,7 +174,7 @@ void titlePressStartLoop()
         SWITCH_ROM_MBC1(1U);
         set_bkg_data(0U, 40U, fontTiles);
         set_bkg_data(borderTileIndex, 8U, borderTiles);
-        set_bkg_data(cardsTileIndex, 60U, cardTiles);
+        set_bkg_data(cardsTileIndex, 66U, cardTiles);
         set_sprite_data(0U, 3U, cursorTiles);
         SWITCH_ROM_MBC1(2U);
         set_bkg_data(forestTileIndex, 60U, forestTiles);

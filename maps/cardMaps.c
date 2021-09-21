@@ -31,6 +31,9 @@ const unsigned char card8Map[] =      { 0x70, 0x73,
 const unsigned char card9Map[] =      { 0x76, 0x79,
                                         0x77, 0x7A,
                                         0x78, 0x7B };
+const unsigned char card10Map[] =     { 0x7C, 0x7F,
+                                        0x7D, 0x80,
+                                        0x7E, 0x81 };
 const unsigned char cardEmptyMap[] =  { 0xFF, 0xFF,
                                         0xFF, 0xFF,
                                         0xFF, 0xFF };

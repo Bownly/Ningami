@@ -276,6 +276,9 @@ void displayCardWinShop(CARDFACE cardFace, UINT8 x, UINT8 y)
         case FUUSEN:
             set_win_tiles(x, y, 2U, 3U, card9Map);
             break;
+        case ONIGIRI:
+            set_win_tiles(x, y, 2U, 3U, card10Map);
+            break;
         default:
             set_win_tiles(x, y, 2U, 3U, cardBackMap);
             set_win_tile_xy(x, y, cardFace);

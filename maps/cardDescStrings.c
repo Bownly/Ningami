@@ -1,5 +1,5 @@
 
-const unsigned char cardDescStrings[19][19] = { "SHURIKEN         ", "DEAL 3 DAMAGE    ",
+const unsigned char cardDescStrings[21][19] = { "SHURIKEN         ", "DEAL 3 DAMAGE    ",
                                                 "KATANA           ", "DEAL 7 DAMAGE    ",
                                                 "SCISSORS         ", "DEAL 11 DAMAGE   ",
                                                 "PAPER AIRPLANE   ", "DEAL 2 DAMAGE    ",
@@ -8,5 +8,6 @@ const unsigned char cardDescStrings[19][19] = { "SHURIKEN         ", "DEAL 3 DAM
                                                 "HEART            ", "HEAL 5 HEALTH    ",
                                                 "SCROLL           ", "GAIN 1 MANA      ",
                                                 "SMOKE BALLOON    ", "3 DMG, 3 SHIELDS ",
+                                                "ONIGIRI          ", "FULL HEAL        ",
                                                 "                 "
 };

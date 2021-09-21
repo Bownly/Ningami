@@ -230,6 +230,7 @@ void phaseDiscardCard()
     if (curJoypad & J_B && !(prevJoypad & J_B))
     {
         substate = PM_LOOP;
+        displayCardDescWin();
     }
 }
 
@@ -278,6 +279,9 @@ void displayCardWin(CARDFACE cardFace, UINT8 x, UINT8 y)
             break;
         case FUUSEN:
             set_win_tiles(x, y, 2U, 3U, card9Map);
+            break;
+        case ONIGIRI:
+            set_win_tiles(x, y, 2U, 3U, card10Map);
             break;
         case EMPTY:
             set_win_tiles(x, y, 2U, 3U, cardEmptyMap);
