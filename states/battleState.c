@@ -602,6 +602,17 @@ void phaseWinCheck()
 
         // Goto BATTLE_END
         substate = BATTLE_END;
+
+        // Discard what's left of the hand
+        if (hand.cardCount != 0U)
+        {
+            for (i = 0U; i != hand.cardCount;)
+            {
+                tempCardId = removeCardFromHand(&hand, i);
+                discardCard(&deck, tempCardId);
+            }
+        }
+
     }
     else
     {

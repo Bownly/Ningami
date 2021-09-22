@@ -202,6 +202,7 @@ void phaseBuyYNLoop()
             player.paper -= k;
 
             // Add card to deck
+            shuffleDeck(&deck, 0U, TRUE);
             deck.orderedCards[deck.cardCount] = shopDex[shopId][m];
             deck.cardIds[deck.cardCount] = deck.cardCount;
             deck.cardCount++;
