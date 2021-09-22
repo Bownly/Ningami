@@ -12,6 +12,7 @@ typedef struct RoomObject {
     UINT8 encounterRate;
     const unsigned char *roomMap;
     EventObject *events;
+    EventObject *aEvents;
     ENEMYTYPE encounterSet[4U];
 } RoomObject;
 

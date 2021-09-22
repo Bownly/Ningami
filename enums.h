@@ -96,7 +96,7 @@ typedef enum {
     EV_DIALOG,
     EV_BATTLE,
     EV_LOADROOM,
-    EV_CARD_GET
+    EV_OPEN_SHOP
 } EVENTTYPE;
 
 extern GAMESTATE gamestate;

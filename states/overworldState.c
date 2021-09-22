@@ -54,6 +54,7 @@ TileObject playGrid[30U][30U];
 TileObject* tilePtr;
 const char * roomMapPtr;
 const EventObject * roomEventsPtr;
+const EventObject * roomAEventsPtr;
 RoomObject room;
 
 UINT8 encounterCounter = 10U;
@@ -92,6 +93,7 @@ void phasePlayerInputs();
 /* HELPER METHODS */
 void loadRoom();
 void checkUnderfootTile();
+void openShop();
 
 /* DISPLAY METHODS */
 void draw_new_bkg();
@@ -281,19 +283,39 @@ void phasePlayerInputs()
             hide_metasprite(player_metasprites[player.dir*3 + animFrame], PLAYER_SPR_NUM_START);
             return;
         }
-        else if (curJoypad & J_SELECT && !(prevJoypad & J_SELECT))
-        {
-            oldSubstate = substate;
-            oldGamestate = gamestate;
-            gamestate = STATE_SHOP;
-            substate = SHOP_INIT;
-            hide_metasprite(player_metasprites[player.dir*3 + animFrame], PLAYER_SPR_NUM_START);
-            return;
-        }
         else if (curJoypad & J_A && !(prevJoypad & J_A))
         {
-            // Check for NPC in front of player
-            // Interact with NPC if present
+            // Determine coords of square player is facing
+            i = player.xTile;
+            j = player.yTile;
+            switch (player.dir)
+            {
+                case N: --j; break;
+                case S: ++j; break;
+                case W: --i; break;
+                case E: ++i; break;
+            }
+            // Interact with A event if present
+            for (l = 0U; l != 4U; l++)  // TODO: Make this variable length, not a hard-coded 4
+            {
+                if (i == (roomAEventsPtr+l)->x && j == (roomAEventsPtr+l)->y)
+                {
+                    if ((roomAEventsPtr+l)->type == EV_DIALOG)
+                    {
+                        dialogQueue[dialogQueueCount] = (roomAEventsPtr+l)->value << 1U;
+                        ++dialogQueueCount;
+                        oldGamestate = STATE_OVERWORLD;
+                        oldSubstate = OW_PLAYER_INPUTS;
+                        gamestate = STATE_DIALOG;
+                        substate = DIALOG_INIT;
+                    }
+                    else if ((roomAEventsPtr+l)->type == EV_OPEN_SHOP)
+                    {
+                        openShop();
+                        return;
+                    }
+                }
+            }
         }
         // Cardinal movement
         else if ((curJoypad == J_UP) && (prevJoypad == J_UP))
@@ -431,6 +453,7 @@ void loadRoom()
     camera_max_y = (((gridH - 18U) * 2U) + 18U) * 8U;
     roomMapPtr = room.roomMap;
     roomEventsPtr = room.events;
+    roomAEventsPtr = room.aEvents;
     encounterRate = room.encounterRate;
     encounterCounter = encounterRate;
 
@@ -520,15 +543,6 @@ void checkUnderfootTile()
                 player.yTile = spawnLocations[(roomEventsPtr+l)->value][2];
                 player.dir = spawnLocations[(roomEventsPtr+l)->value][3];
 
-                // set_bkg_tile_xy(24, 25, spawnLocations[(roomEventsPtr+l)->value][0]);
-                // set_bkg_tile_xy(25, 25, spawnLocations[(roomEventsPtr+l)->value][1]);
-                // set_bkg_tile_xy(26, 25, spawnLocations[(roomEventsPtr+l)->value][2]);
-                // set_bkg_tile_xy(27, 25, spawnLocations[(roomEventsPtr+l)->value][3]);
-
-                // roomId = 2U;
-                // player.xTile = 1U;
-                // player.yTile = 18U;
-
                 gamestate = STATE_OVERWORLD;
                 substate = OW_INIT_OW;
             }
@@ -558,6 +572,14 @@ void checkUnderfootTile()
     }
 }
 
+void openShop()
+{
+    oldSubstate = substate;
+    oldGamestate = gamestate;
+    gamestate = STATE_SHOP;
+    substate = SHOP_INIT;
+    hide_metasprite(player_metasprites[player.dir*3 + animFrame], PLAYER_SPR_NUM_START);
+}
 
 /******************************** DISPLAY METHODS ********************************/
 void draw_new_bkg() {
