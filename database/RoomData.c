@@ -32,9 +32,9 @@ const EventObject room1AEvents[] = {
 
 const EventObject room2AEvents[] = {
     { .x = 17U, .y =  3U, .type = EV_DIALOG,    .value = 6U },
-    { .x = 17U, .y =  3U, .type = EV_DIALOG,    .value = 5U },
-    { .x = 17U, .y =  3U, .type = EV_DIALOG,    .value = 4U },
-    { .x = 17U, .y =  2U, .type = EV_OPEN_SHOP, .value = 0U }
+    { .x = 14U, .y =  2U, .type = EV_OPEN_SHOP, .value = 0U },
+    { .x = 17U, .y =  2U, .type = EV_OPEN_SHOP, .value = 1U },
+    { .x =  9U, .y =  6U, .type = EV_OPEN_SHOP, .value = 2U }
 };
 
 

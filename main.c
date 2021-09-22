@@ -61,6 +61,7 @@ DeckObject deck;
 
 UINT8 enemyId;
 UINT8 roomId = 1U;
+UINT8 shopId = 0U;
 UINT8 dialogId = 0U;
 UINT8 dialogQueue[8];
 UINT8 dialogQueueCount = 0U;

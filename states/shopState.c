@@ -7,6 +7,7 @@
 #include "../fade.h"
 
 #include "../database/CardData.h"
+#include "../database/ShopData.h"
 
 #include "../maps/textWindowMap.h"
 #include "../maps/cardMaps.h"
@@ -36,6 +37,8 @@ extern UINT8 oldSubstate;
 extern DeckObject deck;
 extern PlayerObject player;
 
+extern UINT8 shopId;
+
 extern UINT8 animTick;
 extern UINT8 animFrame;
 
@@ -53,8 +56,6 @@ const UINT8 yAnchorDeckSizeShop = 2U;
 const UINT8 xAnchorPaperShop = 13U;
 const UINT8 yAnchorPaperShop = 2U;
 
-// TODO: This is a temp array
-const CARDFACE testShopStock[6U] = { HIKOUKI, MAKIMONO, FUUSEN, HAATO, KATANA, KABUTO };
 
 /* SUBSTATE METHODS */
 void phaseInitShop();
@@ -179,7 +180,7 @@ void phaseBuyYNLoop()
 {
     if (curJoypad & J_A && !(prevJoypad & J_A))
     {
-        k = cardDex[testShopStock[m]].paperCost;
+        k = cardDex[shopDex[shopId][m]].paperCost;
 
         if (deck.deckSize == 18U)
         {
@@ -201,7 +202,7 @@ void phaseBuyYNLoop()
             player.paper -= k;
 
             // Add card to deck
-            deck.orderedCards[deck.cardCount] = testShopStock[m];
+            deck.orderedCards[deck.cardCount] = shopDex[shopId][m];
             deck.cardIds[deck.cardCount] = deck.cardCount;
             deck.cardCount++;
             deck.deckSize++;
@@ -241,8 +242,8 @@ void phaseRejectMessageLoop()
 /******************************** DISPLAY METHODS ********************************/
 void displayCardDescWinShop()
 {
-    printLine(1U, 15U, cardDescStrings[(testShopStock[m])<<1U], TRUE);
-    printLine(1U, 16U, cardDescStrings[((testShopStock[m])<<1U)+1U], TRUE);
+    printLine(1U, 15U, cardDescStrings[(shopDex[shopId][m])<<1U], TRUE);
+    printLine(1U, 16U, cardDescStrings[((shopDex[shopId][m])<<1U)+1U], TRUE);
 }
 
 void displayCardWinShop(CARDFACE cardFace, UINT8 x, UINT8 y)
@@ -332,7 +333,7 @@ void displayShopStock(UINT8 x, UINT8 y)
 {
     for (i = 0U; i != 4U; ++i)
     {
-        displayCardWinShop(testShopStock[i], (i*4U) + x, y);
+        displayCardWinShop(shopDex[shopId][i], (i*4U) + x, y);
     }
 }
 

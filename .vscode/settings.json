@@ -5,6 +5,7 @@
         "enums.h": "c",
         "common.h": "c",
         "battlestate.h": "c",
-        "textwindowmap.h": "c"
+        "textwindowmap.h": "c",
+        "storedata.h": "c"
     }
 }

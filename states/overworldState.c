@@ -44,6 +44,7 @@ extern UINT8 oldSubstate;
 extern PlayerObject player;
 extern UINT8 enemyId;
 extern UINT8 roomId;
+extern UINT8 shopId;
 extern UINT8 dialogId;
 extern UINT8 dialogQueue[];
 extern UINT8 dialogQueueCount;
@@ -311,6 +312,7 @@ void phasePlayerInputs()
                     }
                     else if ((roomAEventsPtr+l)->type == EV_OPEN_SHOP)
                     {
+                        shopId = (roomAEventsPtr+l)->value;
                         openShop();
                         return;
                     }
