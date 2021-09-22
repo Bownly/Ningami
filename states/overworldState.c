@@ -5,6 +5,7 @@
 #include "../common.h"
 #include "../enums.h"
 #include "../fade.h"
+#include "../ram.h"
 
 #include "../database/RoomData.h"
 
@@ -296,8 +297,8 @@ void phasePlayerInputs()
                 case W: --i; break;
                 case E: ++i; break;
             }
-            // Interact with A event if present
-            for (l = 0U; l != 4U; l++)  // TODO: Make this variable length, not a hard-coded 4
+            // Interact with A-event if present
+            for (l = 0U; l != room.aEventsLen; l++)
             {
                 if (i == (roomAEventsPtr+l)->x && j == (roomAEventsPtr+l)->y)
                 {
@@ -315,6 +316,25 @@ void phasePlayerInputs()
                         shopId = (roomAEventsPtr+l)->value;
                         openShop();
                         return;
+                    }
+                    else if ((roomAEventsPtr+l)->type == EV_SAVE)
+                    {
+                        ENABLE_RAM_MBC1;
+                        SWITCH_RAM_MBC1(0U);
+                        saveGameData();
+                        DISABLE_RAM_MBC1;
+
+                        player.hpCur = player.hpMax;
+
+                        fadeout();
+                        fadein();
+
+                        dialogQueue[dialogQueueCount] = 16U;
+                        ++dialogQueueCount;
+                        oldGamestate = STATE_OVERWORLD;
+                        oldSubstate = OW_PLAYER_INPUTS;
+                        gamestate = STATE_DIALOG;
+                        substate = DIALOG_INIT;
                     }
                 }
             }
@@ -441,13 +461,6 @@ void phasePlayerInputs()
 /******************************** HELPER METHODS *********************************/
 void loadRoom()
 {
-    if (roomId == 0U)
-    {
-        roomId = 1U;  // Eventually, I'll make a roomId = 0U default room. ...Maybe.
-        loadRoom();
-        return;
-    }
-
     room = roomDict[roomId];
     gridW = room.w;
     gridH = room.h;
@@ -490,7 +503,7 @@ void loadRoom()
     if (player.yTile > 4)  // 4 is the y offset from top to center
     {
         // If on the far bottom
-        if (player.yTile > (gridH - 4U))  // 4 is the y offset from bottom to center
+        if (player.yTile > (gridH - 5U))  // 4 is the y offset from bottom to center; - 1 extra for index adjustments
         {
             camera_y = camera_max_y;
             new_camera_y = camera_y;
@@ -522,7 +535,7 @@ void checkUnderfootTile()
     playerstate = IDLE;
     UINT8 didEvent = FALSE;
 
-    for (l = 0U; l != 4U; l++)  // TODO: Make this variable length, not a hard-coded 4
+    for (l = 0U; l != room.eventsLen; l++)
     {
         if (player.xTile == (roomEventsPtr+l)->x && player.yTile == (roomEventsPtr+l)->y)
         {
@@ -548,7 +561,6 @@ void checkUnderfootTile()
                 gamestate = STATE_OVERWORLD;
                 substate = OW_INIT_OW;
             }
-
         }
     }
 

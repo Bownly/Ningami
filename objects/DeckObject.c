@@ -25,6 +25,12 @@ void initializeDeck(DeckObject* deck)
         deck->orderedCards[deck->cardCount] = startDeck[deck->cardCount];
         deck->cardIds[deck->cardCount] = deck->cardCount;
     }
+    for (UINT8 c = deck->cardCount; c != 18U; ++c)
+    {
+        deck->cardIds[c] = 0xFF;
+        deck->orderedCards[c] = 0xFF;
+    }
+
 }
 
 void shuffleDeck(DeckObject* deck, UINT8 shuffleCount, UINT8 includeDiscarded)

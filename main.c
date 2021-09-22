@@ -4,6 +4,7 @@
 #include "common.h"
 #include "enums.h"
 #include "fade.h"
+#include "ram.h"
 
 #include "objects/DeckObject.h"
 #include "objects/PlayerObject.h"
@@ -30,12 +31,9 @@ extern const unsigned char titlecardTiles[];
 // extern const unsigned char scorenumTiles[];
 
 // Save data stuff
-const UBYTE RAM_SIG[8U] = {'N','I','N','G','A','M','I',' '};
+const UBYTE RAM_SIG[7U] = {'N','I','N','G','A','M','I'};
 UBYTE *data;
 
-// const UINT8 borderTileIndex    = 0x30;
-// const UINT8 cardsTileIndex     = 0x40;
-// const UINT8 scoreNumsTileIndex = 0xB0;
 const UINT8 borderTileIndex = 0x30U;
 const UINT8 cardsTileIndex  = 0x40U;
 const UINT8 forestTileIndex = 0xA0U;
@@ -60,7 +58,7 @@ PlayerObject player;
 DeckObject deck;
 
 UINT8 enemyId;
-UINT8 roomId = 1U;
+UINT8 roomId = 0U;
 UINT8 shopId = 0U;
 UINT8 dialogId = 0U;
 UINT8 dialogQueue[8];
@@ -77,6 +75,7 @@ void setBlankBg();
 void titleInit();
 void titlePressStartLoop();
 void initPlayer();
+void initRAM(UBYTE);
 
 
 void vbl_update() {
@@ -85,7 +84,7 @@ void vbl_update() {
 
 void main()
 {
- 	// initRAM(0U);
+ 	initRAM(0U);
     gamestate = STATE_TITLE;
     substate = 0U;
 
@@ -186,6 +185,11 @@ void titlePressStartLoop()
         initializeDeck(&deck);
         initPlayer();
 
+        ENABLE_RAM_MBC1;
+        SWITCH_RAM_MBC1(0U);
+        saveGameData();
+        DISABLE_RAM_MBC1;
+
         gamestate = STATE_OVERWORLD;
         substate = OW_INIT_OW;
     }
@@ -198,9 +202,9 @@ void titlePressStartLoop()
 
 void initPlayer()
 {
-    player.xTile = 3U;
-    player.yTile = 5U;
-    player.dir = S;
+    player.xTile = 4U;
+    player.yTile = 14U;
+    player.dir = N;
     player.hpMax = 10U;
     player.hpCur = 10U;
     player.mpMax = 3U;
@@ -208,6 +212,38 @@ void initPlayer()
     player.shieldCount = 0U;
     player.atk = 0U;
     player.def = 0U;
-    player.paper = 123U;
+    player.paper = 25U;
 }
 
+void initRAM(UBYTE force_clear)
+{
+    UBYTE initialized;
+
+    ENABLE_RAM_MBC1;
+    SWITCH_RAM_MBC1(0U);
+
+    // Check for signature
+    initialized = 1U;
+    for (i = 0U; i != 7U; ++i)
+    {
+        if (ram_data[RAM_SIG_ADDR + i] != RAM_SIG[i])
+        {
+            initialized = 0U;
+            break;
+        }
+    }
+
+    // Initialize memory
+    if (initialized == 0U || force_clear)
+    {
+        for(i = 0U; i != 255U; ++i) {
+            ram_data[i] = 0U;
+        }
+
+        for (i = 0U; i != 7U; ++i) {
+            ram_data[RAM_SIG_ADDR + i] = RAM_SIG[i];
+        }
+    }
+
+    DISABLE_RAM_MBC1;
+}
