@@ -10,11 +10,14 @@ extern UBYTE *data;
 
 extern PlayerObject player;
 extern DeckObject deck;
+extern UINT8 roomId;
 
 void saveGameData()
 {
+    data = (&ram_data[RAM_ROOMID]);
+    *data = roomId;
+    
     data = (&ram_data[RAM_PLAYER]);
-    *data--;
     *data++ = player.xTile;
     *data++ = player.yTile;
     *data++ = player.dir;
@@ -41,8 +44,10 @@ void loadGameData()
 {
     initializeDeck(&deck);
 
+    data = (&ram_data[RAM_ROOMID]);
+    roomId = *data;
+
     data = &ram_data[RAM_PLAYER];
-    *data--;
     player.xTile       = *data++;
     player.yTile       = *data++;
     player.dir         = *data++;

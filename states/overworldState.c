@@ -324,12 +324,12 @@ void phasePlayerInputs()
                     }
                     else if ((roomAEventsPtr+l)->type == EV_SAVE)
                     {
+                        player.hpCur = player.hpMax;
+
                         ENABLE_RAM_MBC1;
                         SWITCH_RAM_MBC1(0U);
                         saveGameData();
                         DISABLE_RAM_MBC1;
-
-                        player.hpCur = player.hpMax;
 
                         fadeout();
                         fadein();

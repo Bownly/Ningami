@@ -15,6 +15,9 @@ extern const unsigned char fontTiles[];
 extern const unsigned char iconTiles[];
 extern const unsigned char titlecardTiles[];
 
+extern UBYTE ram_data[128U];
+extern UBYTE *data;
+
 extern UINT8 curJoypad;
 extern UINT8 prevJoypad;
 extern UINT8 vbl_count;
@@ -169,7 +172,16 @@ void phaseMainMenuLoop()
         {
             ENABLE_RAM_MBC1;
             SWITCH_RAM_MBC1(0U);
-            loadGameData();
+            data = &ram_data[RAM_PLAYER+3U];  // Magic number = offset to player.hpMax
+            if (*data == 0)  // That means no save data has been made
+            {
+                initializeDeck(&deck);
+                initPlayer();
+            }
+            else
+            {
+                loadGameData();
+            }
             DISABLE_RAM_MBC1;
         }
         else if (m == 1U)  // New Game
