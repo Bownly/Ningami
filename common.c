@@ -1,9 +1,16 @@
 #include <gb/gb.h>
 #include <rand.h>
 
+extern const unsigned char borderTiles[];
+extern const unsigned char cardTiles[];
+
+const UINT8 borderTileIndex = 0x30U;
+const UINT8 cardsTileIndex  = 0x40U;
+
 extern UINT8 i;
 extern UINT8 j;
 extern UINT8 r;
+
 UINT8 getRandUint(UINT8 modulo)
 {
     r = 201U;
@@ -66,4 +73,13 @@ void setBlankWin()
             set_win_tile_xy(i, j, 0xFF);
         }
     }
+}
+
+void loadOverworldGraphics()
+{
+    UINT8 cb = _current_bank;
+    SWITCH_ROM_MBC1(1U);
+    set_bkg_data(borderTileIndex, 8U, borderTiles);
+    set_bkg_data(cardsTileIndex, 66U, cardTiles);
+    SWITCH_ROM_MBC1(cb);
 }

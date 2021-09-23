@@ -20,7 +20,6 @@ C:\gbdk2020\bin\lcc -Wa-l -c -o enemyKitsuneTiles.o tiles/enemyKitsuneTiles.c
 C:\gbdk2020\bin\lcc -Wa-l -c -o enemyHorsetiles.o tiles/enemyHorseTiles.c
 C:\gbdk2020\bin\lcc -Wa-l -c -o fonttiles.o tiles/fontTiles.c
 C:\gbdk2020\bin\lcc -Wa-l -c -o icontiles.o tiles/iconTiles.c
-@REM C:\gbdk2020\bin\lcc -Wa-l -c -o scorenumtiles.o tiles/scorenumTiles.c
 C:\gbdk2020\bin\lcc -Wa-l -Wf-bo1 -c -o glintTiles.o tiles/glintTiles.c
 C:\gbdk2020\bin\lcc -Wa-l -Wf-bo1 -c -o healAnimTiles.o tiles/healAnimTiles.c
 C:\gbdk2020\bin\lcc -Wa-l -Wf-bo1 -c -o manaAnimTiles.o tiles/manaAnimTiles.c
@@ -37,6 +36,7 @@ C:\gbdk2020\bin\lcc -Wa-l -c -o fade.o fade.c
 C:\gbdk2020\bin\lcc -Wa-l -Wf-bo1 -c -o battleState.o states/battleState.c
 C:\gbdk2020\bin\lcc -Wa-l -Wf-bo2 -c -o overworldState.o states/overworldState.c
 C:\gbdk2020\bin\lcc -Wa-l -Wf-bo3 -c -o pausemenuState.o states/pausemenuState.c
+C:\gbdk2020\bin\lcc -Wa-l -Wf-bo3 -c -o mainmenuState.o states/mainmenuState.c
 C:\gbdk2020\bin\lcc -Wa-l -Wf-bo4 -c -o dialogState.o states/dialogState.c
 C:\gbdk2020\bin\lcc -Wa-l -Wf-bo5 -c -o shopState.o states/shopState.c
 

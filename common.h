@@ -5,5 +5,6 @@ UINT8 getRandUint(UINT8);
 void printLine(UINT8, UINT8, unsigned char *, UINT8);
 void setBlankBg();
 void setBlankWin();
+void loadOverworldGraphics();
 
 #endif

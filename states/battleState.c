@@ -542,14 +542,14 @@ void phaseAnimateEnemyMove()
                 // TODO: popup damage number
                 // TODO: sfx
                 break;
-            case ANIM_ENEMY_HEAL:
-                // If ANIM_ENEMY_HEAL, show heart popup
-                // TODO: This ^ and sfx
-                break;
-            case ANIM_ENEMY_SHIELD:
-                // If ANIM_ENEMY_SHIELD, show shield popup
-                // TODO: This ^ and sfx
-                break;
+            // case ANIM_ENEMY_HEAL:
+            //     // If ANIM_ENEMY_HEAL, show heart popup
+            //     // TODO: This ^ and sfx
+            //     break;
+            // case ANIM_ENEMY_SHIELD:
+            //     // If ANIM_ENEMY_SHIELD, show shield popup
+            //     // TODO: This ^ and sfx
+            //     break;
         }
         // Increment animTick
         ++animTick;
@@ -563,15 +563,15 @@ void phaseAnimateEnemyMove()
                 displayHP();
                 displayShields();
                 break;
-            case ANIM_ENEMY_HEAL:
-                // If ANIM_ENEMY_HEAL, show heart popup
-                // TODO: This ^ and sfx
-                break;
-            case ANIM_ENEMY_SHIELD:
-                // If ANIM_ENEMY_SHIELD, show shield popup
-                // TODO: This ^ and sfx
-                // displayEnemyShields();
-                break;
+            // case ANIM_ENEMY_HEAL:
+            //     // If ANIM_ENEMY_HEAL, show heart popup
+            //     // TODO: This ^ and sfx
+            //     break;
+            // case ANIM_ENEMY_SHIELD:
+            //     // If ANIM_ENEMY_SHIELD, show shield popup
+            //     // TODO: This ^ and sfx
+            //     // displayEnemyShields();
+            //     break;
         }
         // Goto LOSE_CHECK
         substate = LOSE_CHECK;

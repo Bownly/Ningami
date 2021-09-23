@@ -13,9 +13,8 @@ extern DeckObject deck;
 
 void saveGameData()
 {
-    data = &ram_data[RAM_PLAYER];
-    *data++ = player.x;
-    *data++ = player.y;
+    data = (&ram_data[RAM_PLAYER]);
+    *data--;
     *data++ = player.xTile;
     *data++ = player.yTile;
     *data++ = player.dir;
@@ -33,19 +32,17 @@ void saveGameData()
     {
         *data++ = deck.orderedCards[i];
     }
-    for (UINT8 i = 0U; i != 18U; ++i)  // 18 is a magic number equivalent to max deck size
-    {
-        *data++ = deck.cardIds[i];
-    }
+    shuffleDeck(&deck, 0U, TRUE);
     *data++ = deck.cardCount;
     *data = deck.deckSize;
 }
 
 void loadGameData()
 {
+    initializeDeck(&deck);
+
     data = &ram_data[RAM_PLAYER];
-    player.x           = *data++;
-    player.y           = *data++;
+    *data--;
     player.xTile       = *data++;
     player.yTile       = *data++;
     player.dir         = *data++;
@@ -62,11 +59,10 @@ void loadGameData()
     for (UINT8 i = 0U; i != 18U; ++i)  // 18 is a magic number equivalent to max deck size
     {
         deck.orderedCards[i] = *data++;
-    }
-    for (UINT8 i = 0U; i != 18U; ++i)  // 18 is a magic number equivalent to max deck size
-    {
-        deck.cardIds[i] = *data++;
+        deck.cardIds[i] = i;
     }
     deck.cardCount = *data++;
-    deck.deckSize  = *data;
+    deck.deckSize  = *data++;
+
+    shuffleDeck(&deck, 0U, TRUE);
 }

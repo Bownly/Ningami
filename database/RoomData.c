@@ -58,7 +58,7 @@ const EventObject room2AEvents[] = {
 
 const UINT8 spawnLocations[][4] = {
     // Room num; x coord; y coord; dir
-    { 0U,  4U, 14U, S},
+    { 0U,  4U,  0U, S},
     { 1U,  4U, 17U, N},
     { 1U, 24U,  9U, W},
     { 2U,  1U, 18U, E}

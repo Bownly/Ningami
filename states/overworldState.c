@@ -23,7 +23,10 @@
 #define PLAYER_SPR_NUM_START 1U
 #define PLAYER_TILE_NUM_START 3U
 
+extern const unsigned char forestTiles[];
 extern const unsigned char forestMetaTiles[][4U];
+
+const UINT8 forestTileIndex = 0xA0U;
 
 extern UINT8 curJoypad;
 extern UINT8 prevJoypad;
@@ -133,6 +136,8 @@ void phaseInitOverworld()
     animTick = 0U;
     animFrame = 0U;
     setBlankBg();
+    set_bkg_data(forestTileIndex, 60U, forestTiles);
+
     DISPLAY_ON;
     SHOW_BKG;
     SHOW_SPRITES;
