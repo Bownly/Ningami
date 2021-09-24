@@ -9,7 +9,7 @@
 
 extern const EventObject room1Events[];
 extern const EventObject room2Events[];
-extern const UINT8 spawnLocations[][4];
+extern const UINT8 spawnLocations[][7];
 extern const RoomObject roomDict[];
 
 #endif

@@ -77,6 +77,8 @@ const UINT8 PLAYER_X_RIGHT  = 160U;
 const UINT8 PLAYER_Y_UP     = 24U;
 const UINT8 PLAYER_Y_CENTER = 88U;
 const UINT8 PLAYER_Y_DOWN   = 152U;
+const UINT8 playerSpeed     = 4U;
+
 #define STARTPOS 0U
 #define STARTCAM 0U
 
@@ -197,7 +199,7 @@ void phasePlayerInputs()
         {
             if (camera_y == 0U || player.y != PLAYER_Y_CENTER)
             {
-                player.y -= 4U;
+                player.y -= playerSpeed;
                 if ((player.y + 8U) % 16U == 0U)  // +8 because of the annoying metatiles center + 16 vert offset for sprites
                 {
                     player.yTile--;
@@ -206,7 +208,7 @@ void phasePlayerInputs()
             }
             else
             {
-                camera_y -= 4U;
+                camera_y -= playerSpeed;
                 if (camera_y % 16U == 0U)
                 {
                     player.yTile--;
@@ -218,7 +220,7 @@ void phasePlayerInputs()
         {
             if (camera_y == camera_max_y || player.y != PLAYER_Y_CENTER)
             {
-                player.y += 4U;
+                player.y += playerSpeed;
                 if ((player.y - 8U) % 16U == 0U)
                 {
                     player.yTile++;
@@ -227,7 +229,7 @@ void phasePlayerInputs()
             }
             else
             {
-                camera_y += 4U;
+                camera_y += playerSpeed;
                 if (camera_y % 16U == 0U)
                 {
                     player.yTile++;
@@ -239,7 +241,7 @@ void phasePlayerInputs()
         {
             if (camera_x == 0U || player.x != PLAYER_X_CENTER)
             {
-                player.x -= 4U;
+                player.x -= playerSpeed;
                 if (player.x % 16U == 0U)
                 {
                     player.xTile--;
@@ -248,7 +250,7 @@ void phasePlayerInputs()
             }
             else
             {
-                camera_x -= 4U;
+                camera_x -= playerSpeed;
                 if (camera_x % 16U == 0U)
                 {
                     player.xTile--;
@@ -260,7 +262,7 @@ void phasePlayerInputs()
         {
             if (camera_x == camera_max_x || player.x != PLAYER_X_CENTER)
             {
-                player.x += 4U;
+                player.x += playerSpeed;
                 if (player.x % 16U == 0U)
                 {
                     player.xTile++;
@@ -269,7 +271,7 @@ void phasePlayerInputs()
             }
             else
             {
-                camera_x += 4U;
+                camera_x += playerSpeed;
                 if (camera_x % 16U == 0U)
                 {
                     player.xTile++;
@@ -476,6 +478,14 @@ void loadRoom()
     roomAEventsPtr = room.aEvents;
     encounterRate = room.encounterRate;
     encounterCounter = encounterRate;
+    
+    // slightly randomize encounter rate
+    if (room.encounterRate != 0U)
+    {
+        encounterCounter -= room.encounterRate >> 1U;
+        r = getRandUint(encounterRate);
+        encounterCounter += r;
+    }
 
     // Reset camera and player position
     if (player.xTile > 5)  // 5 is the x offset from left to center
