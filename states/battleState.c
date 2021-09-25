@@ -30,17 +30,16 @@ extern const unsigned char emptyTiles[];
 extern const unsigned char enemyDogTiles[];
 extern const unsigned char enemyHorseTiles[];
 extern const unsigned char enemyKitsuneTiles[];
+extern const unsigned char enemyTanukiTiles[];
 extern const unsigned char fontTiles[];
 extern const unsigned char glintTiles[];
 extern const unsigned char healAnimTiles[];
 extern const unsigned char manaAnimTiles[];
 extern const unsigned char shieldAnimTiles[];
-// extern const unsigned char scorenumTiles[];
 
 const UINT8 enemyTileIndex  = 0xE0;
 const UINT8 battleAnimTileIndex  = 0xF0;
 const UINT8 glintTileIndex  = 0xFC;
-// const UINT8 scoreNumsTileIndex = 0xB0;
 
 extern UINT8 curJoypad;
 extern UINT8 prevJoypad;
@@ -199,6 +198,9 @@ void phaseOpunZaGeimu()
             break;
         case ENEMY_KITSUNE:
             set_bkg_data(enemyTileIndex, 16U, enemyKitsuneTiles);
+            break;
+        case ENEMY_TANUKI:
+            set_bkg_data(enemyTileIndex, 16U, enemyTanukiTiles);
             break;
         case ENEMY_TSURU:
             set_bkg_data(enemyTileIndex, 16U, enemyHorseTiles);

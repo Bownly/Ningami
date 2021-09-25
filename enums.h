@@ -80,7 +80,8 @@ typedef enum {
 typedef enum {
     ENEMY_INU     = 0U,
     ENEMY_KITSUNE = 1U,
-    ENEMY_TSURU   = 2U
+    ENEMY_TANUKI  = 2U,
+    ENEMY_TSURU   = 3U
 } ENEMYTYPE;
 
 typedef enum {
