@@ -30,6 +30,8 @@ extern const unsigned char emptyTiles[];
 extern const unsigned char enemyDogTiles[];
 extern const unsigned char enemyHorseTiles[];
 extern const unsigned char enemyKitsuneTiles[];
+extern const unsigned char enemyNinja1Tiles[];
+extern const unsigned char enemyNinja2Tiles[];
 extern const unsigned char enemyTanukiTiles[];
 extern const unsigned char fontTiles[];
 extern const unsigned char glintTiles[];
@@ -204,6 +206,12 @@ void phaseOpunZaGeimu()
             break;
         case ENEMY_TSURU:
             set_bkg_data(enemyTileIndex, 16U, enemyHorseTiles);
+            break;
+        case ENEMY_NINJA1:
+            set_bkg_data(enemyTileIndex, 16U, enemyNinja1Tiles);
+            break;
+        case ENEMY_NINJA2:
+            set_bkg_data(enemyTileIndex, 16U, enemyNinja2Tiles);
             break;
         default:
             set_bkg_data(enemyTileIndex, 16U, enemyDogTiles);
