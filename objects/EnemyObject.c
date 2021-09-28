@@ -18,6 +18,6 @@ const EnemyObject enemyDex[] = {
     { .hpMax = 20U, .hpCur = 20U, .shieldCount = 0U, .atk = 4U, .def = 1U, .paperAmount = 15U, .enemySpr = 2U },
     { .hpMax = 11U, .hpCur = 11U, .shieldCount = 0U, .atk = 0U, .def = 0U, .paperAmount = 20U, .enemySpr = 3U },
     { .hpMax = 11U, .hpCur = 11U, .shieldCount = 0U, .atk = 0U, .def = 0U, .paperAmount = 20U, .enemySpr = 4U },
-    { .hpMax = 11U, .hpCur = 11U, .shieldCount = 0U, .atk = 0U, .def = 0U, .paperAmount = 20U, .enemySpr = 5U },
-    { .hpMax = 11U, .hpCur = 11U, .shieldCount = 0U, .atk = 0U, .def = 0U, .paperAmount = 20U, .enemySpr = 6U }
+    { .hpMax = 15U, .hpCur = 15U, .shieldCount = 0U, .atk = 5U, .def = 0U, .paperAmount = 20U, .enemySpr = 5U },
+    { .hpMax = 20U, .hpCur = 20U, .shieldCount = 0U, .atk = 4U, .def = 1U, .paperAmount = 20U, .enemySpr = 6U }
 };

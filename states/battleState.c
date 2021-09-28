@@ -29,6 +29,7 @@ extern const unsigned char cursorTiles[];
 extern const unsigned char emptyTiles[];
 extern const unsigned char enemyDogTiles[];
 extern const unsigned char enemyHorseTiles[];
+extern const unsigned char enemyKameTiles[];
 extern const unsigned char enemyKitsuneTiles[];
 extern const unsigned char enemyNinja1Tiles[];
 extern const unsigned char enemyNinja2Tiles[];
@@ -108,6 +109,7 @@ void phaseLoseCheck();
 void phaseWinLoop();
 
 /* HELPER METHODS */
+void loadEnemy();
 
 /* DISPLAY METHODS */
 void displayCursor(UINT8);
@@ -192,32 +194,7 @@ void phaseOpunZaGeimu()
     set_bkg_tiles(0U, 18U, 16U, 1U, blankEnemyMap);
     
     // Initialize enemy data
-    // TODO make this variable based on different enemy types
-    switch (enemyId)
-    {
-        case ENEMY_INU:
-            set_bkg_data(enemyTileIndex, 16U, enemyDogTiles);
-            break;
-        case ENEMY_KITSUNE:
-            set_bkg_data(enemyTileIndex, 16U, enemyKitsuneTiles);
-            break;
-        case ENEMY_TANUKI:
-            set_bkg_data(enemyTileIndex, 16U, enemyTanukiTiles);
-            break;
-        case ENEMY_TSURU:
-            set_bkg_data(enemyTileIndex, 16U, enemyHorseTiles);
-            break;
-        case ENEMY_NINJA1:
-            set_bkg_data(enemyTileIndex, 16U, enemyNinja1Tiles);
-            break;
-        case ENEMY_NINJA2:
-            set_bkg_data(enemyTileIndex, 16U, enemyNinja2Tiles);
-            break;
-        default:
-            set_bkg_data(enemyTileIndex, 16U, enemyDogTiles);
-            break;
-    }
-    enemy = enemyDex[enemyId];
+    loadEnemy();
 
     xAnchorHand = 6U;
 
@@ -226,16 +203,10 @@ void phaseOpunZaGeimu()
     shuffleDeck(&deck, 64U, TRUE);
     initializeHand(&hand);
 
-    // Show enemy on screen
-    set_bkg_tiles(xAnchorEnemy, yAnchorEnemy, 4U, 4U, enemyMap);
-
     // Show player and enemy stats on screen
     displayHP();
     displayMP();
     displayShields();
-    displayEnemyHP();
-    displayEnemyAtk();
-    displayEnemyShields();
 
     // Draw the dialog box
     set_bkg_tiles(0U, 14U, 20U, 4U, textWindowMap);
@@ -590,8 +561,36 @@ void phaseAnimateEnemyMove()
 
 void phaseWinCheck()
 {
-    // If enemy is dead
-    if (enemy.hpCur == 0U)
+    // If enemy is not dead
+    if (enemy.hpCur != 0U || (enemy.hpCur == 0U && enemyId == ENEMY_NINJA1))
+    {
+        // Final boss form change shenanigans
+        if (enemy.hpCur == 0U && enemyId == ENEMY_NINJA1)
+        {
+            enemyId = ENEMY_NINJA2;
+            loadEnemy();
+        }
+
+        // Return to CARD_SELECT if more cards can be played
+        // Else goto ENEMY_TURN
+        substate = ENEMY_TURN;
+
+        for (i = 0U; i != hand.cardCount; ++i)
+        {
+            if (cardDex[deck.orderedCards[hand.cardIds[i]]].mpCost <= player.mpCur)
+            {
+                animTick = 0U;
+                substate = CARD_SELECT;
+                // Reset cursor location
+                m = 0U;
+                displayCursor(m);
+
+                // Update card description of default selected card
+                displayCardDesc();
+            }
+        }
+    }
+    else
     {
         // Hide extra enemy stats and stuff
         set_bkg_tiles( 2U, 5U, 3U, 2U, blankEnemyMap);
@@ -620,28 +619,6 @@ void phaseWinCheck()
             {
                 tempCardId = removeCardFromHand(&hand, i);
                 discardCard(&deck, tempCardId);
-            }
-        }
-
-    }
-    else
-    {
-        // Return to CARD_SELECT if more cards can be played
-        // Else goto ENEMY_TURN
-        substate = ENEMY_TURN;
-
-        for (i = 0U; i != hand.cardCount; ++i)
-        {
-            if (cardDex[deck.orderedCards[hand.cardIds[i]]].mpCost <= player.mpCur)
-            {
-                animTick = 0U;
-                substate = CARD_SELECT;
-                // Reset cursor location
-                m = 0U;
-                displayCursor(m);
-
-                // Update card description of default selected card
-                displayCardDesc();
             }
         }
     }
@@ -676,7 +653,43 @@ void phaseWinLoop()
 
 
 /******************************** HELPER METHODS ********************************/
+void loadEnemy()
+{
+    switch (enemyId)
+    {
+        case ENEMY_INU:
+            set_bkg_data(enemyTileIndex, 16U, enemyDogTiles);
+            break;
+        case ENEMY_KITSUNE:
+            set_bkg_data(enemyTileIndex, 16U, enemyKitsuneTiles);
+            break;
+        case ENEMY_TANUKI:
+            set_bkg_data(enemyTileIndex, 16U, enemyTanukiTiles);
+            break;
+        case ENEMY_TSURU:
+            set_bkg_data(enemyTileIndex, 16U, enemyHorseTiles);
+            break;
+        case ENEMY_KAME:
+            set_bkg_data(enemyTileIndex, 16U, enemyKameTiles);
+            break;
+        case ENEMY_NINJA1:
+            set_bkg_data(enemyTileIndex, 16U, enemyNinja1Tiles);
+            break;
+        case ENEMY_NINJA2:
+            set_bkg_data(enemyTileIndex, 16U, enemyNinja2Tiles);
+            break;
+        default:
+            set_bkg_data(enemyTileIndex, 16U, enemyDogTiles);
+            break;
+    }
+    enemy = enemyDex[enemyId];
 
+    displayEnemyHP();
+    displayEnemyAtk();
+    displayEnemyShields();
+    
+    set_bkg_tiles(xAnchorEnemy, yAnchorEnemy, 4U, 4U, enemyMap);
+}
 
 /******************************** DISPLAY METHODS ********************************/
 void displayCursor(UINT8 xindex)

@@ -85,7 +85,7 @@ const RoomObject roomDict[] = {
 
     {.id = 0U, .w = room1MapWidth, .h = room1MapHeight, .encounterRate = 20U, .roomMap = room1Map, .events = room1Events,
         .eventsLen = 4U, .aEventsLen = 1U, .events = room1Events, .aEvents = room1AEvents,
-        .encounterSet = {ENEMY_INU, ENEMY_INU, ENEMY_INU, ENEMY_INU}},
+        .encounterSet = {ENEMY_NINJA1, ENEMY_NINJA1, ENEMY_INU, ENEMY_INU}},
 
     {.id = 0U, .w = room2MapWidth, .h = room2MapHeight, .encounterRate =  0U, .roomMap = room2Map, .events = room2Events,
         .eventsLen = 3U, .aEventsLen = 2U, .events = room2Events, .aEvents = room2AEvents,
@@ -95,3 +95,9 @@ const RoomObject roomDict[] = {
         .eventsLen = 0U, .aEventsLen = 0U, .events = room3Events, .aEvents = room3AEvents,
         .encounterSet = {ENEMY_TSURU, ENEMY_TSURU, ENEMY_TSURU, ENEMY_TSURU}}
 };
+
+
+
+// Enemy sprites x 3 (ninja, crane, kitsune, turtle)
+// maps
+// sfx (tp)

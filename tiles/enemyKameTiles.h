@@ -1,6 +1,6 @@
 /*
 
- ENEMYNINJA2TILES.H
+ ENEMYKAMETILES.H
 
  Include File.
 
@@ -22,14 +22,14 @@
 
 */
 
-#ifndef __enemyNinja2Tiles_h_INCLUDE
-#define __enemyNinja2Tiles_h_INCLUDE
+#ifndef __enemyKameTiles_h_INCLUDE
+#define __enemyKameTiles_h_INCLUDE
 
 /* Bank of tiles. */
-#define enemyNinja2TilesBank 0
+#define enemyKameTilesBank 0
 /* Start of tile array. */
-extern const unsigned char enemyNinja2Tiles[];
+extern const unsigned char enemyKameTiles[];
 
 #endif
 
-/* End of ENEMYNINJA2TILES.H */
+/* End of ENEMYKAMETILES.H */
