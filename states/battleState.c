@@ -28,12 +28,12 @@ extern const unsigned char cardTiles[];
 extern const unsigned char cursorTiles[];
 extern const unsigned char emptyTiles[];
 extern const unsigned char enemyDogTiles[];
-extern const unsigned char enemyHorseTiles[];
 extern const unsigned char enemyKameTiles[];
 extern const unsigned char enemyKitsuneTiles[];
 extern const unsigned char enemyNinja1Tiles[];
 extern const unsigned char enemyNinja2Tiles[];
 extern const unsigned char enemyTanukiTiles[];
+extern const unsigned char enemyToriTiles[];
 extern const unsigned char fontTiles[];
 extern const unsigned char glintTiles[];
 extern const unsigned char healAnimTiles[];
@@ -85,8 +85,6 @@ const UINT8 xAnchorEnemyAtk = 15U;
 const UINT8 yAnchorEnemyAtk = 5U;
 const UINT8 xAnchorEnemyShield = 15U;
 const UINT8 yAnchorEnemyShield = 6U;
-// const UINT8 xAnchorPaperWinnings = 6U;
-// const UINT8 yAnchorPaperWinnings = 6U;
 
 extern UINT8 animFrame;
 extern UINT8 animTick;
@@ -666,8 +664,8 @@ void loadEnemy()
         case ENEMY_TANUKI:
             set_bkg_data(enemyTileIndex, 16U, enemyTanukiTiles);
             break;
-        case ENEMY_TSURU:
-            set_bkg_data(enemyTileIndex, 16U, enemyHorseTiles);
+        case ENEMY_TORI:
+            set_bkg_data(enemyTileIndex, 16U, enemyToriTiles);
             break;
         case ENEMY_KAME:
             set_bkg_data(enemyTileIndex, 16U, enemyKameTiles);
@@ -688,7 +686,7 @@ void loadEnemy()
     displayEnemyAtk();
     displayEnemyShields();
     
-    set_bkg_tiles(xAnchorEnemy, yAnchorEnemy, 4U, 4U, enemyMap);
+    set_bkg_tiles(xAnchorEnemy, yAnchorEnemy, 4U, 4U, enemyMap); 
 }
 
 /******************************** DISPLAY METHODS ********************************/

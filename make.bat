@@ -18,12 +18,12 @@ C:\gbdk2020\bin\lcc -Wa-l -c -o cursortiles.o tiles/cursorTiles.c
 C:\gbdk2020\bin\lcc -Wa-l -c -o fonttiles.o tiles/fontTiles.c
 C:\gbdk2020\bin\lcc -Wa-l -c -o icontiles.o tiles/iconTiles.c
 C:\gbdk2020\bin\lcc -Wa-l -Wf-bo1 -c -o enemyDogTiles.o tiles/enemyDogTiles.c
-C:\gbdk2020\bin\lcc -Wa-l -Wf-bo1 -c -o enemyHorsetiles.o tiles/enemyHorseTiles.c
 C:\gbdk2020\bin\lcc -Wa-l -Wf-bo1 -c -o enemyKameTiles.o tiles/enemyKameTiles.c
 C:\gbdk2020\bin\lcc -Wa-l -Wf-bo1 -c -o enemyKitsuneTiles.o tiles/enemyKitsuneTiles.c
 C:\gbdk2020\bin\lcc -Wa-l -Wf-bo1 -c -o enemyNinja1tiles.o tiles/enemyNinja1Tiles.c
 C:\gbdk2020\bin\lcc -Wa-l -Wf-bo1 -c -o enemyNinja2tiles.o tiles/enemyNinja2Tiles.c
 C:\gbdk2020\bin\lcc -Wa-l -Wf-bo1 -c -o enemyTanukitiles.o tiles/enemyTanukiTiles.c
+C:\gbdk2020\bin\lcc -Wa-l -Wf-bo1 -c -o enemyToriTiles.o tiles/enemyToriTiles.c
 C:\gbdk2020\bin\lcc -Wa-l -Wf-bo1 -c -o glintTiles.o tiles/glintTiles.c
 C:\gbdk2020\bin\lcc -Wa-l -Wf-bo1 -c -o healAnimTiles.o tiles/healAnimTiles.c
 C:\gbdk2020\bin\lcc -Wa-l -Wf-bo1 -c -o manaAnimTiles.o tiles/manaAnimTiles.c

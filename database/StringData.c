@@ -11,6 +11,12 @@ const unsigned char dialogStrings[][20] = {
                                             "    GAME SAVED    ", " HEALTH RESTORED  ",
                                             "LEFT OR RIGHT?    ", "...DUNNO.         ",
                                             "WRONG PATH, BUDDY.", "    T. FINAL BOSS ",  // 10
-                                            "TRY TAKING ANOTHER", "PATH.             "
+                                            "TRY TAKING ANOTHER", "PATH.             ",
+                                            "TRY NOT READING   ", "FROM THE BACK.    ",
+                                            "BALD BAMBOO SECTOR", "LALALALA LALALA   ",
+                                            "I THINK I AM LOST ", "      NINJA HAIKU ",
+                                            "THIS WAY TO THE   ", "BALD BAMBOO SHOP  ",  // 15
+                                            "FOR THE BEST DEALS", "IN THE FOREST.    ",
+                                            "WE WILL MATCH ANY ", "PRICE.            "
 
 };

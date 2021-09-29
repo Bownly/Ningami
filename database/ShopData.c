@@ -5,5 +5,7 @@
 extern const CARDFACE shopDex[][4U] = {
     { SHURIKEN, SHOUZOKU, HIKOUKI,   HAATO },
     { KATANA,     KABUTO,   HAATO,  FUUSEN },
+    { KATANA,     KABUTO,   HAATO,  FUUSEN },
+    { KATANA,     KABUTO,   HAATO,  FUUSEN },
     { HASAMI,   MAKIMONO,  FUUSEN, ONIGIRI }
 };

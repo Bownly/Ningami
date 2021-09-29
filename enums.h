@@ -81,7 +81,7 @@ typedef enum {
     ENEMY_INU     = 0U,
     ENEMY_KITSUNE = 1U,
     ENEMY_TANUKI  = 2U,
-    ENEMY_TSURU   = 3U,
+    ENEMY_TORI    = 3U,
     ENEMY_KAME    = 4U,
     ENEMY_NINJA1  = 5U,
     ENEMY_NINJA2  = 6U
