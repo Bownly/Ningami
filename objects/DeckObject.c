@@ -6,10 +6,6 @@
 #include "../common.h"
 #include "../enums.h"
 
-// const CARDFACE startDeck[9U] = { SHURIKEN, SHURIKEN, SHURIKEN,
-//                                  SHURIKEN, SHOUZOKU, SHOUZOKU,
-//                                  SHOUZOKU, SHOUZOKU,    HAATO };
-
 const CARDFACE startDeck[18U] = { SHURIKEN, SHURIKEN, SHURIKEN, SHOUZOKU, SHOUZOKU, SHOUZOKU,
                                      HAATO, MAKIMONO,   FUUSEN,   KATANA,   KATANA,   HASAMI,
                                    HIKOUKI,  HIKOUKI,   KABUTO,   KABUTO,  ONIGIRI, SHURIKEN };
@@ -18,7 +14,7 @@ const CARDFACE startDeck[18U] = { SHURIKEN, SHURIKEN, SHURIKEN, SHOUZOKU, SHOUZO
 void initializeDeck(DeckObject* deck)
 {
     deck->discardCount = 0U;
-    deck->deckSize = 9U;
+    deck->deckSize = 7U;
 
     for (deck->cardCount = 0U; deck->cardCount != deck->deckSize; deck->cardCount++)
     {

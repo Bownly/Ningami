@@ -76,7 +76,7 @@ const EventObject room4Events[] = {
 };
 
 const EventObject room4AEvents[] = {
-    { .x = 11U, .y =  3U, .type = EV_OPEN_SHOP, .value = 2U }
+    { .x = 11U, .y =  3U, .type = EV_OPEN_SHOP, .value =  1U }
 };
 
 const EventObject room5Events[] = {
@@ -84,7 +84,7 @@ const EventObject room5Events[] = {
 };
 
 const EventObject room5AEvents[] = {
-    { .x =  3U, .y =  7U, .type = EV_OPEN_SHOP, .value =  4U },
+    { .x =  3U, .y =  7U, .type = EV_OPEN_SHOP, .value =  3U },
     { .x =  7U, .y =  7U, .type = EV_SAVE,      .value =  0U }
 };
 
@@ -104,7 +104,7 @@ const EventObject room7Events[] = {
 };
 
 const EventObject room7AEvents[] = {
-    { .x =  7U, .y =  4U, .type = EV_OPEN_SHOP, .value =  1U },
+    { .x =  7U, .y =  4U, .type = EV_OPEN_SHOP, .value =  2U },
     { .x =  3U, .y =  4U, .type = EV_SAVE,      .value =  0U }
 };
 
@@ -171,37 +171,37 @@ const RoomObject roomDict[] = {
         .eventsLen = 1U, .aEventsLen = 10U, .events = room0Events, .aEvents = room0AEvents,
         .encounterSet = {ENEMY_INU, ENEMY_INU, ENEMY_INU, ENEMY_INU}},
     // 1
-    {.id = 0U, .w = room1MapWidth, .h = room1MapHeight, .encounterRate =  0U, .roomMap = room1Map, .events = room1Events,
+    {.id = 0U, .w = room1MapWidth, .h = room1MapHeight, .encounterRate = 25U, .roomMap = room1Map, .events = room1Events,
         .eventsLen = 4U, .aEventsLen = 1U, .events = room1Events, .aEvents = room1AEvents,
-        .encounterSet = {ENEMY_TORI, ENEMY_TORI, ENEMY_KITSUNE, ENEMY_KITSUNE}},
+        .encounterSet = {ENEMY_INU, ENEMY_INU, ENEMY_INU, ENEMY_KITSUNE}},
     // 2
-    {.id = 0U, .w = room2MapWidth, .h = room2MapHeight, .encounterRate =  0U, .roomMap = room2Map, .events = room2Events,
+    {.id = 0U, .w = room2MapWidth, .h = room2MapHeight, .encounterRate = 25U, .roomMap = room2Map, .events = room2Events,
         .eventsLen = 3U, .aEventsLen = 2U, .events = room2Events, .aEvents = room2AEvents,
-        .encounterSet = {ENEMY_TORI, ENEMY_TORI, ENEMY_TORI, ENEMY_TORI}},
+        .encounterSet = {ENEMY_INU, ENEMY_INU, ENEMY_KITSUNE, ENEMY_TANUKI}},
     // 3
-    {.id = 0U, .w = room3MapWidth, .h = room3MapHeight, .encounterRate =  0U, .roomMap = room3Map, .events = room3Events,
+    {.id = 0U, .w = room3MapWidth, .h = room3MapHeight, .encounterRate = 25U, .roomMap = room3Map, .events = room3Events,
         .eventsLen = 3U, .aEventsLen = 5U, .events = room3Events, .aEvents = room3AEvents,
-        .encounterSet = {ENEMY_TORI, ENEMY_TORI, ENEMY_TORI, ENEMY_TORI}},
+        .encounterSet = {ENEMY_INU, ENEMY_KITSUNE, ENEMY_KITSUNE, ENEMY_TANUKI}},
     // 4
-    {.id = 0U, .w = room4MapWidth, .h = room4MapHeight, .encounterRate =  0U, .roomMap = room4Map, .events = room4Events,
+    {.id = 0U, .w = room4MapWidth, .h = room4MapHeight, .encounterRate = 25U, .roomMap = room4Map, .events = room4Events,
         .eventsLen = 2U, .aEventsLen = 1U, .events = room4Events, .aEvents = room4AEvents,
-        .encounterSet = {ENEMY_TORI, ENEMY_TORI, ENEMY_TORI, ENEMY_TORI}},
+        .encounterSet = {ENEMY_TORI, ENEMY_KITSUNE, ENEMY_TANUKI, ENEMY_TORI}},
     // 5
-    {.id = 0U, .w = room5MapWidth, .h = room5MapHeight, .encounterRate =  0U, .roomMap = room5Map, .events = room5Events,
+    {.id = 0U, .w = room5MapWidth, .h = room5MapHeight, .encounterRate = 0U, .roomMap = room5Map, .events = room5Events,
         .eventsLen = 1U, .aEventsLen = 2U, .events = room5Events, .aEvents = room5AEvents,
-        .encounterSet = {ENEMY_TORI, ENEMY_TORI, ENEMY_TORI, ENEMY_TORI}},
+        .encounterSet = {ENEMY_INU, ENEMY_INU, ENEMY_INU, ENEMY_INU}},
     // 6
-    {.id = 0U, .w = room6MapWidth, .h = room6MapHeight, .encounterRate =  0U, .roomMap = room6Map, .events = room6Events,
+    {.id = 0U, .w = room6MapWidth, .h = room6MapHeight, .encounterRate = 25U, .roomMap = room6Map, .events = room6Events,
         .eventsLen = 3U, .aEventsLen = 1U, .events = room6Events, .aEvents = room6AEvents,
-        .encounterSet = {ENEMY_TORI, ENEMY_TORI, ENEMY_TORI, ENEMY_TORI}},
+        .encounterSet = {ENEMY_KITSUNE, ENEMY_TANUKI, ENEMY_TANUKI, ENEMY_KITSUNE}},
     // 7
     {.id = 0U, .w = room7MapWidth, .h = room7MapHeight, .encounterRate =  0U, .roomMap = room7Map, .events = room7Events,
         .eventsLen = 2U, .aEventsLen = 2U, .events = room7Events, .aEvents = room7AEvents,
-        .encounterSet = {ENEMY_TORI, ENEMY_TORI, ENEMY_TORI, ENEMY_TORI}},
+        .encounterSet = {ENEMY_INU, ENEMY_INU, ENEMY_INU, ENEMY_INU}},
     // 8
-    {.id = 0U, .w = room8MapWidth, .h = room8MapHeight, .encounterRate =  0U, .roomMap = room8Map, .events = room8Events,
+    {.id = 0U, .w = room8MapWidth, .h = room8MapHeight, .encounterRate = 25U, .roomMap = room8Map, .events = room8Events,
         .eventsLen = 2U, .aEventsLen = 0U, .events = room8Events, .aEvents = room8AEvents,
-        .encounterSet = {ENEMY_TORI, ENEMY_TORI, ENEMY_TORI, ENEMY_TORI}},
+        .encounterSet = {ENEMY_INU, ENEMY_TORI, ENEMY_KAME, ENEMY_KAME}},
     // 9
     {.id = 0U, .w = room9MapWidth, .h = room9MapHeight, .encounterRate =  0U, .roomMap = room9Map, .events = room9Events,
         .eventsLen = 1U, .aEventsLen = 2U, .events = room9Events, .aEvents = room9AEvents,

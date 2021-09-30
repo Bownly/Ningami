@@ -595,8 +595,6 @@ void checkUnderfootTile()
             enemyId = room.encounterSet[getRandUint(4U)];
 
             fadeout();
-            // Reset encounterCounter
-            // encounterCounter = 10U;
         }
     }
 }

@@ -3,21 +3,12 @@
 
 #include "EnemyObject.h"
 
-// typedef struct EnemyObject {
-//     UINT8 hpMax;
-//     UINT8 hpCur;
-//     UINT8 shieldCount;
-//     UINT8 atk;
-//     UINT8 def;
-//     UINT8 enemySpr;
-// } EnemyObject;
-
 const EnemyObject enemyDex[] = {
-    { .hpMax = 10U, .hpCur = 10U, .shieldCount = 0U, .atk = 3U, .def = 0U, .paperAmount =  5U, .enemySpr = 0U },
-    { .hpMax = 15U, .hpCur = 15U, .shieldCount = 0U, .atk = 4U, .def = 0U, .paperAmount = 10U, .enemySpr = 1U },
-    { .hpMax = 20U, .hpCur = 20U, .shieldCount = 0U, .atk = 4U, .def = 1U, .paperAmount = 15U, .enemySpr = 2U },
-    { .hpMax = 11U, .hpCur = 11U, .shieldCount = 0U, .atk = 0U, .def = 0U, .paperAmount = 20U, .enemySpr = 3U },
-    { .hpMax = 11U, .hpCur = 11U, .shieldCount = 0U, .atk = 0U, .def = 0U, .paperAmount = 20U, .enemySpr = 4U },
-    { .hpMax = 15U, .hpCur = 15U, .shieldCount = 0U, .atk = 5U, .def = 0U, .paperAmount = 20U, .enemySpr = 5U },
-    { .hpMax = 20U, .hpCur = 20U, .shieldCount = 0U, .atk = 4U, .def = 1U, .paperAmount = 20U, .enemySpr = 6U }
+    { .hpMax = 10U, .hpCur = 10U, .shieldsMax = 0U, .shieldsCur = 0U, .atk = 3U, .paperAmount =  5U, .enemySpr = 0U },  // Inu
+    { .hpMax = 15U, .hpCur = 15U, .shieldsMax = 1U, .shieldsCur = 0U, .atk = 4U, .paperAmount = 10U, .enemySpr = 1U },  // Kitsune
+    { .hpMax = 20U, .hpCur = 20U, .shieldsMax = 2U, .shieldsCur = 0U, .atk = 4U, .paperAmount = 15U, .enemySpr = 2U },  // Tanuki
+    { .hpMax =  9U, .hpCur =  9U, .shieldsMax = 0U, .shieldsCur = 0U, .atk = 7U, .paperAmount = 20U, .enemySpr = 3U },  // Tori
+    { .hpMax = 10U, .hpCur = 10U, .shieldsMax = 5U, .shieldsCur = 0U, .atk = 4U, .paperAmount = 20U, .enemySpr = 4U },  // Kame
+    { .hpMax = 25U, .hpCur = 25U, .shieldsMax = 0U, .shieldsCur = 0U, .atk = 5U, .paperAmount =  0U, .enemySpr = 5U },  // Ninja 1
+    { .hpMax = 15U, .hpCur = 15U, .shieldsMax = 3U, .shieldsCur = 0U, .atk = 4U, .paperAmount = 99U, .enemySpr = 6U }   // Ninja 2
 };

@@ -225,6 +225,8 @@ void phaseStartTurn()
     displayMP();
     player.shieldCount = 0U;
     displayShields();
+    enemy.shieldsCur = enemy.shieldsMax;
+    displayEnemyShields();
 
     // Discard old hand
     if (hand.cardCount != 0U)
@@ -346,12 +348,23 @@ void phaseUseCard()
     if (cardDex[tempCardId].typeId == CT_ATTACK || cardDex[tempCardId].typeId == CT_ATKDEF)
     {
         // Run damage calcs on target
-        k = cardDex[tempCardId].pointVal + player.atk - enemy.def;
-        if (k < enemy.hpCur)
-            enemy.hpCur -= k;
+        k = cardDex[tempCardId].pointVal + player.atk;
+
+        if (k >= enemy.shieldsCur)
+        {
+            k -= enemy.shieldsCur;
+            enemy.shieldsCur = 0U;
+            if (k < enemy.hpCur)
+                enemy.hpCur -= k;
+            else
+                enemy.hpCur = 0;
+            displayEnemyHP();
+        }
         else
-            enemy.hpCur = 0;
-        displayEnemyHP();
+        {
+            enemy.shieldsCur -= k;
+        }
+        displayEnemyShields();
     }
     if (cardDex[tempCardId].typeId == CT_SHIELD || cardDex[tempCardId].typeId == CT_ATKDEF)
     {
@@ -821,11 +834,11 @@ void displayEnemyAtk()
 
 void displayEnemyShields()
 {
-    if (enemy.shieldCount/10U != 0)
-        set_bkg_tile_xy(xAnchorEnemyShield, yAnchorEnemyShield, enemy.shieldCount/10U);
+    if (enemy.shieldsCur/10U != 0)
+        set_bkg_tile_xy(xAnchorEnemyShield, yAnchorEnemyShield, enemy.shieldsCur/10U);
     else
         set_bkg_tile_xy(xAnchorEnemyShield, yAnchorEnemyShield, 0xFFU);
-    set_bkg_tile_xy(xAnchorEnemyShield+1, yAnchorEnemyShield, enemy.shieldCount%10U);
+    set_bkg_tile_xy(xAnchorEnemyShield+1, yAnchorEnemyShield, enemy.shieldsCur%10U);
     set_bkg_tile_xy(xAnchorEnemyShield+2, yAnchorEnemyShield, 0x29U);
 }
 
