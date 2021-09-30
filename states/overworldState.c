@@ -583,6 +583,12 @@ void checkUnderfootTile()
                 gamestate = STATE_OVERWORLD;
                 substate = OW_INIT_OW;
             }
+            else if ((roomEventsPtr+l)->type == EV_BATTLE)
+            {
+                enemyId = (roomEventsPtr+l)->value;
+                openBattle();
+                return;
+            }
         }
     }
 

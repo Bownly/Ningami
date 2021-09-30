@@ -212,9 +212,3 @@ const RoomObject roomDict[] = {
         .eventsLen = 8U, .aEventsLen = 3U, .events = room9Events, .aEvents = room9AEvents,
         .encounterSet = {ENEMY_INU, ENEMY_INU, ENEMY_INU, ENEMY_INU}}
 };
-
-
-
-// Enemy sprites x 3 (ninja, crane, kitsune, turtle)
-// maps
-// sfx (tp)
