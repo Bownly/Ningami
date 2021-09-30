@@ -84,7 +84,7 @@ void mainmenuStateMain()
             break;
         default:  // Abort to title in the event of unexpected state
             gamestate = STATE_TITLE;
-            substate = 0U;
+            substate = MM_INIT;
             break;
     }
     prevJoypad = curJoypad;
@@ -106,7 +106,6 @@ void phaseInitMainMenu()
 
     set_bkg_tiles(6U, 4U, 9U, 7U, titlecardMap);
     set_bkg_tiles(5U, 13U, 11U, 1U, pressStartText);
-
 
     m = 0U;
     enemyId = 0U;

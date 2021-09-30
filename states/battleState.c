@@ -171,7 +171,7 @@ void battleStateMain()
             break;
         default:  // Abort to title in the event of unexpected state
             gamestate = STATE_TITLE;
-            substate = 0U;
+            substate = MM_INIT;
             break;
     }
     prevJoypad = curJoypad;
@@ -187,7 +187,6 @@ void phaseOpunZaGeimu()
     DISPLAY_ON;
     SHOW_BKG;
     SHOW_SPRITES;
-    // set_bkg_data(scoreNumsTileIndex, 20U, scorenumTiles);
     set_bkg_data(glintTileIndex, 2U, glintTiles);
 
     set_sprite_tile(1U, glintTileIndex);
@@ -222,9 +221,6 @@ void phaseOpunZaGeimu()
     substate = TURN_KAISHI;
 
     fadein();
-
-    // // test junk
-    // displayFullDeck(&deck, 0, 0);
 }
 
 void phaseStartTurn()
@@ -827,7 +823,6 @@ void displayMP()
 void displayPaperEarnings()
 {
     // Paper won
-    // set_bkg_tile_xy(xAnchorEnemy, yAnchorEnemy, 0x27U);
     if (enemyDex[enemyId].paperAmount/10U != 0U)
         set_bkg_tile_xy(xAnchorEnemy+1U, yAnchorEnemy+3U, enemyDex[enemyId].paperAmount/10U %10U);
     set_bkg_tile_xy(xAnchorEnemy+2U, yAnchorEnemy+3U, enemyDex[enemyId].paperAmount%10U);

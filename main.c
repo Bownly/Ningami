@@ -99,7 +99,7 @@ void main()
                 shopStateMain();
                 break;
         }
-        // // music stuff
+        // Music stuff
         // songPlayerUpdate();
     }
 }

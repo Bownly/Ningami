@@ -1,16 +1,3 @@
-REM mod2gbt TheLuckyBench.mod tlbsong -c 2
-REM del outputtlbsong.c
-REM rename output.c outputtlbsong.c
-REM mod2gbt TheWhiteFrame.mod twfsong -c 4
-REM del outputtwfsong.c
-REM rename output.c outputtwfsong.c
-REM mod2gbt TheWhite.mod twsong -c 4
-REM del outputtwsong.c
-REM rename output.c outputtwsong.c
-REM mod2gbt ayVenture.mod avsong -c 4
-REM del outputavsong.c
-REM rename output.c outputavsong.c
-REM pause
 
 C:\gbdk2020\bin\lcc -Wa-l -c -o bordertiles.o tiles/borderTiles.c
 C:\gbdk2020\bin\lcc -Wa-l -c -o cardtiles.o tiles/cardTiles.c
@@ -71,4 +58,6 @@ del *.sym
 @REM 0: main, common, music logic etc
 @REM 1: battleState
 @REM 2: overworldState
-@REM 3: title card stuff; pause menu
+@REM 3: title stuff; pause menu stuff
+@REM 4: dialog stuff
+@REM 5: shop stuff

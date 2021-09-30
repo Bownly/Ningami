@@ -43,12 +43,6 @@ void phaseDialogboxLoop();
 /* HELPER METHODS */
 
 /* DISPLAY METHODS */
-// void displayDeckCursor();
-// void displayCardWin(CARDFACE, UINT8, UINT8);
-// void displayCardDescWin();
-// void displayFullDeck(DeckObject*, UINT8, UINT8);
-// void displayHp();
-// void displayPaper();
 
 void dialogStateMain()
 {
@@ -64,7 +58,7 @@ void dialogStateMain()
             break;
         default:  // Abort to title in the event of unexpected state
             gamestate = STATE_TITLE;
-            substate = 0U;
+            substate = MM_INIT;
             break;
     }
     prevJoypad = curJoypad;
@@ -88,8 +82,6 @@ void phaseInitDialogbox()
         SHOW_WIN;
 
         // Draw cursor
-        // animTick = 0U;
-        // animFrame = 0U;
         move_sprite(0U, xAnchorDialogCursor, yAnchorDialogCursor);
     }
     
@@ -126,10 +118,7 @@ void phaseDialogboxLoop()
 
 
 /******************************** HELPER METHODS *********************************/
-// void closeDialogWindow()
-// {
 
-// }
 
 /******************************** DISPLAY METHODS ********************************/
 

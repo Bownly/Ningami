@@ -94,7 +94,7 @@ void shopStateMain()
             break;
         default:  // Abort to title in the event of unexpected state
             gamestate = STATE_TITLE;
-            substate = 0U;
+            substate = MM_INIT;
             break;
     }
     prevJoypad = curJoypad;

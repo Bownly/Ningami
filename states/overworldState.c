@@ -44,7 +44,6 @@ extern UINT8 substate;
 extern UINT8 oldGamestate;
 extern UINT8 oldSubstate;
 
-// DeckObject deck;
 extern PlayerObject player;
 extern UINT8 enemyId;
 extern UINT8 roomId;
@@ -125,7 +124,7 @@ void overworldStateMain()
             break;
         default:  // Abort to title in the event of unexpected state
             gamestate = STATE_TITLE;
-            substate = 0U;
+            substate = MM_INIT;
             break;
     }
     prevJoypad = curJoypad;
@@ -363,7 +362,7 @@ void phasePlayerInputs()
                 // Move sprite, not camera
                 if (camera_y == 0U || player.y > PLAYER_Y_CENTER)
                 {
-                    if (player.y != PLAYER_Y_UP)  // Bomb/covered check goes here
+                    if (player.y != PLAYER_Y_UP)
                     {
                         playerstate = WALKING;
                     }
@@ -385,7 +384,7 @@ void phasePlayerInputs()
                 // Move sprite, not camera
                 if (camera_y == camera_max_y || player.y < PLAYER_Y_CENTER)
                 {
-                    if (player.y != PLAYER_Y_DOWN)  // Bomb/covered check goes here
+                    if (player.y != PLAYER_Y_DOWN)
                     {
                         playerstate = WALKING;
                     }
@@ -407,7 +406,7 @@ void phasePlayerInputs()
                 // Move sprite, not camera
                 if (camera_x == 0U || player.x > PLAYER_X_CENTER)
                 {
-                    if (player.x != PLAYER_X_LEFT)  // Bomb/covered check goes here
+                    if (player.x != PLAYER_X_LEFT)
                     {
                         playerstate = WALKING;
                     }
@@ -429,7 +428,7 @@ void phasePlayerInputs()
                 // Move sprite, not camera
                 if (camera_x == camera_max_x || player.x < PLAYER_X_CENTER)
                 {
-                    if (player.x != PLAYER_X_RIGHT)  // Bomb/covered check goes here
+                    if (player.x != PLAYER_X_RIGHT)
                     {
                         playerstate = WALKING;
                     }
@@ -468,7 +467,6 @@ void phasePlayerInputs()
     }
     else
         wait_vbl_done();
-
 }
 
 
@@ -486,7 +484,7 @@ void loadRoom()
     encounterRate = room.encounterRate;
     encounterCounter = encounterRate;
     
-    // slightly randomize encounter rate
+    // Slightly randomize encounter rate
     if (room.encounterRate != 0U)
     {
         encounterCounter -= room.encounterRate >> 1U;

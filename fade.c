@@ -1,8 +1,6 @@
 #include <gb/gb.h>
 // #include "songPlayer.h"
 
-//#include "graphics/statsTextMap.c"
-
 UINT8 isFadedOut;
 // UINT8 shouldStartMusic;
 
@@ -44,19 +42,19 @@ void fadein()
         switch(i) 
         {
             case 0U:
-                // OBP0_REG = 0x40;  // sprites
-                OBP0_REG = 0x40;  // dark grey as transparent
-                BGP_REG = 0x40;  // bkg
+                // OBP0_REG = 0x40;  // Sprites
+                OBP0_REG = 0x40;  // Dark grey as transparent
+                BGP_REG = 0x40;  // Bkg
                 break;
             case 1U:
                 // OBP0_REG = 0x90;
-                OBP0_REG = 0x81;  // dark grey as transparent
+                OBP0_REG = 0x81;  // Dark grey as transparent
                 BGP_REG = 0x90;
                 break;
             case 2U:
-                // OBP0_REG = 0xE4;  // white as transparent
-                // OBP0_REG = 0xE1;  // light grey as transparent
-                OBP0_REG = 0xD2;  // dark grey as transparent  11010010
+                // OBP0_REG = 0xE4;  // White as transparent
+                // OBP0_REG = 0xE1;  // Light grey as transparent
+                OBP0_REG = 0xD2;  // Dark grey as transparent  11010010
                 BGP_REG = 0xE4;
                 break;
         }
@@ -76,17 +74,17 @@ void fadeout()
         {
             case 0U:
                 // OBP0_REG = 0xE4;
-                OBP0_REG = 0xD2;  // dark grey as transparent  11010010
+                OBP0_REG = 0xD2;  // Dark grey as transparent  11010010
                 BGP_REG = 0xE4;
                 break;
             case 1U:
                 // OBP0_REG = 0x90;
-                OBP0_REG = 0x81;  // dark grey as transparent
+                OBP0_REG = 0x81;  // Dark grey as transparent
                 BGP_REG = 0x90;
                 break;
             case 2U:
                 // OBP0_REG = 0x40;
-                OBP0_REG = 0x40;  // dark grey as transparent
+                OBP0_REG = 0x40;  // Dark grey as transparent
                 BGP_REG = 0x40;
                 break;
             case 3U:
