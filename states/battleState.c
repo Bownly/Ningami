@@ -23,6 +23,11 @@
 #define stringWonA "   YOU DEFEATED  "
 #define stringWonB "  WON SOME PAPER "
 
+#define stringBeatGame1 "  CONGRATULATION"
+#define stringBeatGame2 " YOU BEAT THE GAME"
+#define stringBeatGame3 "   YOU ARE NOW"
+#define stringBeatGame4 "  NINGAMI MASTER"
+
 extern const unsigned char borderTiles[];
 extern const unsigned char cardTiles[];
 extern const unsigned char cursorTiles[];
@@ -105,6 +110,7 @@ void phaseAnimateEnemyMove();
 void phaseWinCheck();
 void phaseLoseCheck();
 void phaseWinLoop();
+void beatTheGameLoop();
 
 /* HELPER METHODS */
 void loadEnemy();
@@ -159,6 +165,9 @@ void battleStateMain()
             break;
         case BATTLE_END:
             phaseWinLoop();
+            break;
+        case BEAT_ZA_GEIMU:
+            beatTheGameLoop();
             break;
         default:  // Abort to title in the event of unexpected state
             gamestate = STATE_TITLE;
@@ -658,10 +667,34 @@ void phaseWinLoop()
     if ((curJoypad & J_A && !(prevJoypad & J_A))
         || (curJoypad & J_B && !(prevJoypad & J_B)))
     {
-        gamestate = STATE_OVERWORLD;
-        substate = OW_INIT_OW;
         move_sprite(0U, 0U, 0U);
         fadeout();
+        if (enemyId == ENEMY_NINJA2)
+        {
+            setBlankBg();
+            printLine(1U,  6U, stringBeatGame1, FALSE);
+            printLine(1U,  7U, stringBeatGame2, FALSE);
+            printLine(1U,  9U, stringBeatGame3, FALSE);
+            printLine(1U, 10U, stringBeatGame4, FALSE);
+            move_bkg(4U, 0U);
+            fadein();
+            substate = BEAT_ZA_GEIMU;
+        }
+        else 
+        {
+            gamestate = STATE_OVERWORLD;
+            substate = OW_INIT_OW;
+        }
+    }
+}
+
+void beatTheGameLoop()
+{
+    if ((curJoypad & J_A && !(prevJoypad & J_A))
+        || (curJoypad & J_B && !(prevJoypad & J_B)))
+    {
+        gamestate = STATE_TITLE;
+        substate = MM_INIT;
     }
 }
 

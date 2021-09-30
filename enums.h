@@ -23,6 +23,7 @@ typedef enum {
     WIN_CHECK,
     LOSE_CHECK,
     BATTLE_END,
+    BEAT_ZA_GEIMU,
     OW_INIT_OW,
     OW_INIT_MAP,
     OW_PLAYER_INPUTS,

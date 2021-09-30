@@ -118,15 +118,20 @@ const EventObject room8AEvents[] = {
 };
 
 const EventObject room9Events[] = {
-    { .x =  7U, .y = 19U, .type = EV_LOADROOM,  .value =  7U }
+    { .x =  7U, .y = 19U, .type = EV_LOADROOM,  .value =  7U },
+    { .x =  7U, .y =  6U, .type = EV_DIALOG,    .value = 24U },
+    { .x =  7U, .y =  6U, .type = EV_DIALOG,    .value = 23U },
+    { .x =  7U, .y =  6U, .type = EV_DIALOG,    .value = 22U },
+    { .x =  7U, .y =  6U, .type = EV_DIALOG,    .value = 21U },
+    { .x =  7U, .y =  6U, .type = EV_DIALOG,    .value = 20U },
+    { .x =  7U, .y =  6U, .type = EV_DIALOG,    .value = 19U },
+    { .x =  7U, .y =  6U, .type = EV_DIALOG,    .value = 18U }
 };
 
-// Todo
 const EventObject room9AEvents[] = {
     { .x =  6U, .y = 18U, .type = EV_OPEN_SHOP, .value =  4U },
     { .x =  8U, .y = 18U, .type = EV_SAVE,      .value =  0U },
-    { .x =  7U, .y =  5U, .type = EV_DIALOG,    .value =  0U },
-    { .x =  7U, .y =  5U, .type = EV_BATTLE,    .value =  0U }
+    { .x =  7U, .y =  5U, .type = EV_BATTLE,    .value =  ENEMY_NINJA1 }
 };
 
 
@@ -204,8 +209,8 @@ const RoomObject roomDict[] = {
         .encounterSet = {ENEMY_INU, ENEMY_TORI, ENEMY_KAME, ENEMY_KAME}},
     // 9
     {.id = 0U, .w = room9MapWidth, .h = room9MapHeight, .encounterRate =  0U, .roomMap = room9Map, .events = room9Events,
-        .eventsLen = 1U, .aEventsLen = 2U, .events = room9Events, .aEvents = room9AEvents,
-        .encounterSet = {ENEMY_TORI, ENEMY_TORI, ENEMY_TORI, ENEMY_TORI}}
+        .eventsLen = 8U, .aEventsLen = 3U, .events = room9Events, .aEvents = room9AEvents,
+        .encounterSet = {ENEMY_INU, ENEMY_INU, ENEMY_INU, ENEMY_INU}}
 };
 
 

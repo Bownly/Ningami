@@ -100,6 +100,7 @@ void phasePlayerInputs();
 /* HELPER METHODS */
 void loadRoom();
 void checkUnderfootTile();
+void openBattle();
 void openShop();
 
 /* DISPLAY METHODS */
@@ -322,6 +323,12 @@ void phasePlayerInputs()
                     {
                         shopId = (roomAEventsPtr+l)->value;
                         openShop();
+                        return;
+                    }
+                    else if ((roomAEventsPtr+l)->type == EV_BATTLE)
+                    {
+                        enemyId = (roomAEventsPtr+l)->value;
+                        openBattle();
                         return;
                     }
                     else if ((roomAEventsPtr+l)->type == EV_SAVE)
@@ -586,17 +593,20 @@ void checkUnderfootTile()
         if (encounterCounter == 0U && encounterRate != 0U)
         {
             encounterCounter = encounterRate;
-            oldGamestate = STATE_OVERWORLD;
-            oldSubstate = OW_PLAYER_INPUTS;
-            gamestate = STATE_BATTLE;
-            substate = GAME_KAISHI;
-            shouldHidePlayer = TRUE;
-
             enemyId = room.encounterSet[getRandUint(4U)];
-
-            fadeout();
+            openBattle();
         }
     }
+}
+
+void openBattle()
+{
+    oldGamestate = STATE_OVERWORLD;
+    oldSubstate = OW_PLAYER_INPUTS;
+    gamestate = STATE_BATTLE;
+    substate = GAME_KAISHI;
+    shouldHidePlayer = TRUE;
+    fadeout();
 }
 
 void openShop()
