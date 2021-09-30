@@ -501,6 +501,9 @@ void phaseEnemyTurn()
     {
         k = enemy.atk - player.shieldCount;
     }
+
+    if (k > player.hpCur)
+        k = player.hpCur;
     player.hpCur -= k;
 
     // Goto ENEMY_ANIM
@@ -641,11 +644,11 @@ void phaseLoseCheck()
     if (player.hpCur == 0U)
     {
         gamestate = STATE_TITLE;
-        substate = 0U;
+        substate = MM_INIT;
+        return;
     }
     else
     {
-        // Goto SHOW_MESSAGES
         substate = TURN_KAISHI;
     }
 }
